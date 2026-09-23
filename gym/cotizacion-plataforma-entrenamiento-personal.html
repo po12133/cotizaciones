@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotización — Panel Web + App Móvil de Coaching Deportivo y Nutrición</title>
+<style>
+  :root{
+    --ink:#1b1f23; --ink-soft:#5a6472; --line:#e3e7ec; --bg:#f5f7fa; --panel:#ffffff;
+    --brand:#0f766e; --brand-dark:#0b544e; --brand-soft:#e6f4f2;
+    --accent:#f59e0b; --accent-soft:#fef3e2; --good:#16a34a; --bad:#dc2626;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; font-family:'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif; background:var(--bg); color:var(--ink); line-height:1.55; }
+  .page{ max-width:960px; margin:0 auto; padding:48px 40px 80px; }
+  .doc-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; padding-bottom:28px; border-bottom:3px solid var(--brand); margin-bottom:32px; }
+  .brand-block .brand-name{ font-size:22px; font-weight:800; color:var(--brand-dark); letter-spacing:.3px; }
+  .brand-block .brand-tag{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
+  .doc-meta{ text-align:right; font-size:13px; color:var(--ink-soft); }
+  .doc-meta .doc-title{ font-size:26px; font-weight:800; color:var(--ink); margin-bottom:6px; }
+  .doc-meta div{margin-top:2px;} .doc-meta b{color:var(--ink);}
+  .client-box{ display:grid; grid-template-columns:1fr 1fr; gap:16px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px 24px; margin-bottom:32px; }
+  .client-box .label{ font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700; margin-bottom:4px; }
+  .client-box .value{font-size:15px; font-weight:600;}
+  section{margin-bottom:44px;}
+  h2{ font-size:20px; font-weight:800; color:var(--brand-dark); margin:0 0 6px; display:flex; align-items:center; gap:10px; }
+  h2 .num{ display:inline-flex; align-items:center; justify-content:center; width:28px;height:28px; border-radius:8px; background:var(--brand); color:#fff; font-size:14px; flex:none; }
+  .section-intro{ color:var(--ink-soft); font-size:14.5px; margin:0 0 18px; max-width:760px; }
+  .feature-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .feature-card{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px 22px; }
+  .feature-card .role{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--brand-dark); background:var(--brand-soft); padding:5px 12px; border-radius:999px; margin-bottom:14px; }
+  .feature-card ul{ margin:0; padding-left:18px; font-size:14px; }
+  .feature-card li{margin-bottom:8px;} .feature-card li:last-child{margin-bottom:0;}
+  table{ width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; font-size:13.8px; }
+  thead th{ background:var(--brand-dark); color:#fff; text-align:left; padding:11px 14px; font-weight:700; font-size:12.5px; }
+  tbody td{ padding:11px 14px; border-top:1px solid var(--line); }
+  tbody tr:nth-child(even){background:#fafbfc;}
+  td.num, th.num{text-align:right; white-space:nowrap;} td.center, th.center{text-align:center;}
+  tfoot td{ padding:13px 14px; font-weight:800; border-top:2px solid var(--brand); background:var(--brand-soft); }
+  .yes{color:var(--good); font-weight:800;} .no{color:var(--bad); font-weight:800;}
+  .price-card{ border-radius:14px; padding:22px 24px; color:#fff; background:linear-gradient(135deg,var(--brand),var(--brand-dark)); }
+  .price-card .pc-label{font-size:12px; text-transform:uppercase; letter-spacing:.6px; opacity:.85; font-weight:700;}
+  .price-card .pc-amount{font-size:34px; font-weight:800; margin:6px 0 2px;}
+  .price-card .pc-note{font-size:12.5px; opacity:.9;}
+  .timeline{display:flex; flex-direction:column;}
+  .tl-item{ display:grid; grid-template-columns:110px 1fr; gap:18px; padding:13px 0; border-bottom:1px solid var(--line); }
+  .tl-item:last-child{border-bottom:none;}
+  .tl-phase{font-weight:800; color:var(--brand-dark); font-size:13px;}
+  .tl-desc b{display:block; font-size:14px; margin-bottom:2px;} .tl-desc span{font-size:13.3px; color:var(--ink-soft);}
+  .terms-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .terms-card{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 22px; }
+  .terms-card h3{ margin:0 0 10px; font-size:14.5px; color:var(--brand-dark); }
+  .terms-card ul{margin:0; padding-left:18px; font-size:13.5px;} .terms-card li{margin-bottom:6px;}
+  .note-box{ background:var(--accent-soft); border:1px solid #f5d7a3; border-radius:12px; padding:14px 18px; font-size:13.5px; color:#7c4a03; margin-top:18px; }
+  .clause-box{ background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--brand); border-radius:10px; padding:18px 22px; font-size:13.5px; color:var(--ink-soft); }
+  .clause-box p{margin:0 0 10px;} .clause-box p:last-child{margin-bottom:0;}
+  .visual-card{ display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; background:linear-gradient(135deg,var(--brand-dark),var(--brand)); color:#fff; border-radius:16px; padding:26px 28px; }
+  .visual-card .vc-title{font-size:19px; font-weight:800;}
+  .visual-card .vc-desc{font-size:13.5px; opacity:.9; max-width:480px; margin-top:6px;}
+  .visual-card a.vc-btn{ display:inline-flex; align-items:center; gap:8px; background:#fff; color:var(--brand-dark); font-weight:800; font-size:14px; padding:12px 20px; border-radius:10px; text-decoration:none; white-space:nowrap; }
+  .visual-tags{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+  .visual-tags span{background:rgba(255,255,255,.15); font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:999px;}
+  .signature-grid{ display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:50px; }
+  .sign-line{ border-top:1px solid var(--ink); padding-top:8px; font-size:13px; color:var(--ink-soft); }
+  footer.doc-footer{ text-align:center; font-size:12px; color:var(--ink-soft); margin-top:60px; padding-top:20px; border-top:1px solid var(--line); }
+  @media (max-width:720px){
+    .page{padding:28px 18px 60px;} .doc-header{flex-direction:column;} .doc-meta{text-align:left;}
+    .client-box, .feature-grid, .terms-grid, .signature-grid{grid-template-columns:1fr;}
+    table{font-size:12px;} .visual-card{flex-direction:column; align-items:flex-start;}
+  }
+  @media print{ body{background:#fff;} .page{padding:0; max-width:100%;} section{page-break-inside:avoid;} }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-header">
+    <div class="brand-block">
+      <div class="brand-name">Amicornios Soft</div>
+      <div class="brand-tag">Desarrollo de software · Plataformas web y móviles</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-title">Cotización</div>
+      <div>N.º <b>COT-GYM-002</b></div>
+      <div>Fecha: <b>21/09/2026</b></div>
+      <div>Válida hasta: <b>21/10/2026</b></div>
+    </div>
+  </div>
+
+  <div class="client-box">
+    <div><div class="label">Preparado para</div><div class="value">Carlos</div></div>
+    <div><div class="label">Proyecto</div><div class="value">Panel Web + App Móvil (Flutter) de Coaching Deportivo y Nutrición (V1 — un coach, múltiples alumnos)</div></div>
+  </div>
+
+  <!-- 1. RESUMEN -->
+  <section>
+    <h2><span class="num">1</span>Resumen del proyecto</h2>
+    <p class="section-intro">
+      Panel administrativo web para el coach, combinado con una aplicación móvil nativa para el alumno
+      desarrollada en Flutter (Android e iOS). El coach administra alumnos, rutinas, dietas, membresías y
+      evolución física desde su computadora; el alumno usa una app instalada en su celular, con cámara nativa,
+      notificaciones push reales y mejor experiencia de uso diario.
+    </p>
+  </section>
+
+  <!-- 2. ALCANCE -->
+  <section>
+    <h2><span class="num">2</span>Alcance funcional</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="role">👤 Panel del Coach (web)</span>
+        <ul>
+          <li>Dashboard con alumnos activos/inactivos, membresías por vencer y estadísticas generales</li>
+          <li>Gestión de alumnos: listado, foto, servicio contratado, estado de membresía</li>
+          <li>Perfil del alumno: datos, entrenamiento y dieta actual, progreso, fotos y evaluaciones</li>
+          <li>Creación y asignación de rutinas de entrenamiento (ejercicios, series, reps, carga, descanso, video)</li>
+          <li>Creación y asignación de planes alimenticios por día</li>
+          <li>Revisión de fotos de comidas enviadas por el alumno, con comentarios</li>
+          <li>Evolución física con gráficos e historial de evaluaciones</li>
+          <li>Gestión de membresías: servicio, precio, vigencia y renovación</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <span class="role">🏋️ App del Alumno (Flutter — Android/iOS)</span>
+        <ul>
+          <li>Inicio: entrenamiento del día, próxima comida, membresía activa</li>
+          <li>Mis entrenamientos: ejercicios, series, reps, video y botón de completado</li>
+          <li>Mi alimentación: plan del día por comida, horarios y cantidades</li>
+          <li>Registrar mi comida: foto con cámara nativa del celular y observaciones</li>
+          <li>Mi progreso: peso inicial/actual, gráfico de evolución, historial</li>
+          <li>Mi membresía: vigencia, días restantes y datos del coach</li>
+          <li>Mi perfil: datos personales y configuración básica</li>
+          <li>Notificaciones push nativas (recordatorios, avisos del coach)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. REFERENCIAS VISUALES -->
+  <section>
+    <h2><span class="num">3</span>Referencias visuales de la plataforma</h2>
+    <p class="section-intro">
+      El mismo prototipo navegable cubre tanto el panel del coach como la experiencia que tendrá la app del
+      alumno, para que puedas recorrer el diseño propuesto antes de iniciar el desarrollo.
+    </p>
+    <div class="visual-card">
+      <div>
+        <div class="vc-title">Prototipo interactivo — Atlas Coaching</div>
+        <div class="vc-desc">Incluye las pantallas de Dashboard, Alumnos, Perfil, Entrenamientos, Dietas, Seguimiento, Evolución y Membresías (coach), y Inicio, Entrenamientos, Alimentación, Registro de comida, Progreso, Membresía y Perfil (alumno, en formato de celular). Datos de ejemplo, navegable.</div>
+        <div class="visual-tags"><span>Panel del coach</span><span>App del alumno</span><span>Datos ficticios</span></div>
+      </div>
+      <a class="vc-btn" href="https://claude.ai/artifact/Ev5WoFCbvokCoDmxV6aW6y" target="_blank" rel="noopener">Ver prototipo →</a>
+    </div>
+    <div class="note-box">
+      Estas pantallas son referencias visuales del producto propuesto, con nombre y marca de ejemplo ("Atlas
+      Coaching"). La app final se construye de forma nativa en Flutter siguiendo esta misma línea visual;
+      pueden existir ajustes de diseño durante el desarrollo, manteniendo siempre las funcionalidades acordadas
+      en esta cotización.
+    </div>
+  </section>
+
+  <!-- 4. COSTOS POR MÓDULO -->
+  <section>
+    <h2><span class="num">4</span>Tabla de costos por módulo</h2>
+    <table>
+      <thead><tr><th>Módulo</th><th>Descripción</th><th class="num">Inversión (Bs)</th></tr></thead>
+      <tbody>
+        <tr><td>Diseño UX/UI</td><td>Identidad visual única para el panel web y la app Flutter</td><td class="num">400</td></tr>
+        <tr><td>Backend (BaaS)</td><td>Base de datos y autenticación coach/alumno sobre Firebase/Supabase</td><td class="num">700</td></tr>
+        <tr><td>Panel del Coach (web)</td><td>Dashboard, alumnos, perfil, entrenamientos, dietas, seguimiento, evolución y membresías</td><td class="num">1,700</td></tr>
+        <tr><td>App del Alumno (Flutter)</td><td>Inicio, entrenamientos, alimentación, registro de comida con cámara nativa, progreso, membresía y perfil</td><td class="num">1,700</td></tr>
+        <tr><td>Notificaciones Push</td><td>Notificaciones nativas vía Firebase Cloud Messaging</td><td class="num">300</td></tr>
+        <tr><td>QA y Despliegue</td><td>Pruebas funcionales básicas y compilación para Android/iOS</td><td class="num">200</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="2">Total del proyecto</td><td class="num">Bs 5,000</td></tr></tfoot>
+    </table>
+    <div class="price-card" style="margin-top:18px;">
+      <div class="pc-label">Panel Web + App Móvil Flutter — Inversión total</div>
+      <div class="pc-amount">Bs 5,000</div>
+      <div class="pc-note">≈ 5 semanas de desarrollo</div>
+    </div>
+    <div class="note-box">
+      Presupuesto exprés: se logra este costo usando un backend como servicio (Firebase/Supabase) en vez de un
+      backend a medida, plantillas de diseño en vez de UI 100% personalizada, y QA reducido a pruebas
+      funcionales básicas. El cliente aporta el contenido inicial (rutinas/dietas/ejercicios de ejemplo). No
+      incluye publicación en tiendas (ver sección 8).
+    </div>
+  </section>
+
+  <!-- 5. FUNCIONALIDADES INCLUIDAS / ADICIONALES -->
+  <section>
+    <h2><span class="num">5</span>Funcionalidades incluidas y adicionales</h2>
+    <table>
+      <thead><tr><th>Funcionalidad</th><th class="center">Incluida</th><th>Detalle</th></tr></thead>
+      <tbody>
+        <tr><td>Rutinas, dietas, membresías y evolución</td><td class="center yes">Sí</td><td>Descritas en la sección 2</td></tr>
+        <tr><td>Subida de fotos (comidas y ejercicios) con cámara nativa</td><td class="center yes">Sí</td><td>Almacenamiento en la nube incluido</td></tr>
+        <tr><td>Notificaciones push nativas</td><td class="center yes">Sí</td><td>Firebase Cloud Messaging</td></tr>
+        <tr><td>Publicación en Google Play y App Store</td><td class="center no">No</td><td>Ver costos y cuentas de desarrollador en sección 8</td></tr>
+        <tr><td>Biblioteca de clases grabadas (video)</td><td class="center no">No</td><td>Módulo adicional, se cotiza aparte</td></tr>
+        <tr><td>Chat entrenador–alumno</td><td class="center no">No</td><td>Módulo adicional, se cotiza aparte</td></tr>
+        <tr><td>Chat en tiempo real (mensajería instantánea)</td><td class="center no">No</td><td>Mejora técnica adicional (+Bs 1,800 aprox.)</td></tr>
+        <tr><td>Varios coaches / multi-gimnasio</td><td class="center no">No</td><td>Esta V1 es para un solo coach; escalarlo se cotiza aparte</td></tr>
+        <tr><td>Pasarela de pagos para cobrar membresías</td><td class="center no">No</td><td>No incluida; se cotiza aparte</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 6. CRONOGRAMA -->
+  <section>
+    <h2><span class="num">6</span>Cronograma de trabajo</h2>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-phase">Semana 1</div><div class="tl-desc"><b>Diseño y backend</b><span>Identidad visual y configuración de Firebase/Supabase con autenticación coach/alumno.</span></div></div>
+      <div class="tl-item"><div class="tl-phase">Semana 2</div><div class="tl-desc"><b>Panel del Coach</b><span>Dashboard, gestión de alumnos, perfil, entrenamientos, dietas y membresías.</span></div></div>
+      <div class="tl-item"><div class="tl-phase">Semana 3–4</div><div class="tl-desc"><b>App del Alumno en Flutter</b><span>Inicio, entrenamientos, alimentación, registro de comida, progreso, membresía y perfil.</span></div></div>
+      <div class="tl-item"><div class="tl-phase">Semana 5</div><div class="tl-desc"><b>Notificaciones, QA y despliegue</b><span>Integración de Firebase Cloud Messaging, pruebas funcionales y compilación final.</span></div></div>
+    </div>
+  </section>
+
+  <!-- 7. TECNOLOGÍAS -->
+  <section>
+    <h2><span class="num">7</span>Tecnologías propuestas</h2>
+    <div class="terms-grid">
+      <div class="terms-card"><h3>Panel del coach</h3><ul><li>React, aplicación web responsive</li></ul></div>
+      <div class="terms-card"><h3>App del alumno</h3><ul><li>Flutter (una sola base de código para Android e iOS)</li></ul></div>
+      <div class="terms-card"><h3>Backend</h3><ul><li>Firebase / Supabase (base de datos, autenticación y almacenamiento)</li></ul></div>
+      <div class="terms-card"><h3>Notificaciones</h3><ul><li>Firebase Cloud Messaging (notificaciones push nativas)</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 8. INFRAESTRUCTURA -->
+  <section>
+    <h2><span class="num">8</span>Costos adicionales de infraestructura</h2>
+    <p class="section-intro">No forman parte del costo de desarrollo; son costos operativos recurrentes o de publicación.</p>
+    <table>
+      <thead><tr><th>Servicio</th><th class="num">Costo</th></tr></thead>
+      <tbody>
+        <tr><td>Hosting y dominio (mensual)</td><td class="num">Bs 70 – 100</td></tr>
+        <tr><td>Hosting y dominio (anual)</td><td class="num">Bs 840 – 1,200</td></tr>
+        <tr><td>Cuenta Google Play Console</td><td class="num">USD 25 (pago único)</td></tr>
+        <tr><td>Cuenta Apple Developer</td><td class="num">USD 99 / año</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 9. CONDICIONES DE PAGO -->
+  <section>
+    <h2><span class="num">9</span>Condiciones de pago</h2>
+    <div class="terms-grid">
+      <div class="terms-card"><h3>Forma de pago</h3><ul><li>40% al inicio del proyecto</li><li>30% a la entrega de la versión beta</li><li>30% contra entrega final</li></ul></div>
+      <div class="terms-card"><h3>Vigencia</h3><ul><li>Cotización válida por 30 días desde su emisión</li><li>Montos expresados en bolivianos (Bs)</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 10. CLÁUSULA DE MODIFICACIONES -->
+  <section>
+    <h2><span class="num">10</span>Modificaciones de alcance y precio</h2>
+    <div class="clause-box">
+      <p>Una vez aprobada esta cotización y definido el alcance del proyecto, cualquier solicitud de
+      incorporación, eliminación o modificación de funcionalidades estará sujeta a una nueva evaluación
+      técnica y económica por parte de Amicornios Soft.</p>
+      <p>Las modificaciones podrán generar ajustes en el precio final y en el plazo de entrega. Todo cambio
+      deberá acordarse previamente entre el cliente y Amicornios Soft antes de su implementación.</p>
+      <p>La eliminación de funcionalidades no implica automáticamente una reducción proporcional del precio,
+      especialmente cuando dichas funcionalidades ya hayan sido desarrolladas o se encuentren en proceso de
+      implementación.</p>
+      <p>Las correcciones de errores correspondientes a las funcionalidades originalmente contratadas no se
+      consideran nuevas funcionalidades; están cubiertas por la garantía descrita en la sección 13.</p>
+    </div>
+  </section>
+
+  <!-- 11. EXCLUSIONES -->
+  <section>
+    <h2><span class="num">11</span>Consideraciones y exclusiones</h2>
+    <div class="terms-card">
+      <ul>
+        <li>No incluye hosting, dominio, cuentas de desarrollador ni servicios externos de almacenamiento (ver sección 8)</li>
+        <li>No incluye biblioteca de clases grabadas, chat, chat en tiempo real, multi-coach ni pasarela de pagos (ver sección 5)</li>
+        <li>No incluye la creación de contenido (ejercicios, rutinas, dietas); el cliente lo aporta</li>
+        <li>La publicación en Google Play y App Store no está incluida en el precio de desarrollo</li>
+        <li>Los diseños de la sección 3 son referenciales y pueden ajustarse durante el desarrollo sin afectar las funcionalidades acordadas</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 12. ENTREGABLES -->
+  <section>
+    <h2><span class="num">12</span>Entregables finales</h2>
+    <div class="terms-card">
+      <ul>
+        <li>Panel web funcional desplegado en producción</li>
+        <li>Archivo de instalación de la app (APK/IPA) listo para publicación</li>
+        <li>Código fuente completo del proyecto</li>
+        <li>Capacitación básica de uso (una sesión en vivo)</li>
+        <li>Video tutorial sobre cómo administrar la plataforma</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 13. GARANTÍA -->
+  <section>
+    <h2><span class="num">13</span>Garantía y soporte técnico</h2>
+    <div class="terms-grid">
+      <div class="terms-card"><h3>Garantía</h3><ul><li>30 días de corrección de errores sin costo tras la entrega</li></ul></div>
+      <div class="terms-card"><h3>Soporte continuo (opcional)</h3><ul><li>Plan de mantenimiento mensual desde Bs 1,500/mes</li></ul></div>
+    </div>
+  </section>
+
+  <div class="signature-grid">
+    <div class="sign-line">Firma — Representante, Amicornios Soft</div>
+    <div class="sign-line">Firma — Carlos</div>
+  </div>
+
+  <footer class="doc-footer">
+    Amicornios Soft · [vargascarlos12123@gmail.com] · [+591 714 0557] · Cotización N.º COT-GYM-002
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotización Bravos Fit Club</title>
+<meta name="description" content="Cotización para la modernización de la plataforma web de Bravos Fit Club: catálogo, localizador de distribuidores, pedidos por WhatsApp y panel administrativo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b140a; --ink-soft:#5f5243; --line:#e7dcc6; --bg:#f7f1e4; --panel:#fffcf5;
+    --dark:#0A0A06; --dark2:#141208; --brown:#3D2A14;
+    --brand:#D4711A; --brand-2:#E8891E; --brand-dark:#9a4f0f; --brand-soft:#fbead6;
+    --good:#1d8a5e; --bad:#b83b2e; --cream:#F5EDD8;
+    --fd:'Bebas Neue',Impact,'Arial Narrow',sans-serif;
+    --fb:'Outfit','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; font-family:var(--fb); background:var(--bg); color:var(--ink); line-height:1.55; }
+  img{max-width:100%;display:block}
+  a{color:var(--brand-dark)}
+  .hero-band{ background:radial-gradient(700px 360px at 85% 20%,rgba(212,113,26,.35),transparent 60%),var(--dark); color:var(--cream); }
+  .hero-in{ max-width:1040px; margin:0 auto; padding:40px 40px 34px; }
+  .doc-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
+  .brand-name{ font-size:22px; font-weight:800; color:#fff; letter-spacing:.3px; }
+  .brand-tag{ font-size:13px; color:#b9a88a; margin-top:2px; }
+  .doc-meta{ text-align:right; font-size:13px; color:#b9a88a; }
+  .doc-meta .doc-title{ font-family:var(--fd); font-size:40px; line-height:1; color:#fff; letter-spacing:1px; margin-bottom:6px; }
+  .doc-meta b{color:#fff;}
+  .hero-title{ display:flex; align-items:center; gap:22px; margin-top:34px; padding-top:28px; border-top:1px solid #3a2c18; }
+  .hero-title img{ width:92px; height:92px; border-radius:20px; flex:none; }
+  .hero-title .eyebrow{ font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--brand-2); font-weight:700; }
+  .hero-title h1{ font-family:var(--fd); font-weight:400; font-size:54px; line-height:.95; margin:6px 0 6px; color:#fff; letter-spacing:1px; }
+  .hero-title h1 em{ font-style:normal; color:var(--brand-2); }
+  .hero-title p{ margin:0; color:#cdbd9c; font-size:15px; max-width:640px; }
+  .page{ max-width:1040px; margin:0 auto; padding:34px 40px 80px; }
+  .client-box{ display:grid; grid-template-columns:1fr 1.4fr .8fr; gap:16px; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin-bottom:38px; }
+  .label{ font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700; margin-bottom:4px; }
+  .value{font-size:15px; font-weight:600;}
+  section{margin-bottom:48px;}
+  h2{ font-size:21px; font-weight:800; color:var(--ink); margin:0 0 8px; display:flex; align-items:center; gap:10px; }
+  h2 .num{ display:inline-flex; align-items:center; justify-content:center; min-width:30px; height:30px; padding:0 6px; border-radius:8px; background:var(--brand); color:#fff; font-size:14px; flex:none; }
+  .section-intro{ color:var(--ink-soft); font-size:14.5px; margin:0 0 18px; max-width:800px; }
+  .compare{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .compare .col{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
+  .compare .col.after{ border-color:#e9b98a; background:linear-gradient(135deg,#fff5e8,var(--panel)); }
+  .compare h3{ margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:1px; }
+  .compare .before h3{ color:var(--ink-soft);} .compare .after h3{ color:var(--brand-dark);}
+  .compare ul{ margin:0; padding-left:18px; font-size:14px; } .compare li{ margin-bottom:5px; }
+  .visual-card{ display:flex; align-items:center; justify-content:space-between; gap:22px; flex-wrap:wrap; background:radial-gradient(500px 240px at 90% 0,rgba(212,113,26,.35),transparent 60%),var(--dark); color:#fff; border-radius:18px; padding:26px 28px; }
+  .vc-title{ font-family:var(--fd); font-size:30px; letter-spacing:.8px; line-height:1; }
+  .vc-desc{ font-size:13.8px; color:#cdbd9c; max-width:560px; margin-top:8px; }
+  .vc-btn{ display:inline-flex; align-items:center; gap:8px; background:var(--brand); color:#fff !important; font-weight:700; font-size:14.5px; padding:13px 22px; border-radius:11px; text-decoration:none; white-space:nowrap; }
+  .vc-btn:hover{ background:var(--brand-2); }
+  .visual-tags{ display:flex; gap:6px; margin-top:14px; flex-wrap:wrap; }
+  .visual-tags span{ background:rgba(255,255,255,.08); border:1px solid #3a2c18; font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:999px; color:#e7d8bb; }
+  .note-box{ background:var(--brand-soft); border:1px solid #efc596; border-radius:12px; padding:14px 18px; font-size:13.5px; color:#6b3a0a; margin-top:18px; }
+  .note-box b{ color:#4a2805; }
+
+  /* modules */
+  .module{ background:var(--panel); border:1px solid var(--line); border-radius:18px; overflow:hidden; margin-bottom:26px; page-break-inside:avoid; }
+  .mod-h{ display:flex; justify-content:space-between; align-items:center; gap:16px; padding:18px 24px; border-bottom:1px solid var(--line); background:linear-gradient(90deg,#fff7ea,var(--panel)); }
+  .mod-t{ display:flex; align-items:center; gap:14px; }
+  .mod-n{ font-family:var(--fd); font-size:40px; line-height:.85; color:var(--brand); }
+  .mod-t h3{ margin:0; font-size:19px; font-weight:800; }
+  .mod-t small{ display:block; font-size:12.5px; color:var(--ink-soft); font-weight:500; }
+  .mod-price{ text-align:right; flex:none; }
+  .mod-price b{ display:block; font-family:var(--fd); font-weight:400; font-size:34px; line-height:1; color:var(--brand-dark); letter-spacing:.5px; }
+  .mod-price span{ font-size:11.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.6px; font-weight:700; }
+  .mod-b{ padding:20px 24px 22px; }
+  .mod-desc{ font-size:14.5px; margin:0 0 16px; color:#33291c; }
+  .mod-cols{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+  .mod-cols h4{ margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--brand-dark); }
+  .mod-cols ul{ margin:0; padding-left:18px; font-size:13.8px; } .mod-cols li{ margin-bottom:5px; }
+  .mod-cols .benef li::marker{ color:var(--good); }
+  .shots{ display:grid; gap:12px; align-items:start; }
+  .shots.dm{ grid-template-columns:1fr 260px; }
+  .shots.ddm{ grid-template-columns:1fr 1fr 190px; }
+  .shots.dd{ grid-template-columns:1fr 1fr; }
+  .shots.mm{ grid-template-columns:repeat(3,1fr); max-width:760px; }
+  figure{ margin:0; }
+  figure a{ display:block; border-radius:12px; overflow:hidden; border:1px solid #d9cbb0; background:#0A0A06; transition:transform .15s, box-shadow .15s; }
+  figure a:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(40,24,6,.2); }
+  figure.mob a{ border-radius:22px; border:0; background:none; }
+  figcaption{ font-size:12px; color:var(--ink-soft); margin-top:6px; display:flex; gap:6px; align-items:center; }
+  .tag{ font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; padding:2px 8px; border-radius:99px; }
+  .tag.b{ background:#ece3d2; color:#6b5a44; } .tag.a{ background:var(--brand); color:#fff; }
+  .proto-link{ display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-weight:700; font-size:13.5px; color:var(--brand-dark); text-decoration:none; border:1.5px solid #e9b98a; border-radius:10px; padding:8px 14px; background:#fff; }
+  .proto-link:hover{ background:var(--brand-soft); }
+
+  table{ width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; font-size:13.8px; }
+  thead th{ background:var(--dark2); color:#fff; text-align:left; padding:11px 14px; font-weight:700; font-size:12.5px; }
+  tbody td{ padding:10px 14px; border-top:1px solid var(--line); vertical-align:top; }
+  tbody tr:nth-child(even){ background:#fbf6ec; }
+  td.num, th.num{ text-align:right; white-space:nowrap; } td.center, th.center{ text-align:center; }
+  tfoot td{ padding:13px 14px; font-weight:800; border-top:2px solid var(--brand); background:var(--brand-soft); font-size:15px; }
+  .yes{ color:var(--good); font-weight:800; } .no{ color:var(--bad); font-weight:800; }
+  .options{ display:grid; grid-template-columns:1.15fr 1fr; gap:16px; margin-top:18px; }
+  .price-card{ border-radius:16px; padding:22px 24px; color:#fff; background:radial-gradient(400px 200px at 100% 0,rgba(232,137,30,.5),transparent 60%),var(--dark); position:relative; }
+  .price-card.alt{ background:var(--panel); color:var(--ink); border:1px solid var(--line); }
+  .pc-badge{ position:absolute; top:16px; right:16px; background:var(--brand); color:#fff; font-size:10.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; padding:3px 9px; border-radius:99px; }
+  .pc-label{ font-size:12px; text-transform:uppercase; letter-spacing:.6px; opacity:.85; font-weight:700; }
+  .pc-amount{ font-family:var(--fd); font-size:52px; line-height:1; margin:8px 0 4px; letter-spacing:.5px; }
+  .price-card.alt .pc-amount{ color:var(--brand-dark); }
+  .pc-note{ font-size:13px; opacity:.9; }
+  .pc-list{ margin:12px 0 0; padding-left:18px; font-size:13px; opacity:.92; } .pc-list li{ margin-bottom:3px; }
+  .timeline{ display:flex; flex-direction:column; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:4px 22px; }
+  .tl-item{ display:grid; grid-template-columns:110px 1fr; gap:18px; padding:13px 0; border-bottom:1px solid var(--line); }
+  .tl-item:last-child{ border-bottom:none; }
+  .tl-phase{ font-weight:800; color:var(--brand-dark); font-size:13px; }
+  .tl-desc b{ display:block; font-size:14px; margin-bottom:2px; } .tl-desc span{ font-size:13.3px; color:var(--ink-soft); }
+  .terms-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .terms-card{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 22px; }
+  .terms-card h3{ margin:0 0 10px; font-size:14.5px; color:var(--brand-dark); }
+  .terms-card ul{ margin:0; padding-left:18px; font-size:13.5px; } .terms-card li{ margin-bottom:6px; }
+  .clause-box{ background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--brand); border-radius:10px; padding:18px 22px; font-size:13.5px; color:var(--ink-soft); }
+  .clause-box p{ margin:0 0 10px; } .clause-box p:last-child{ margin-bottom:0; }
+  .signature-grid{ display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:56px; }
+  .sign-line{ border-top:1px solid var(--ink); padding-top:8px; font-size:13px; color:var(--ink-soft); }
+  footer.doc-footer{ text-align:center; font-size:12px; color:var(--ink-soft); margin-top:60px; padding-top:20px; border-top:1px solid var(--line); }
+  .toc{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px; }
+  .toc a{ display:flex; align-items:center; gap:10px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:9px 12px; text-decoration:none; color:var(--ink); font-size:13.5px; font-weight:600; }
+  .toc a:hover{ border-color:#e9b98a; }
+  .toc a span{ font-family:var(--fd); font-size:22px; color:var(--brand); line-height:1; width:22px; }
+  .toc a em{ margin-left:auto; font-style:normal; font-size:12px; color:var(--ink-soft); font-weight:500; white-space:nowrap; }
+  @media (max-width:760px){
+    .hero-in{ padding:26px 18px 24px; } .page{ padding:26px 16px 60px; }
+    .doc-header{ flex-direction:column; } .doc-meta{ text-align:left; }
+    .hero-title{ flex-direction:column; align-items:flex-start; } .hero-title h1{ font-size:40px; }
+    .client-box, .compare, .terms-grid, .signature-grid, .mod-cols, .options, .toc{ grid-template-columns:1fr; }
+    .mod-h{ flex-direction:column; align-items:flex-start; padding:16px 18px; } .mod-price{ text-align:left; }
+    .mod-b{ padding:16px 18px; }
+    .shots.dm, .shots.ddm, .shots.dd{ grid-template-columns:1fr; }
+    .shots figure.mob{ max-width:240px; }
+    .shots.mm{ grid-template-columns:1fr 1fr; }
+    table{ font-size:12.5px; } .infra th:nth-child(2), .infra td:nth-child(2){ display:none; } .tl-item{ grid-template-columns:80px 1fr; gap:12px; }
+    .visual-card{ flex-direction:column; align-items:flex-start; }
+  }
+  @media print{
+    body{ background:#fff; } .page{ padding:0 10px; max-width:100%; }
+    .hero-band{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    section, .module, .price-card, table{ page-break-inside:avoid; }
+    figure a{ box-shadow:none; transform:none; }
+    .proto-link, .vc-btn{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero-band"><div class="hero-in">
+  <div class="doc-header">
+    <div>
+      <div class="brand-name">Amicornios Soft</div>
+      <div class="brand-tag">Desarrollo de software · Plataformas web y móviles</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-title">COTIZACIÓN</div>
+      <div>N.º <b>COT-BRV-001</b></div>
+      <div>Fecha: <b>23/09/2026</b></div>
+      <div>Válida hasta: <b>23/10/2026</b></div>
+    </div>
+  </div>
+  <div class="hero-title">
+    <img src="assets/logo.jpg" alt="Bravos Fit Club">
+    <div>
+      <div class="eyebrow">Propuesta para Bravos Fit Club</div>
+      <h1>DE VITRINA DE DISTRIBUIDORES<br>A <em>PLATAFORMA DE VENTAS</em></h1>
+      <p>Modernización del sitio web con catálogo, localizador de distribuidores con mapa, pedidos por WhatsApp y un panel administrativo para gestionar todo sin tocar código.</p>
+    </div>
+  </div>
+</div></div>
+
+<div class="page">
+
+  <div class="client-box">
+    <div><div class="label">Preparado para</div><div class="value">Bravos Fit Club</div></div>
+    <div><div class="label">Proyecto</div><div class="value">Modernización de la plataforma web y panel administrativo</div></div>
+    <div><div class="label">Plazo estimado</div><div class="value">6 semanas</div></div>
+  </div>
+
+  <!-- 1 -->
+  <section>
+    <h2><span class="num">1</span>Resumen del proyecto</h2>
+    <p class="section-intro">
+      Hoy el sitio de Bravos cumple bien una función: mostrar dónde comprar. La propuesta lo convierte en una
+      plataforma comercial completa: el cliente ve los productos con precio, arma su pedido, encuentra al distribuidor
+      más cercano en un mapa y le envía el pedido por WhatsApp en un clic. Bravos administra productos, distribuidores
+      y promociones desde un panel privado, y mide qué funciona con estadísticas propias.
+    </p>
+    <div class="compare">
+      <div class="col before"><h3>Situación actual</h3><ul>
+        <li>Página centrada en listar distribuidores por ciudad</li>
+        <li>Precio general y sin botón de compra</li>
+        <li>Modal de producto con una imagen y un texto general</li>
+        <li>Distribuidores en listas, sin mapa ni distancia</li>
+        <li>Cualquier cambio de contenido requiere editar el código</li>
+        <li>Sin datos de qué productos o distribuidores generan interés</li>
+      </ul></div>
+      <div class="col after"><h3>Con la propuesta</h3><ul>
+        <li>Portada comercial con productos, precios y compra</li>
+        <li>Catálogo con filtros y ficha completa de cada producto</li>
+        <li>Localizador con mapa, ubicación del cliente y distancia</li>
+        <li>Carrito que envía el pedido por WhatsApp al distribuidor</li>
+        <li>Panel para gestionar productos, distribuidores y promociones</li>
+        <li>Estadísticas de visitas, consultas, pedidos y contactos</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <h2><span class="num">2</span>Prototipos interactivos</h2>
+    <p class="section-intro">
+      Para que puedas ver exactamente qué estás contratando, preparamos prototipos navegables de alta fidelidad de las 9
+      funcionalidades, con la identidad visual de Bravos. Puedes recorrerlos en vista de escritorio y de móvil, agregar
+      productos al carrito, buscar distribuidores en el mapa y probar el panel administrativo.
+    </p>
+    <div class="visual-card">
+      <div>
+        <div class="vc-title">PROTOTIPOS BRAVOS FIT CLUB</div>
+        <div class="vc-desc">Página principal (antes y después), catálogo y nuevo modal, localizador de distribuidores, carrito por WhatsApp, panel administrativo, productos, distribuidores, promociones y estadísticas.</div>
+        <div class="visual-tags"><span>9 prototipos</span><span>Escritorio y móvil</span><span>Navegables</span><span>Datos ficticios</span></div>
+      </div>
+      <a class="vc-btn" href="prototipos-bravos-fit-club.html#p1" target="_blank" rel="noopener">Abrir prototipos →</a>
+    </div>
+    <div class="note-box">
+      <b>Importante:</b> los prototipos son demostraciones visuales y no un sistema terminado. No se conectan a servicios reales
+      ni envían pedidos. Los distribuidores, teléfonos, pedidos, estadísticas e información nutricional que aparecen son
+      <b>datos ficticios de ejemplo</b> y no representan información real de Bravos. Las interfaces son referenciales y podrán
+      ajustarse durante el desarrollo, respetando siempre el alcance funcional contratado.
+    </div>
+    <div class="toc">
+      <a href="#m1"><span>1</span>Página principal<em>Bs 900</em></a>
+      <a href="#m2"><span>2</span>Catálogo y modal<em>Bs 800</em></a>
+      <a href="#m3"><span>3</span>Localizador<em>Bs 1,100</em></a>
+      <a href="#m4"><span>4</span>Carrito WhatsApp<em>Bs 900</em></a>
+      <a href="#m5"><span>5</span>Panel administrativo<em>Bs 900</em></a>
+      <a href="#m6"><span>6</span>Adm. productos<em>Bs 600</em></a>
+      <a href="#m7"><span>7</span>Adm. distribuidores<em>Bs 700</em></a>
+      <a href="#m8"><span>8</span>Adm. promociones<em>Bs 600</em></a>
+      <a href="#m9"><span>9</span>Estadísticas<em>Bs 900</em></a>
+    </div>
+  </section>
+
+  <!-- 3 MODULES -->
+  <section>
+    <h2><span class="num">3</span>Módulos de la propuesta</h2>
+    <p class="section-intro">Cada módulo incluye su descripción, funcionalidades, beneficios para Bravos, las vistas del prototipo y su precio. Haz clic en una imagen para verla en tamaño completo.</p>
+
+    <!-- M1 -->
+    <div class="module" id="m1">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">01</span><div><h3>Modernización de la página principal</h3><small>Portada comercial orientada a la venta</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 900</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Rediseño de la portada para que, además de mostrar dónde comprar, venda: presenta el producto, su precio y los sabores, y lleva al cliente a comprar o a encontrar a su distribuidor en pocos pasos.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Encabezado moderno con menú, buscador y acceso al carrito</li><li>Banner promocional con precio y cuenta regresiva</li><li>Productos destacados con precio y botón de compra</li><li>Buscador de distribuidores por departamento y ciudad</li><li>Sección de beneficios y modo de consumo</li><li>Llamado para nuevos distribuidores y footer completo</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Más visitantes pasan de mirar a comprar</li><li>Las promociones se ven apenas se entra al sitio</li><li>Imagen de marca más profesional y confiable</li><li>Experiencia pensada primero para el celular</li></ul></div>
+        </div>
+        <div class="shots ddm">
+          <figure><a href="assets/capturas/m1-antes-desktop.jpg" target="_blank"><img src="assets/capturas/m1-antes-desktop.jpg" alt="Página actual" loading="lazy"></a><figcaption><span class="tag b">Antes</span>Página actual</figcaption></figure>
+          <figure><a href="assets/capturas/m1-desktop.jpg" target="_blank"><img src="assets/capturas/m1-desktop.jpg" alt="Nueva portada en escritorio" loading="lazy"></a><figcaption><span class="tag a">Después</span>Nueva portada · escritorio</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m1-mobile.jpg" target="_blank"><img src="assets/capturas/m1-mobile.jpg" alt="Nueva portada en móvil" loading="lazy"></a><figcaption><span class="tag a">Después</span>Móvil</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p1" target="_blank">Abrir prototipo interactivo 1 →</a>
+      </div>
+    </div>
+
+    <!-- M2 -->
+    <div class="module" id="m2">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">02</span><div><h3>Catálogo de productos y nuevo modal</h3><small>Ficha completa para decidir la compra</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 800</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Catálogo con todos los productos en tarjetas y un nuevo modal de producto con galería, información nutricional, ingredientes, preparación, precio y compra directa.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Tarjetas con foto, nombre, precio, presentación y disponibilidad</li><li>Filtros por sabor y presentación, búsqueda y orden</li><li>Botones “Ver detalles” y “Agregar al carrito”</li><li>Modal con imagen principal y galería de fotos</li><li>Pestañas: descripción, nutrición, ingredientes y preparación</li><li>Selector de cantidad, agregar al carrito y buscar distribuidores</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>El cliente resuelve sus dudas sin escribir por WhatsApp</li><li>Cada sabor tiene su propia ficha y fotos</li><li>Preparado para sumar nuevos productos y packs</li><li>Menos pasos entre ver el producto y pedirlo</li></ul></div>
+        </div>
+        <div class="shots dm">
+          <figure><a href="assets/capturas/m2-desktop.jpg" target="_blank"><img src="assets/capturas/m2-desktop.jpg" alt="Catálogo" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Catálogo · escritorio</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m2-mobile.jpg" target="_blank"><img src="assets/capturas/m2-mobile.jpg" alt="Catálogo en móvil" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Catálogo · móvil</figcaption></figure>
+        </div>
+        <div class="shots ddm" style="margin-top:12px">
+          <figure><a href="assets/capturas/m2-modal-antes-desktop.jpg" target="_blank"><img src="assets/capturas/m2-modal-antes-desktop.jpg" alt="Modal actual" loading="lazy"></a><figcaption><span class="tag b">Antes</span>Modal actual</figcaption></figure>
+          <figure><a href="assets/capturas/m2-modal-desktop.jpg" target="_blank"><img src="assets/capturas/m2-modal-desktop.jpg" alt="Nuevo modal de producto" loading="lazy"></a><figcaption><span class="tag a">Después</span>Nuevo modal · escritorio</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m2-modal-mobile.jpg" target="_blank"><img src="assets/capturas/m2-modal-mobile.jpg" alt="Nuevo modal en móvil" loading="lazy"></a><figcaption><span class="tag a">Después</span>Móvil</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p2" target="_blank">Abrir prototipo interactivo 2 →</a>
+      </div>
+    </div>
+
+    <!-- M3 -->
+    <div class="module" id="m3">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">03</span><div><h3>Localizador de distribuidores</h3><small>Mapa interactivo, cercanía y contacto directo</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 1,100</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Reemplaza las listas por ciudad por un buscador con mapa: el cliente filtra por departamento, ciudad o zona, o usa su ubicación, y ve los distribuidores más cercanos con la distancia aproximada.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Buscador por departamento, ciudad y zona</li><li>Botón para detectar la ubicación del cliente (con su permiso)</li><li>Mapa interactivo con marcadores de cada distribuidor</li><li>Listado ordenado por cercanía con distancia aproximada</li><li>Botón “Cómo llegar” que abre Google Maps</li><li>Botón de WhatsApp con mensaje precargado</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Cada cliente llega al punto de venta correcto</li><li>Más contactos para la red de distribuidores</li><li>Escala sin esfuerzo al sumar nuevas ciudades</li><li>Sin costos de licencias de mapas (OpenStreetMap)</li></ul></div>
+        </div>
+        <div class="shots dm">
+          <figure><a href="assets/capturas/m3-desktop.jpg" target="_blank"><img src="assets/capturas/m3-desktop.jpg" alt="Localizador de distribuidores" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Localizador con ubicación del cliente · escritorio</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m3-mobile.jpg" target="_blank"><img src="assets/capturas/m3-mobile.jpg" alt="Localizador en móvil" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Móvil</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p3" target="_blank">Abrir prototipo interactivo 3 →</a>
+      </div>
+    </div>
+
+    <!-- M4 -->
+    <div class="module" id="m4">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">04</span><div><h3>Carrito de compras por WhatsApp</h3><small>Pedidos listos para el distribuidor</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 900</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">El cliente arma su pedido en el sitio, elige ciudad y distribuidor, y lo envía por WhatsApp con un mensaje ordenado con productos, cantidades, total y datos de entrega. Sin pasarela de pago: el cobro y la entrega los coordina el distribuidor, como hoy.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>1. Selección de productos y cantidades</li><li>2. Carrito con edición y total estimado</li><li>3. Selección de departamento y ciudad</li><li>4. Selección de distribuidor, ordenado por cercanía</li><li>5. Resumen con datos del cliente y forma de entrega</li><li>6. Envío por WhatsApp con el mensaje armado automáticamente</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Pedidos claros y completos, sin idas y vueltas</li><li>Cada pedido queda registrado para las estadísticas</li><li>Sin comisiones de pasarelas de pago</li><li>Los distribuidores reciben clientes listos para comprar</li></ul></div>
+        </div>
+        <div class="shots mm">
+          <figure class="mob"><a href="assets/capturas/m4-carrito-mobile.jpg" target="_blank"><img src="assets/capturas/m4-carrito-mobile.jpg" alt="Carrito" loading="lazy"></a><figcaption>Paso 2 · Carrito</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m4-distribuidor-mobile.jpg" target="_blank"><img src="assets/capturas/m4-distribuidor-mobile.jpg" alt="Selección de distribuidor" loading="lazy"></a><figcaption>Paso 4 · Distribuidor</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m4-whatsapp-mobile.jpg" target="_blank"><img src="assets/capturas/m4-whatsapp-mobile.jpg" alt="Mensaje de WhatsApp" loading="lazy"></a><figcaption>Paso 6 · Mensaje que recibe el distribuidor</figcaption></figure>
+        </div>
+        <div class="shots" style="margin-top:12px">
+          <figure><a href="assets/capturas/m4-whatsapp-desktop.jpg" target="_blank"><img src="assets/capturas/m4-whatsapp-desktop.jpg" alt="Confirmación y envío por WhatsApp" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Confirmación y envío · escritorio</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p4" target="_blank">Abrir prototipo interactivo 4 →</a>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="module" id="m5">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">05</span><div><h3>Panel administrativo</h3><small>Base del sistema de gestión</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 900</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Sistema privado con acceso por usuario y contraseña desde el que Bravos gestiona su sitio. Incluye la estructura del panel, el dashboard principal y la configuración general.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Inicio de sesión seguro y menú lateral</li><li>Dashboard con indicadores, pedidos recientes y promoción activa</li><li>Configuración general: marca, contacto y redes</li><li>Plantilla editable del mensaje de pedido por WhatsApp</li><li>Usuarios del panel con roles (administrador y editor)</li><li>Diseño adaptable a computadora y celular</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Autonomía total: sin depender de un programador</li><li>Visión rápida del negocio en una sola pantalla</li><li>Varias personas del equipo pueden colaborar</li><li>Cambios publicados al instante</li></ul></div>
+        </div>
+        <div class="shots dm">
+          <figure><a href="assets/capturas/m5-desktop.jpg" target="_blank"><img src="assets/capturas/m5-desktop.jpg" alt="Dashboard del panel" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Dashboard · escritorio</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m5-mobile.jpg" target="_blank"><img src="assets/capturas/m5-mobile.jpg" alt="Dashboard en móvil" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Móvil</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p5" target="_blank">Abrir prototipo interactivo 5 →</a>
+      </div>
+    </div>
+
+    <!-- M6 -->
+    <div class="module" id="m6">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">06</span><div><h3>Administración de productos</h3><small>Catálogo editable desde el panel</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 600</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Gestión completa del catálogo: agregar, editar, duplicar, ocultar o eliminar productos, con sus fotos, precios, presentación, disponibilidad y ficha nutricional.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Tabla con fotografía, nombre, sabor, precio, presentación y estado</li><li>Acciones: editar, duplicar, publicar u ocultar, eliminar</li><li>Formulario con carga de hasta 5 fotos por producto</li><li>Precio actual y precio anterior (se muestra tachado)</li><li>Disponibilidad y etiquetas destacadas (ej.: “Más vendido”)</li><li>Información nutricional, ingredientes y preparación</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Lanzar un sabor nuevo toma minutos</li><li>Precios y stock siempre actualizados</li><li>Ediciones limitadas que se pueden ocultar al agotarse</li><li>Información consistente en todo el sitio</li></ul></div>
+        </div>
+        <div class="shots dd">
+          <figure><a href="assets/capturas/m6-desktop.jpg" target="_blank"><img src="assets/capturas/m6-desktop.jpg" alt="Tabla de productos" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Tabla de productos</figcaption></figure>
+          <figure><a href="assets/capturas/m6-form-desktop.jpg" target="_blank"><img src="assets/capturas/m6-form-desktop.jpg" alt="Formulario de producto" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Formulario de alta y edición</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p6" target="_blank">Abrir prototipo interactivo 6 →</a>
+      </div>
+    </div>
+
+    <!-- M7 -->
+    <div class="module" id="m7">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">07</span><div><h3>Administración de distribuidores</h3><small>Red de venta con ubicación en mapa</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 700</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Registro y mantenimiento de la red de distribuidores. Cada punto de venta se ubica haciendo clic en el mapa y aparece automáticamente en el localizador y en el carrito de pedidos.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Tabla con nombre comercial, departamento, ciudad, zona, teléfono, WhatsApp, ubicación y estado</li><li>Búsqueda y filtro por departamento</li><li>Formulario de registro con horario de atención</li><li>Selección de ubicación en el mapa (marcador arrastrable)</li><li>Activar o desactivar distribuidores sin eliminarlos</li><li>Carga inicial de los distribuidores actuales del sitio</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Sumar un distribuidor nuevo toma un minuto</li><li>Ubicaciones exactas, sin errores de dirección</li><li>La red crece sin rediseñar el sitio</li><li>Control de quién aparece en cada ciudad</li></ul></div>
+        </div>
+        <div class="shots dd">
+          <figure><a href="assets/capturas/m7-desktop.jpg" target="_blank"><img src="assets/capturas/m7-desktop.jpg" alt="Tabla de distribuidores" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Tabla de distribuidores</figcaption></figure>
+          <figure><a href="assets/capturas/m7-form-desktop.jpg" target="_blank"><img src="assets/capturas/m7-form-desktop.jpg" alt="Formulario con mapa" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Registro con selección en el mapa</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p7" target="_blank">Abrir prototipo interactivo 7 →</a>
+      </div>
+    </div>
+
+    <!-- M8 -->
+    <div class="module" id="m8">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">08</span><div><h3>Administración de promociones</h3><small>Ofertas programables con vista previa</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 600</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Crea promociones por producto con precio especial y fechas de vigencia. Se activan y desactivan solas en las fechas elegidas, y una vista previa muestra cómo se verán en el sitio antes de publicarlas.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Registro de promociones con nombre y texto de la barra superior</li><li>Selección de los productos incluidos</li><li>Precio promocional y porcentaje de descuento automático</li><li>Fecha de inicio y de finalización</li><li>Activar o desactivar con un interruptor</li><li>Vista previa en vivo y cuenta regresiva opcional</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Campañas (Black Friday, lanzamientos) preparadas con anticipación</li><li>Las ofertas terminan a tiempo, sin olvidos</li><li>Urgencia de compra con la cuenta regresiva</li><li>Se ve el resultado antes de publicar</li></ul></div>
+        </div>
+        <div class="shots dm">
+          <figure><a href="assets/capturas/m8-desktop.jpg" target="_blank"><img src="assets/capturas/m8-desktop.jpg" alt="Promociones" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Promociones con vista previa · escritorio</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m8-mobile.jpg" target="_blank"><img src="assets/capturas/m8-mobile.jpg" alt="Promociones en móvil" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Móvil</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p8" target="_blank">Abrir prototipo interactivo 8 →</a>
+      </div>
+    </div>
+
+    <!-- M9 -->
+    <div class="module" id="m9">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">09</span><div><h3>Dashboard estadístico</h3><small>Datos para decidir mejor</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 900</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Registro automático de la actividad del sitio y un tablero con indicadores y gráficos para saber qué productos interesan más, qué distribuidores reciben más contactos y de qué ciudades llegan los clientes.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Indicadores: visitas, consultas de productos, pedidos y clics en WhatsApp</li><li>Gráfico de barras de pedidos generados por día o semana</li><li>Gráfico circular de visitas por ciudad</li><li>Ranking de productos más consultados</li><li>Ranking de distribuidores más contactados</li><li>Filtro por periodo (7, 30 y 90 días) y exportación de datos</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Saber qué sabores impulsar y cuáles revisar</li><li>Detectar ciudades con demanda y sin distribuidores</li><li>Medir el resultado real de cada promoción</li><li>Información para negociar con la red de venta</li></ul></div>
+        </div>
+        <div class="shots dm">
+          <figure><a href="assets/capturas/m9-desktop.jpg" target="_blank"><img src="assets/capturas/m9-desktop.jpg" alt="Dashboard estadístico" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Estadísticas · escritorio (datos ficticios)</figcaption></figure>
+          <figure class="mob"><a href="assets/capturas/m9-mobile.jpg" target="_blank"><img src="assets/capturas/m9-mobile.jpg" alt="Estadísticas en móvil" loading="lazy"></a><figcaption><span class="tag a">Nuevo</span>Móvil</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos-bravos-fit-club.html#p9" target="_blank">Abrir prototipo interactivo 9 →</a>
+      </div>
+    </div>
+
+    <!-- M10 -->
+    <div class="module" id="m10">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">10</span><div><h3>Base técnica, migración y puesta en marcha</h3><small>Lo que sostiene a todos los módulos</small></div></div><div class="mod-price"><span>Inversión</span><b>Bs 800</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Infraestructura necesaria para que el sitio y el panel funcionen de forma segura y rápida, más el traslado de la información actual y la publicación final.</p>
+        <div class="mod-cols">
+          <div><h4>Funcionalidades</h4><ul><li>Base de datos, autenticación y almacenamiento de imágenes</li><li>Migración de los distribuidores y productos actuales del sitio</li><li>Registro de eventos para las estadísticas</li><li>Optimización de velocidad e imágenes para celular</li><li>SEO básico y conservación de Google Analytics actual</li><li>Pruebas funcionales, despliegue y dominio</li></ul></div>
+          <div class="benef"><h4>Beneficios para Bravos</h4><ul><li>Se conserva toda la información actual</li><li>Sitio rápido, seguro y con respaldos</li><li>Mejor posicionamiento en Google</li><li>Transición sin interrupciones del sitio actual</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <h2><span class="num">4</span>Resumen de inversión</h2>
+    <table>
+      <thead><tr><th>#</th><th>Módulo</th><th>Alcance</th><th class="num">Inversión (Bs)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Página principal</td><td>Encabezado, banner, destacados, precios, carrito, buscador, beneficios, footer</td><td class="num">900</td></tr>
+        <tr><td>2</td><td>Catálogo y modal</td><td>Tarjetas, filtros, galería, nutrición, ingredientes, preparación, cantidad</td><td class="num">800</td></tr>
+        <tr><td>3</td><td>Localizador de distribuidores</td><td>Filtros, ubicación, mapa, marcadores, distancia, Google Maps, WhatsApp</td><td class="num">1,100</td></tr>
+        <tr><td>4</td><td>Carrito por WhatsApp</td><td>Flujo de 6 pantallas y mensaje automático al distribuidor</td><td class="num">900</td></tr>
+        <tr><td>5</td><td>Panel administrativo</td><td>Acceso seguro, menú, dashboard, configuración y usuarios</td><td class="num">900</td></tr>
+        <tr><td>6</td><td>Administración de productos</td><td>Tabla, alta, edición, fotos y ficha nutricional</td><td class="num">600</td></tr>
+        <tr><td>7</td><td>Administración de distribuidores</td><td>Tabla, registro y ubicación en mapa</td><td class="num">700</td></tr>
+        <tr><td>8</td><td>Administración de promociones</td><td>Productos, precio, vigencia, activación y vista previa</td><td class="num">600</td></tr>
+        <tr><td>9</td><td>Dashboard estadístico</td><td>Indicadores, gráficos y rankings</td><td class="num">900</td></tr>
+        <tr><td>10</td><td>Base técnica y puesta en marcha</td><td>Base de datos, migración, SEO, pruebas y despliegue</td><td class="num">800</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="3">Total del proyecto completo</td><td class="num">Bs 8,200</td></tr></tfoot>
+    </table>
+
+    <div class="options">
+      <div class="price-card">
+        <span class="pc-badge">Recomendada</span>
+        <div class="pc-label">Opción A · Plataforma completa</div>
+        <div class="pc-amount">Bs 8,200</div>
+        <div class="pc-note">Módulos 1 al 10 · ≈ 6 semanas</div>
+        <ul class="pc-list"><li>Sitio público con catálogo, localizador y carrito</li><li>Panel administrativo con productos, distribuidores y promociones</li><li>Estadísticas propias desde el primer día</li></ul>
+      </div>
+      <div class="price-card alt">
+        <div class="pc-label">Opción B · Solo sitio público</div>
+        <div class="pc-amount">Bs 4,500</div>
+        <div class="pc-note">Módulos 1 al 4 + base técnica (módulo 10) · ≈ 3–4 semanas</div>
+        <ul class="pc-list"><li>Sin panel: el contenido se actualiza a pedido, dentro del plan de soporte</li><li>El panel y las estadísticas se pueden sumar después (Bs 4,000)</li></ul>
+      </div>
+    </div>
+    <div class="note-box">Montos en bolivianos (Bs). No incluyen impuestos de facturación si se requiere factura. Los costos de infraestructura recurrentes se detallan en la sección 7.</div>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <h2><span class="num">5</span>Cronograma de trabajo</h2>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-phase">Semana 1</div><div class="tl-desc"><b>Diseño final y base técnica</b><span>Ajustes de diseño sobre los prototipos aprobados, base de datos, autenticación y migración de distribuidores actuales.</span></div></div>
+      <div class="tl-item"><div class="tl-phase">Semana 2</div><div class="tl-desc"><b>Página principal y catálogo</b><span>Nueva portada, catálogo de productos y modal con galería, nutrición, ingredientes y preparación.</span></div></div>
+      <div class="tl-item"><div class="tl-phase">Semana 3</div><div class="tl-desc"><b>Localizador y carrito por WhatsApp</b><span>Mapa interactivo, geolocalización, distancias y flujo completo de pedido.</span></div></div>
+      <div class="tl-item"><div class="tl-phase">Semana 4</div><div class="tl-desc"><b>Panel: dashboard, productos y distribuidores</b><span>Acceso seguro, dashboard, gestión de productos y de distribuidores con mapa. Entrega de versión beta.</span></div></div>
+      <div class="tl-item"><div class="tl-phase">Semana 5</div><div class="tl-desc"><b>Promociones, estadísticas y configuración</b><span>Gestión de promociones programadas, registro de eventos y tablero estadístico.</span></div></div>
+      <div class="tl-item"><div class="tl-phase">Semana 6</div><div class="tl-desc"><b>Pruebas, capacitación y lanzamiento</b><span>Pruebas en celulares y computadoras, correcciones, capacitación y publicación en producción.</span></div></div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <h2><span class="num">6</span>Tecnologías propuestas</h2>
+    <div class="terms-grid">
+      <div class="terms-card"><h3>Sitio y panel</h3><ul><li>Aplicación web moderna (React / Next.js), responsive y optimizada para celular</li></ul></div>
+      <div class="terms-card"><h3>Datos y acceso</h3><ul><li>Supabase (PostgreSQL): base de datos, autenticación y almacenamiento de imágenes</li></ul></div>
+      <div class="terms-card"><h3>Mapas</h3><ul><li>Leaflet con OpenStreetMap: sin costo de licencia; enlaces directos a Google Maps</li></ul></div>
+      <div class="terms-card"><h3>WhatsApp</h3><ul><li>Enlaces de WhatsApp con mensaje precargado (sin costo). No requiere la API de WhatsApp Business</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <h2><span class="num">7</span>Costos de infraestructura</h2>
+    <p class="section-intro">No forman parte del costo de desarrollo: son costos operativos recurrentes que paga Bravos directamente a cada proveedor.</p>
+    <table class="infra">
+      <thead><tr><th>Servicio</th><th>Detalle</th><th class="num">Mensual</th><th class="num">Anual</th></tr></thead>
+      <tbody>
+        <tr><td>Hosting del sitio y del panel</td><td>Plan gratuito al inicio; plan pago si el tráfico crece</td><td class="num">Bs 0 – 140</td><td class="num">Bs 0 – 1,680</td></tr>
+        <tr><td>Base de datos y almacenamiento</td><td>Plan gratuito al inicio; plan Pro si crece el volumen</td><td class="num">Bs 0 – 180</td><td class="num">Bs 0 – 2,160</td></tr>
+        <tr><td>Dominio propio (opcional)</td><td>.com o .com.bo, según disponibilidad</td><td class="num">—</td><td class="num">Bs 100 – 350</td></tr>
+        <tr><td>Mapas y WhatsApp</td><td>OpenStreetMap y enlaces de WhatsApp</td><td class="num">Bs 0</td><td class="num">Bs 0</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 8 -->
+  <section>
+    <h2><span class="num">8</span>Condiciones de pago</h2>
+    <div class="terms-grid">
+      <div class="terms-card"><h3>Forma de pago</h3><ul><li>40% al inicio del proyecto</li><li>30% a la entrega de la versión beta (semana 4)</li><li>30% contra entrega final</li></ul></div>
+      <div class="terms-card"><h3>Vigencia</h3><ul><li>Cotización válida por 30 días desde su emisión</li><li>Montos expresados en bolivianos (Bs)</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section>
+    <h2><span class="num">9</span>Sobre los prototipos</h2>
+    <div class="clause-box">
+      <p>Los prototipos que acompañan esta cotización son demostraciones visuales de las funcionalidades propuestas y no constituyen un sistema terminado. No se conectan a servicios reales, no envían pedidos ni mensajes de WhatsApp y no almacenan información.</p>
+      <p>Los distribuidores, teléfonos, ubicaciones, pedidos, clientes, estadísticas, información nutricional e ingredientes mostrados son datos ficticios de ejemplo y no representan información real de Bravos Fit Club. Las fotografías de producto y el logotipo se tomaron del sitio actual solo con fines de referencia.</p>
+      <p>Las interfaces son referenciales: colores, tipografía, textos y disposición de elementos podrán ajustarse durante el desarrollo, respetando siempre el alcance funcional contratado en esta cotización.</p>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section>
+    <h2><span class="num">10</span>Modificaciones de alcance y precio</h2>
+    <div class="clause-box">
+      <p>Una vez aprobada esta cotización y definido el alcance del proyecto, cualquier solicitud de incorporación, eliminación o modificación de funcionalidades estará sujeta a una nueva evaluación técnica y económica por parte de Amicornios Soft.</p>
+      <p>Las modificaciones podrán generar ajustes en el precio final y en el plazo de entrega. Todo cambio deberá acordarse previamente entre el cliente y Amicornios Soft antes de su implementación.</p>
+      <p>La eliminación de funcionalidades no implica automáticamente una reducción proporcional del precio, especialmente cuando dichas funcionalidades ya hayan sido desarrolladas o se encuentren en proceso de implementación.</p>
+      <p>Las correcciones de errores correspondientes a las funcionalidades originalmente contratadas no se consideran nuevas funcionalidades; están cubiertas por la garantía descrita en la sección 13.</p>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section>
+    <h2><span class="num">11</span>Consideraciones y exclusiones</h2>
+    <table>
+      <thead><tr><th>Funcionalidad</th><th class="center">Incluida</th><th>Detalle</th></tr></thead>
+      <tbody>
+        <tr><td>Los 10 módulos descritos en la sección 3</td><td class="center yes">Sí</td><td>Según la opción contratada</td></tr>
+        <tr><td>Migración de distribuidores y productos actuales</td><td class="center yes">Sí</td><td>Desde el sitio actual</td></tr>
+        <tr><td>Pasarela de pagos en línea (tarjeta, QR)</td><td class="center no">No</td><td>El pago se coordina con el distribuidor; se cotiza aparte</td></tr>
+        <tr><td>API oficial de WhatsApp Business / bots</td><td class="center no">No</td><td>Se usan enlaces de WhatsApp sin costo; se cotiza aparte</td></tr>
+        <tr><td>Control de inventario por distribuidor</td><td class="center no">No</td><td>Módulo adicional, se cotiza aparte</td></tr>
+        <tr><td>Aplicación móvil nativa (App Store / Play Store)</td><td class="center no">No</td><td>El sitio funciona en el navegador del celular</td></tr>
+        <tr><td>Fotografía, redacción y datos nutricionales reales</td><td class="center no">No</td><td>El contenido lo aporta Bravos</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 12 -->
+  <section>
+    <h2><span class="num">12</span>Entregables finales</h2>
+    <div class="terms-card"><ul>
+      <li>Sitio web y panel administrativo funcionales, publicados en producción</li>
+      <li>Código fuente del proyecto</li>
+      <li>Capacitación de uso del panel (una sesión en vivo)</li>
+      <li>Video tutorial sobre cómo administrar productos, distribuidores y promociones</li>
+      <li>Accesos a todos los servicios a nombre de Bravos Fit Club</li>
+    </ul></div>
+  </section>
+
+  <!-- 13 -->
+  <section>
+    <h2><span class="num">13</span>Garantía y soporte técnico</h2>
+    <div class="terms-grid">
+      <div class="terms-card"><h3>Garantía</h3><ul><li>30 días de corrección de errores sin costo tras la entrega</li></ul></div>
+      <div class="terms-card"><h3>Soporte continuo (opcional)</h3><ul><li>Plan de mantenimiento mensual desde Bs 500/mes: actualizaciones, respaldos y ajustes menores</li></ul></div>
+    </div>
+  </section>
+
+  <div class="signature-grid">
+    <div class="sign-line">Firma — Representante, Amicornios Soft</div>
+    <div class="sign-line">Firma — Bravos Fit Club</div>
+  </div>
+
+  <footer class="doc-footer">
+    Amicornios Soft · [correo@ejemplo.com] · [+591 000 00000] · Cotización N.º COT-BRV-001
+  </footer>
+</div>
+</body>
+</html>
