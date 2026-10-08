@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotización SHOKPROTEIN</title>
+<meta name="description" content="Propuesta comercial para el diseño y desarrollo desde cero del sitio web de SHOKPROTEIN: sitio corporativo, catálogo de productos, WhatsApp y panel administrativo. Inversión: Bs 5.000.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Identidad SHOKPROTEIN: #D5AF04 · #121112 · #B39302 · #050505 */
+  :root{
+    --y:#D5AF04; --y2:#B39302; --k:#121112; --k0:#050505;
+    --ysoft:#fbf4d2; --yline:#ecd98a;
+    --ink:#121112; --ink2:#55524b; --line:#e4e0d4; --bg:#f5f3ec; --panel:#fff;
+    --good:#2f7d4f; --bad:#b3261e;
+    --fd:'Anton',Impact,'Arial Narrow',sans-serif;
+    --fc:'Barlow Condensed','Arial Narrow',sans-serif;
+    --fb:'Barlow','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--fb);background:var(--bg);color:var(--ink);line-height:1.55;font-size:15px}
+  img{max-width:100%;display:block}
+  a{color:var(--y2)}
+
+  /* ---------- PORTADA ---------- */
+  .cover{position:relative;overflow:hidden;color:#fff;background:radial-gradient(800px 420px at 0 0,rgba(213,175,4,.14),transparent 60%),var(--k0)}
+  .cover .slab{position:absolute;top:0;bottom:0;right:-12%;width:44%;background:linear-gradient(160deg,var(--y),var(--y2));transform:skewX(-11deg)}
+  .cover .bgw{position:absolute;left:-12px;bottom:-60px;font-family:var(--fd);font-size:230px;line-height:1;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.06);white-space:nowrap;pointer-events:none}
+  .cover-in{position:relative;max-width:1080px;margin:0 auto;padding:34px 40px 46px}
+  .doc-header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+  .dev-name{font-size:21px;font-weight:800;letter-spacing:.3px}
+  .dev-tag{font-size:13px;color:#a9a497;margin-top:2px}
+  .doc-meta{text-align:right;font-size:13px;color:#bdb8aa;background:rgba(5,5,5,.7);border:1px solid #2c2a2c;border-radius:10px;padding:10px 14px}
+  .doc-meta .t{font-family:var(--fd);font-size:30px;line-height:1;color:#fff;letter-spacing:1px;margin-bottom:6px}
+  .doc-meta b{color:#fff}
+  .cover-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:30px;align-items:center;margin-top:40px}
+  .eyebrow{font-family:var(--fc);font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:var(--y)}
+  .brandmark{font-family:var(--fd);font-size:30px;letter-spacing:.6px;line-height:1;margin:14px 0 4px;display:inline-flex;align-items:center;gap:4px}
+  .brandmark b{font-weight:400;color:var(--y)}
+  .brandmark svg{width:22px;height:22px;fill:var(--y)}
+  .cover h1{font-family:var(--fd);font-weight:400;font-size:66px;line-height:.95;text-transform:uppercase;margin:10px 0 14px;letter-spacing:.4px}
+  .cover h1 em{font-style:normal;color:var(--y)}
+  .cover p.lead{margin:0;color:#d9d4c7;font-size:16px;max-width:470px}
+  .cover-kpis{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+  .ck{background:rgba(255,255,255,.05);border:1px solid #2c2a2c;border-radius:10px;padding:10px 14px}
+  .ck b{display:block;font-family:var(--fd);font-weight:400;font-size:26px;line-height:1}
+  .ck span{font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:#a9a497;font-family:var(--fc);font-weight:700}
+  .ck.y{background:var(--y);border-color:var(--y);color:var(--k0)}
+  .ck.y span{color:#3a3003}
+  .mock{position:relative;height:400px}
+  .mock .lap{position:absolute;left:0;top:10px;width:88%;border-radius:12px;overflow:hidden;border:1px solid #333;background:#141314;box-shadow:0 30px 60px rgba(0,0,0,.55)}
+  .mock .lap .bar{height:22px;display:flex;align-items:center;gap:5px;padding:0 10px;background:#1b1a1b}
+  .mock .lap .bar i{width:8px;height:8px;border-radius:50%;background:#444}
+  .mock .lap .scr{height:330px;overflow:hidden}
+  .mock .lap img{width:100%}
+  .mock .phone{position:absolute;right:0;bottom:0;width:150px;border:7px solid #1c1b1c;border-radius:26px;overflow:hidden;background:#000;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+  .mock .phone .scr{height:300px;overflow:hidden}
+  .parties{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+  .party{background:rgba(5,5,5,.78);border:1px solid #2c2a2c;border-radius:12px;padding:16px 18px;font-size:13.5px;color:#d9d4c7}
+  .party .lb{font-family:var(--fc);font-weight:700;font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--y);margin-bottom:6px}
+  .party b{color:#fff;font-size:16px;display:block;margin-bottom:4px}
+  .party .pend{color:#a9a497;font-style:italic}
+
+  /* ---------- CUERPO ---------- */
+  .page{max-width:1080px;margin:0 auto;padding:44px 40px 80px}
+  section{margin-bottom:52px}
+  h2{font-family:var(--fd);font-weight:400;font-size:34px;line-height:1;text-transform:uppercase;letter-spacing:.4px;color:var(--ink);margin:0 0 10px;display:flex;align-items:center;gap:12px}
+  h2 .num{display:inline-grid;place-items:center;min-width:40px;height:40px;padding:0 6px;border-radius:8px;background:var(--k0);color:var(--y);font-size:20px;flex:none}
+  .intro{color:var(--ink2);font-size:15px;margin:0 0 20px;max-width:820px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--y);border-radius:10px;padding:14px 16px}
+  .kpi b{display:block;font-family:var(--fd);font-weight:400;font-size:28px;line-height:1.05}
+  .kpi span{font-size:13px;color:var(--ink2)}
+  .goals{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .goal{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .goal .n{font-family:var(--fd);font-size:26px;line-height:1;color:var(--y2)}
+  .goal b{display:block;font-size:15.5px;margin:6px 0 4px}
+  .goal p{margin:0;font-size:13.8px;color:var(--ink2)}
+  .scope{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .sc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;break-inside:avoid}
+  .sc h3{margin:0 0 2px;font-family:var(--fc);font-weight:700;font-size:18px;letter-spacing:.6px;text-transform:uppercase}
+  .sc h3 small{display:block;font-size:12px;color:var(--y2);letter-spacing:1.5px}
+  .sc ul{margin:10px 0 10px;padding-left:18px;font-size:13.8px}
+  .sc li{margin-bottom:3px}
+  .sc .to{font-size:12px;font-weight:700;background:var(--ysoft);color:#5f4d00;border-radius:99px;padding:3px 10px;display:inline-block}
+
+  .visual-card{display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;color:#fff;border-radius:18px;padding:26px 28px;background:radial-gradient(500px 240px at 100% 0,rgba(213,175,4,.35),transparent 60%),var(--k)}
+  .vc-title{font-family:var(--fd);font-size:30px;letter-spacing:.6px;line-height:1;text-transform:uppercase}
+  .vc-title b{font-weight:400;color:var(--y)}
+  .vc-desc{font-size:14px;color:#d0cbbd;max-width:600px;margin-top:8px}
+  .vc-btn{display:inline-flex;align-items:center;gap:8px;background:var(--y);color:var(--k0)!important;font-family:var(--fc);font-weight:700;font-size:17px;letter-spacing:1px;text-transform:uppercase;padding:13px 22px;border-radius:8px;text-decoration:none;white-space:nowrap}
+  .vc-btn:hover{background:var(--y2)}
+  .tags{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .tags span{background:rgba(255,255,255,.07);border:1px solid #333;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:999px;color:#e6e1d3}
+  .note{background:var(--ysoft);border:1px solid var(--yline);border-radius:12px;padding:14px 18px;font-size:13.5px;color:#4a3d00;margin-top:16px}
+  .note b{color:#2e2600}
+
+  /* partidas */
+  .mod{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
+  .mod-h{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 22px;background:var(--k);color:#fff;border-bottom:4px solid var(--y)}
+  .mod-t{display:flex;align-items:center;gap:14px}
+  .mod-n{font-family:var(--fd);font-size:40px;line-height:.85;color:var(--y)}
+  .mod-t h3{margin:0;font-size:19px;font-weight:800}
+  .mod-t small{display:block;font-size:12.5px;color:#b9b4a6;font-weight:500}
+  .mod-price{text-align:right;flex:none}
+  .mod-price b{display:block;font-family:var(--fd);font-weight:400;font-size:32px;line-height:1;color:var(--y)}
+  .mod-price span{font-size:11px;color:#b9b4a6;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+  .mod-b{padding:18px 22px 22px}
+  .mod-desc{font-size:14.5px;margin:0 0 14px;color:#33302a}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px}
+  .cols h4{margin:0 0 8px;font-family:var(--fc);font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:1.5px;color:var(--y2)}
+  .cols ul{margin:0;padding-left:18px;font-size:13.8px}
+  .cols li{margin-bottom:4px}
+  .cols .benef li::marker{color:var(--y2)}
+  .shots{display:grid;gap:14px;align-items:start}
+  .shots.dm{grid-template-columns:1fr 200px}
+  .shots.dmm{grid-template-columns:1fr 170px 170px}
+  .shots.dd{grid-template-columns:1fr 1fr}
+  .shots.mmm{grid-template-columns:repeat(3,190px);justify-content:center;gap:22px}
+  figure{margin:0}
+  figure a{display:block;text-decoration:none}
+  .bw{border-radius:10px;overflow:hidden;border:1px solid #d6d1c3;background:#141314}
+  .bw .bar{height:18px;display:flex;align-items:center;gap:4px;padding:0 8px;background:#1f1e1f}
+  .bw .bar i{width:7px;height:7px;border-radius:50%;background:#4a4a4a}
+  .bw .scr{max-height:430px;overflow:hidden}
+  .shots.dd .bw .scr{max-height:300px}
+  .pw{border:6px solid #1c1b1c;border-radius:24px;overflow:hidden;background:#000}
+  .pw .scr{aspect-ratio:9/18.5;overflow:hidden}
+  .bw img,.pw img{width:100%}
+  figure a:hover .bw,figure a:hover .pw{box-shadow:0 10px 24px rgba(18,17,18,.22)}
+  figcaption{font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.35}
+  figcaption b{color:var(--ink)}
+  .proto-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-weight:700;font-size:13.5px;color:var(--k0);text-decoration:none;border:1.5px solid var(--y);border-radius:8px;padding:8px 14px;background:var(--ysoft)}
+  .proto-link:hover{background:var(--y)}
+
+  /* tablas */
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);font-size:14px}
+  thead th{background:var(--k);color:#fff;text-align:left;padding:11px 14px;font-weight:700;font-size:12.5px;letter-spacing:.5px}
+  tbody td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:top}
+  tbody tr:nth-child(even){background:#faf9f4}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  td.center,th.center{text-align:center}
+  td small{color:var(--ink2)}
+  tfoot td{padding:14px;font-weight:800;background:var(--y);color:var(--k0);font-size:16px}
+  tfoot td.num{font-family:var(--fd);font-weight:400;font-size:26px}
+  .yes{color:var(--good);font-weight:800}.no{color:var(--bad);font-weight:800}
+  .total-band{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-top:16px}
+  .tb{border-radius:14px;padding:18px 22px;background:var(--panel);border:1px solid var(--line)}
+  .tb.main{background:radial-gradient(400px 200px at 100% 0,rgba(213,175,4,.4),transparent 60%),var(--k0);color:#fff;border:0}
+  .tb .lb{font-family:var(--fc);font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink2)}
+  .tb.main .lb{color:var(--y)}
+  .tb .am{font-family:var(--fd);font-size:46px;line-height:1;margin:6px 0 2px}
+  .tb .am.s{font-size:32px}
+  .tb .nt{font-size:13px;color:var(--ink2)}
+  .tb.main .nt{color:#cfcabc}
+  .timeline{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px 22px}
+  .tl{display:grid;grid-template-columns:120px 1fr;gap:18px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .tl:last-child{border-bottom:0}
+  .tl .ph{font-family:var(--fc);font-weight:700;font-size:16px;letter-spacing:1px;text-transform:uppercase;color:var(--k0)}
+  .tl .ph span{display:inline-block;background:var(--y);padding:2px 10px;border-radius:5px}
+  .tl b{display:block;font-size:14.5px;margin-bottom:2px}
+  .tl p{margin:0;font-size:13.5px;color:var(--ink2)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .tc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 22px}
+  .tc h3{margin:0 0 10px;font-family:var(--fc);font-weight:700;font-size:17px;letter-spacing:1px;text-transform:uppercase;color:var(--k0)}
+  .tc h3:before{content:'';display:inline-block;width:10px;height:10px;background:var(--y);border-radius:2px;margin-right:8px}
+  .tc ul{margin:0;padding-left:18px;font-size:13.8px}
+  .tc li{margin-bottom:6px}
+  .tc p{margin:0 0 8px;font-size:13.8px;color:var(--ink2)}
+  .deliv{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .dl{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14px}
+  .dl i{flex:none;width:26px;height:26px;border-radius:6px;background:var(--k0);color:var(--y);display:grid;place-items:center;font-style:normal;font-weight:800;font-size:13px}
+  .future{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .fu{border:1.5px dashed #cfc9b8;border-radius:12px;padding:14px 16px;background:#fbfaf6}
+  .fu b{display:block;font-size:14.5px}
+  .fu span{font-size:13px;color:var(--ink2)}
+  .fu em{display:inline-block;margin-top:8px;font-style:normal;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--ink2);background:#ece8dc;border-radius:99px;padding:2px 8px}
+  .clause{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--y);border-radius:10px;padding:16px 22px;font-size:13.8px;color:var(--ink2)}
+  .clause p{margin:0 0 9px}.clause p:last-child{margin:0}
+  .approve{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+  .approve p{margin:0 0 22px;font-size:14px;color:var(--ink2)}
+  .sign{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .sign .who{font-family:var(--fc);font-weight:700;font-size:15px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:26px}
+  .sline{border-bottom:1px solid var(--ink);height:34px;margin-bottom:4px}
+  .sl{font-size:12px;color:var(--ink2);margin-bottom:14px}
+  footer.doc-footer{text-align:center;font-size:12px;color:var(--ink2);margin-top:50px;padding-top:18px;border-top:1px solid var(--line)}
+  .toc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+  .toc a{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;text-decoration:none;color:var(--ink);font-size:13.5px;font-weight:600}
+  .toc a:hover{border-color:var(--y)}
+  .toc a span{font-family:var(--fd);font-size:20px;color:var(--y2);line-height:1;width:26px}
+  .toc a em{margin-left:auto;font-style:normal;font-size:12.5px;color:var(--ink2);font-weight:700;white-space:nowrap}
+  .warn{display:none;background:#fde8e6;border:1px solid #f1b5ae;color:#7a1810;border-radius:10px;padding:10px 14px;font-size:13px;margin-top:12px}
+
+  @media screen and (max-width:820px){
+    .cover-in{padding:22px 16px 30px}.page{padding:30px 16px 60px}
+    .doc-header{flex-direction:column}.doc-meta{text-align:left}
+    .cover .slab{width:70%;right:-40%}
+    .cover-grid{grid-template-columns:1fr;margin-top:26px}
+    .cover h1{font-size:46px}
+    .mock{height:300px}.mock .lap .scr{height:230px}.mock .phone{width:118px}.mock .phone .scr{height:226px}
+    .parties,.goals,.scope,.cols,.grid2,.deliv,.future,.total-band,.sign,.toc{grid-template-columns:1fr}
+    .kpis{grid-template-columns:1fr 1fr}
+    h2{font-size:27px}
+    .mod-h{flex-direction:column;align-items:flex-start;padding:14px 16px}.mod-price{text-align:left}
+    .mod-b{padding:16px}
+    .shots.dm,.shots.dmm,.shots.dd{grid-template-columns:1fr 1fr}
+    .shots.dm>figure:first-child,.shots.dmm>figure:first-child,.shots.dd>figure{grid-column:1/-1}
+    .shots.mmm{grid-template-columns:repeat(3,1fr);gap:10px}
+    .tl{grid-template-columns:1fr;gap:6px}
+    table{font-size:12.8px}thead th,tbody td{padding:9px 10px}
+    .hide-m{display:none}
+    .visual-card{flex-direction:column;align-items:flex-start}
+  }
+  @page{size:A4;margin:12mm 11mm}
+  @media print{
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{background:#fff;font-size:13px}
+    .cover{min-height:auto;break-after:page;break-inside:avoid}
+    .cover-in{padding:24px 24px 26px}
+    .cover-grid{margin-top:26px;gap:20px}
+    .cover-grid{grid-template-columns:1.1fr .9fr}
+    .cover h1{font-size:44px}
+    .cover p.lead{font-size:14px}
+    .mock{height:300px}.mock .lap .scr{height:236px}.mock .phone{width:118px}.mock .phone .scr{height:232px}
+    .parties{margin-top:22px}
+    .cover-kpis{gap:6px}.ck{padding:8px 10px}.ck b{font-size:20px}
+    .kpi b{font-size:22px}
+    .shots.dm{grid-template-columns:1fr 160px}
+    .shots.dmm{grid-template-columns:1fr 140px 140px}
+    .shots.mmm{grid-template-columns:repeat(3,150px)}
+    .mod-b{padding:14px 18px 16px}
+    .cols{gap:14px;margin-bottom:12px}
+    .page{padding:0;max-width:100%}
+    section{margin-bottom:26px}
+    h2{break-after:avoid}
+    .intro{break-after:avoid}
+    .sc,.goal,.kpi,.tc,.tl,.dl,.fu,.approve,.total-band,figure,tr,.visual-card,.clause,.shots,.mod-desc,.note,.futwrap{break-inside:avoid}
+    .mod-h{break-after:avoid;break-inside:avoid}
+    .mod-b .cols{break-inside:avoid}
+    .bw .scr{max-height:330px}.shots.dd .bw .scr{max-height:230px}
+    .pw .scr{max-height:330px}
+    .proto-link,.vc-btn,.toc{display:none}
+    .page-break{break-before:page}
+    a{color:inherit;text-decoration:none}
+    figure a:hover .bw,figure a:hover .pw{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PORTADA ================= -->
+<header class="cover">
+  <div class="slab"></div><div class="bgw">SHOKPROTEIN</div>
+  <div class="cover-in">
+    <div class="doc-header">
+      <div>
+        <div class="dev-name" data-c="devName">Amicornios Soft</div>
+        <div class="dev-tag">Empresa desarrolladora · Desarrollo de software, plataformas web y móviles</div>
+      </div>
+      <div class="doc-meta">
+        <div class="t">COTIZACIÓN</div>
+        <div>N.º <b data-c="quoteNo">COT-SHK-001</b></div>
+        <div>Fecha de emisión: <b data-c="issued">08/10/2026</b></div>
+        <div>Válida hasta: <b data-c="validUntil">07/11/2026</b></div>
+      </div>
+    </div>
+
+    <div class="cover-grid">
+      <div>
+        <div class="eyebrow">Propuesta comercial para</div>
+        <div class="brandmark">SHOK<b>PROTEIN</b><svg viewBox="0 0 24 24"><path d="M13.5 2 4 14h7l-1.5 8L20 10h-7l.5-8z"/></svg></div>
+        <h1>Nuevo sitio web <em>y catálogo en línea</em></h1>
+        <p class="lead">Diseño y desarrollo desde cero de un sitio web corporativo con catálogo de productos, pedidos por WhatsApp y un panel administrativo para gestionar productos, precios e imágenes sin depender de un programador.</p>
+        <div class="cover-kpis">
+          <div class="ck y"><b data-total>Bs 5.000</b><span>Inversión total</span></div>
+          <div class="ck"><b data-c="weeks">5 semanas</b><span>Plazo estimado</span></div>
+          <div class="ck"><b>6</b><span>Partidas</span></div>
+        </div>
+      </div>
+      <div class="mock">
+        <div class="lap"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/inicio-desktop.jpg" alt="Página principal propuesta, vista de escritorio"></div></div>
+        <div class="phone"><div class="scr"><img src="assets/mockups/inicio-mobile.jpg" alt="Página principal propuesta, vista móvil"></div></div>
+      </div>
+    </div>
+
+    <div class="parties">
+      <div class="party">
+        <div class="lb">Empresa desarrolladora (emite)</div>
+        <b data-c="devName">Amicornios Soft</b>
+        Correo: <span class="pend">vargascarlos12123@gmail.com</span><br>
+        Teléfono: <span class="pend">+591 71450557</span>
+      </div>
+      <div class="party">
+        <div class="lb">Cliente</div>
+        <b>SHOKPROTEIN</b>
+        Protein snacks · Hecho en Bolivia · Instagram <a href="https://www.instagram.com/shockprotein/" style="color:var(--y)">@shockprotein</a><br>
+        Razón social, NIT, representante y contacto: <span class="pend">por confirmar</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- 1 -->
+  <section>
+    <h2><span class="num">1</span>Resumen ejecutivo</h2>
+    <p class="intro">
+      SHOKPROTEIN es una marca boliviana de protein snacks —barras, cookies y peanut butter— que hoy comunica principalmente por
+      Instagram y WhatsApp. Proponemos construir <b>desde cero</b> su sitio web propio: una vitrina con la identidad amarillo y negro
+      de la marca, un catálogo donde cada producto tiene su página con fotos, precio y descripción, y un botón que lleva al cliente a
+      WhatsApp con el pedido ya escrito. Detrás, un <b>panel administrativo seguro</b> permite al equipo de SHOKPROTEIN crear productos,
+      cambiar precios e imágenes, y organizar categorías por su cuenta.
+    </p>
+    <div class="kpis">
+      <div class="kpi"><b data-total>Bs 5.000</b><span>Inversión total del proyecto</span></div>
+      <div class="kpi"><b data-c="weeks">5 semanas</b><span>Plazo estimado de desarrollo</span></div>
+      <div class="kpi"><b>6 módulos</b><span>Sitio, catálogo, panel, WhatsApp, SEO y publicación</span></div>
+      <div class="kpi"><b>3 pantallas</b><span>Computadora, tablet y celular</span></div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <h2><span class="num">2</span>Objetivos del proyecto</h2>
+    <div class="goals">
+      <div class="goal"><span class="n">01</span><b>Presencia web propia</b><p>Un sitio con dominio propio que represente la marca con fuerza, energía y calidad premium.</p></div>
+      <div class="goal"><span class="n">02</span><b>Mostrar todo el catálogo</b><p>Que cada producto tenga su página con fotos, precio y descripción, fácil de encontrar y compartir.</p></div>
+      <div class="goal"><span class="n">03</span><b>Más pedidos por WhatsApp</b><p>Llevar al cliente del producto a WhatsApp en un clic, con el mensaje ya escrito.</p></div>
+      <div class="goal"><span class="n">04</span><b>Autonomía del equipo</b><p>Actualizar productos, precios, imágenes y categorías desde un panel, sin tocar código.</p></div>
+      <div class="goal"><span class="n">05</span><b>Ser encontrados en Google</b><p>Base de SEO para que la marca y sus productos aparezcan en los buscadores.</p></div>
+      <div class="goal"><span class="n">06</span><b>Base para crecer</b><p>Una estructura preparada para sumar después pagos en línea, más productos o nuevas funciones.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <h2><span class="num">3</span>Alcance funcional</h2>
+    <p class="intro">Funcionalidades incluidas en el presupuesto de <b data-total>Bs 5.000</b>. Cada módulo indica la partida de inversión que lo cubre (sección 5).</p>
+    <div class="scope">
+      <div class="sc"><h3><small>Módulo 1</small>Página principal</h3><ul><li>Banner principal con imagen de marca</li><li>Productos destacados</li><li>Presentación de SHOKPROTEIN</li><li>Beneficios y características</li><li>Llamadas a la acción</li><li>Enlaces a redes sociales</li></ul><span class="to">→ Partida 02</span></div>
+      <div class="sc"><h3><small>Módulo 2</small>Catálogo de productos</h3><ul><li>Listado de productos y categorías</li><li>Buscador y filtros básicos</li><li>Fotografías, precios y descripciones</li><li>Página individual de producto</li><li>Botón de consulta o pedido por WhatsApp</li></ul><span class="to">→ Partida 03</span></div>
+      <div class="sc"><h3><small>Módulo 3</small>Panel administrativo</h3><ul><li>Inicio de sesión</li><li>Crear, editar y eliminar productos</li><li>Actualizar precios</li><li>Gestionar imágenes</li><li>Activar y desactivar productos</li><li>Administrar categorías</li><li>Editar información básica</li></ul><span class="to">→ Partida 04</span></div>
+      <div class="sc"><h3><small>Módulo 4</small>Información corporativa</h3><ul><li>Nosotros</li><li>Información de la marca</li><li>Contacto</li><li>Redes sociales</li><li>Ubicación, si se dispone de datos verificados</li></ul><span class="to">→ Partida 02</span></div>
+      <div class="sc"><h3><small>Módulo 5</small>WhatsApp y contacto</h3><ul><li>Botón flotante de WhatsApp</li><li>Consulta de productos</li><li>Mensaje automático prellenado con el nombre del producto</li><li>Formulario básico de contacto</li></ul><span class="to">→ Partida 05</span></div>
+      <div class="sc"><h3><small>Módulo 6</small>Optimización y publicación</h3><ul><li>Diseño responsive</li><li>SEO básico</li><li>Optimización de imágenes</li><li>Buenas prácticas de rendimiento</li><li>Configuración inicial de publicación</li><li>Pruebas funcionales</li></ul><span class="to">→ Partida 06</span></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <h2><span class="num">4</span>Prototipos navegables</h2>
+    <p class="intro">Para que SHOKPROTEIN vea exactamente qué está contratando, preparamos prototipos de alta fidelidad con su identidad visual y sus productos reales. Se pueden recorrer en vista de escritorio y de celular, buscar en el catálogo, abrir la ficha de cada producto, ver el mensaje de WhatsApp y probar el panel administrativo.</p>
+    <div class="visual-card">
+      <div>
+        <div class="vc-title">Prototipos <b>SHOKPROTEIN</b></div>
+        <div class="vc-desc">Página principal · Catálogo · Detalle de producto · Nosotros y contacto · Panel administrativo · Formulario de producto · Guía de identidad visual.</div>
+        <div class="tags"><span>7 pantallas</span><span>Escritorio y móvil</span><span>Navegables</span><span>Productos reales</span></div>
+      </div>
+      <a class="vc-btn" href="prototipos.html#p1" target="_blank" rel="noopener">Abrir prototipos →</a>
+    </div>
+    <div class="note"><b>Importante:</b> los prototipos son una demostración visual y no un sistema terminado; no se conectan a servicios reales ni envían mensajes. Las fotografías y los datos de proteína y peso provienen de los empaques de SHOKPROTEIN. <b>Los precios, textos descriptivos, número de WhatsApp, correo y usuarios mostrados son de ejemplo</b> y se reemplazarán por la información que entregue el cliente.</div>
+    <div class="toc" id="toc">
+      <a href="#m1"><span>01</span>Diseño UI/UX<em data-price="m1">Bs 900</em></a>
+      <a href="#m2"><span>02</span>Página principal<em data-price="m2">Bs 800</em></a>
+      <a href="#m3"><span>03</span>Catálogo<em data-price="m3">Bs 1.200</em></a>
+      <a href="#m4"><span>04</span>Panel administrativo<em data-price="m4">Bs 1.300</em></a>
+      <a href="#m5"><span>05</span>WhatsApp y formularios<em data-price="m5">Bs 400</em></a>
+      <a href="#m6"><span>06</span>Responsive, SEO y publicación<em data-price="m6">Bs 400</em></a>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <h2><span class="num">5</span>Partidas de inversión</h2>
+    <p class="intro">Detalle de cada partida con su alcance, beneficios y las vistas del prototipo correspondiente. Haz clic en una imagen para verla completa.</p>
+
+    <!-- 01 -->
+    <div class="mod" id="m1">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">01</span><div><h3>Diseño UI/UX y estructura del sitio</h3><small>Identidad visual aplicada y diseño de todas las pantallas</small></div></div><div class="mod-price"><span>Inversión</span><b data-price="m1">Bs 900</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Definimos la estructura del sitio y diseñamos cada pantalla con la identidad de SHOKPROTEIN: contraste amarillo y negro, tipografía fuerte y fotografías grandes, para transmitir energía, rendimiento y calidad premium.</p>
+        <div class="cols">
+          <div><h4>Incluye</h4><ul><li>Mapa del sitio y flujo de navegación</li><li>Guía visual: paleta oficial, tipografías, botones y tarjetas</li><li>Diseño de las pantallas públicas y del panel, en escritorio y móvil</li><li>Prototipo navegable para aprobación (adelantado en esta propuesta)</li><li>Hasta 2 rondas de ajustes de diseño</li></ul></div>
+          <div class="benef"><h4>Beneficios</h4><ul><li>Un sitio que no parece plantilla: hecho para la marca</li><li>Se aprueba el diseño antes de programar</li><li>Coherencia visual entre sitio, Instagram y empaques</li></ul></div>
+        </div>
+        <div class="shots dd">
+          <figure><a href="assets/mockups/guia-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/guia-desktop.jpg" alt="Guía de identidad visual" loading="lazy"></div></div></a><figcaption><b>Guía de identidad visual</b> · paleta, tipografías y componentes</figcaption></figure>
+          <figure><a href="assets/mockups/inicio-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/inicio-desktop.jpg" alt="Diseño aplicado a la portada" loading="lazy"></div></div></a><figcaption><b>Identidad aplicada</b> · portada del sitio</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos.html#p7" target="_blank">Ver guía visual en el prototipo →</a>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="mod" id="m2">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">02</span><div><h3>Página principal y secciones corporativas</h3><small>Módulo 1 · Página principal &nbsp;+&nbsp; Módulo 4 · Información corporativa</small></div></div><div class="mod-price"><span>Inversión</span><b data-price="m2">Bs 800</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">La portada presenta la marca y sus productos en segundos y lleva al visitante al catálogo o a WhatsApp. La sección “Nosotros y contacto” cuenta quién es SHOKPROTEIN y reúne todos sus canales.</p>
+        <div class="cols">
+          <div><h4>Incluye</h4><ul><li>Banner principal con imagen de marca y llamadas a la acción</li><li>Productos destacados (se eligen desde el panel)</li><li>Presentación de SHOKPROTEIN y sus categorías</li><li>Beneficios y características</li><li>Enlaces a redes sociales (Instagram)</li><li>Página Nosotros y contacto; ubicación solo con datos verificados</li></ul></div>
+          <div class="benef"><h4>Beneficios</h4><ul><li>Primera impresión profesional y con fuerza de marca</li><li>Cada sección invita a ver productos o a pedir</li><li>Toda la información de la marca en un solo lugar</li></ul></div>
+        </div>
+        <div class="shots dmm">
+          <figure><a href="assets/mockups/inicio-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/inicio-desktop.jpg" alt="Página principal en escritorio" loading="lazy"></div></div></a><figcaption><b>Página principal</b> · escritorio</figcaption></figure>
+          <figure><a href="assets/mockups/inicio-mobile.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/inicio-mobile.jpg" alt="Página principal en móvil" loading="lazy"></div></div></a><figcaption><b>Inicio</b> · móvil</figcaption></figure>
+          <figure><a href="assets/mockups/contacto-mobile.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/contacto-mobile.jpg" alt="Nosotros en móvil" loading="lazy"></div></div></a><figcaption><b>Nosotros</b> · móvil</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos.html#p1" target="_blank">Abrir prototipo de la página principal →</a>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="mod" id="m3">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">03</span><div><h3>Catálogo de productos en línea</h3><small>Módulo 2 · Listado, categorías, buscador y ficha de producto</small></div></div><div class="mod-price"><span>Inversión</span><b data-price="m3">Bs 1.200</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Todos los productos en un catálogo ordenado por categorías (barras, cookies, peanut butter), con buscador y filtros. Cada producto tiene su propia página para compartir por redes o WhatsApp.</p>
+        <div class="cols">
+          <div><h4>Incluye</h4><ul><li>Listado de productos con fotografía, precio y datos clave</li><li>Categorías con contador de productos</li><li>Buscador por nombre y descripción</li><li>Filtros básicos: categoría y orden por precio o nombre</li><li>Página individual: galería de imágenes, precio, descripción y datos</li><li>Botón de consulta o pedido por WhatsApp en cada producto</li></ul></div>
+          <div class="benef"><h4>Beneficios</h4><ul><li>El cliente encuentra su sabor en segundos</li><li>Un enlace propio por producto para compartir</li><li>Menos preguntas repetidas por chat</li><li>Crece con cada producto que se cargue en el panel</li></ul></div>
+        </div>
+        <div class="shots dm">
+          <figure><a href="assets/mockups/catalogo-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/catalogo-desktop.jpg" alt="Catálogo en escritorio" loading="lazy"></div></div></a><figcaption><b>Catálogo</b> · categorías, buscador y orden</figcaption></figure>
+          <figure><a href="assets/mockups/catalogo-mobile.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/catalogo-mobile.jpg" alt="Catálogo en móvil" loading="lazy"></div></div></a><figcaption><b>Catálogo</b> · móvil</figcaption></figure>
+        </div>
+        <div class="shots dm" style="margin-top:14px">
+          <figure><a href="assets/mockups/producto-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/producto-desktop.jpg" alt="Detalle de producto en escritorio" loading="lazy"></div></div></a><figcaption><b>Página de producto</b> · escritorio</figcaption></figure>
+          <figure><a href="assets/mockups/producto-mobile.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/producto-mobile.jpg" alt="Detalle de producto en móvil" loading="lazy"></div></div></a><figcaption><b>Producto</b> · móvil</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos.html#p2" target="_blank">Abrir prototipo del catálogo →</a>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="mod" id="m4">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">04</span><div><h3>Panel administrativo y gestión de productos</h3><small>Módulo 3 · Acceso seguro, productos, precios, imágenes y categorías</small></div></div><div class="mod-price"><span>Inversión</span><b data-price="m4">Bs 1.300</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">Un panel privado, protegido con usuario y contraseña, desde el que el equipo de SHOKPROTEIN mantiene el catálogo al día desde la computadora o el celular. Los cambios se reflejan en el sitio de inmediato.</p>
+        <div class="cols">
+          <div><h4>Incluye</h4><ul><li>Inicio de sesión con contraseñas cifradas</li><li>Crear, editar y eliminar productos</li><li>Actualización rápida de precios desde el listado</li><li>Gestión de imágenes: subir, quitar y elegir la principal</li><li>Activar y desactivar productos sin borrarlos</li><li>Administrar categorías y marcar productos destacados</li></ul></div>
+          <div class="benef"><h4>Beneficios</h4><ul><li>Autonomía: sin depender de un programador</li><li>Lanzar un sabor nuevo toma minutos</li><li>Precios siempre actualizados</li><li>Ocultar productos agotados con un clic</li></ul></div>
+        </div>
+        <div class="shots dd">
+          <figure><a href="assets/mockups/login-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/login-desktop.jpg" alt="Inicio de sesión" loading="lazy"></div></div></a><figcaption><b>Inicio de sesión</b> · acceso seguro</figcaption></figure>
+          <figure><a href="assets/mockups/panel-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/panel-desktop.jpg" alt="Listado de productos" loading="lazy"></div></div></a><figcaption><b>Productos</b> · precios, estado y acciones</figcaption></figure>
+          <figure><a href="assets/mockups/form-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/form-desktop.jpg" alt="Formulario de producto" loading="lazy"></div></div></a><figcaption><b>Crear / editar producto</b> · imágenes, vista previa y SEO</figcaption></figure>
+          <figure><a href="assets/mockups/categorias-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/categorias-desktop.jpg" alt="Categorías" loading="lazy"></div></div></a><figcaption><b>Categorías</b> · crear, editar, activar</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos.html#p5" target="_blank">Abrir prototipo del panel →</a>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="mod" id="m5">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">05</span><div><h3>Integración con WhatsApp y formularios</h3><small>Módulo 5 · Botón flotante, mensaje prellenado y contacto</small></div></div><div class="mod-price"><span>Inversión</span><b data-price="m5">Bs 400</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">WhatsApp es el canal de venta de la marca. Cada producto tiene un botón que abre WhatsApp con un mensaje listo: nombre del producto, cantidad y precio de referencia. El cliente solo presiona “Enviar”.</p>
+        <div class="cols">
+          <div><h4>Incluye</h4><ul><li>Botón flotante de WhatsApp en todo el sitio</li><li>Consulta de productos desde el catálogo y la ficha</li><li>Mensaje automático prellenado con el nombre del producto</li><li>Formulario básico de contacto con validación</li><li>Número de WhatsApp y textos configurables</li></ul></div>
+          <div class="benef"><h4>Beneficios</h4><ul><li>Pedidos claros desde el primer mensaje</li><li>Sin costos de API: usa enlaces oficiales de WhatsApp</li><li>Un canal alternativo para consultas formales</li></ul></div>
+        </div>
+        <div class="shots dmm">
+          <figure><a href="assets/mockups/whatsapp-desktop.jpg" target="_blank"><div class="bw"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><img src="assets/mockups/whatsapp-desktop.jpg" alt="Mensaje de WhatsApp prellenado" loading="lazy"></div></div></a><figcaption><b>Mensaje prellenado</b> · desde la ficha del producto</figcaption></figure>
+          <figure><a href="assets/mockups/whatsapp-mobile.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/whatsapp-mobile.jpg" alt="WhatsApp en móvil" loading="lazy"></div></div></a><figcaption><b>WhatsApp</b> · móvil</figcaption></figure>
+          <figure><a href="assets/mockups/contacto-desktop.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/formcontacto-mobile.jpg" alt="Formulario de contacto" loading="lazy"></div></div></a><figcaption><b>Formulario</b> · contacto</figcaption></figure>
+        </div>
+        <a class="proto-link" href="prototipos.html#p3" target="_blank">Probar el botón de WhatsApp →</a>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="mod" id="m6">
+      <div class="mod-h"><div class="mod-t"><span class="mod-n">06</span><div><h3>Diseño responsive, SEO básico y publicación</h3><small>Módulo 6 · Optimización, pruebas y puesta en línea</small></div></div><div class="mod-price"><span>Inversión</span><b data-price="m6">Bs 400</b></div></div>
+      <div class="mod-b">
+        <p class="mod-desc">El sitio se adapta a computadoras, tablets y celulares, carga rápido y queda preparado para Google. Lo publicamos y probamos antes de entregarlo.</p>
+        <div class="cols">
+          <div><h4>Incluye</h4><ul><li>Diseño adaptable a computadora, tablet y celular</li><li>SEO básico: títulos, descripciones, URLs amigables, sitemap y vista previa para redes</li><li>Optimización automática de imágenes (WebP)</li><li>Buenas prácticas de rendimiento y seguridad</li><li>Configuración inicial de publicación en el hosting y dominio del cliente</li><li>Pruebas funcionales en distintos dispositivos y navegadores</li></ul></div>
+          <div class="benef"><h4>Beneficios</h4><ul><li>La mayoría de visitas llegan desde el celular</li><li>Mejor posicionamiento en buscadores</li><li>Enlaces que se ven bien al compartir en redes</li><li>Entrega probada y lista para usar</li></ul></div>
+        </div>
+        <div class="shots mmm">
+          <figure><a href="assets/mockups/menu-mobile.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/menu-mobile.jpg" alt="Menú móvil" loading="lazy"></div></div></a><figcaption><b>Menú</b> · móvil</figcaption></figure>
+          <figure><a href="assets/mockups/login-mobile.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/login-mobile.jpg" alt="Acceso al panel en móvil" loading="lazy"></div></div></a><figcaption><b>Panel</b> · acceso móvil</figcaption></figure>
+          <figure><a href="assets/mockups/panel-mobile.jpg" target="_blank"><div class="pw"><div class="scr"><img src="assets/mockups/panel-mobile.jpg" alt="Productos en móvil" loading="lazy"></div></div></a><figcaption><b>Productos</b> · gestión móvil</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <h2><span class="num">6</span>Resumen de inversión</h2>
+    <table>
+      <thead><tr><th>#</th><th>Partida</th><th class="hide-m">Cubre</th><th class="num">Inversión</th></tr></thead>
+      <tbody id="inv">
+        <tr><td>01</td><td>Diseño UI/UX y estructura del sitio</td><td class="hide-m"><small>Guía visual, diseño de pantallas y prototipo</small></td><td class="num" data-price="m1">Bs 900</td></tr>
+        <tr><td>02</td><td>Página principal y secciones corporativas</td><td class="hide-m"><small>Módulos 1 y 4</small></td><td class="num" data-price="m2">Bs 800</td></tr>
+        <tr><td>03</td><td>Catálogo de productos en línea</td><td class="hide-m"><small>Módulo 2</small></td><td class="num" data-price="m3">Bs 1.200</td></tr>
+        <tr><td>04</td><td>Panel administrativo y gestión de productos</td><td class="hide-m"><small>Módulo 3</small></td><td class="num" data-price="m4">Bs 1.300</td></tr>
+        <tr><td>05</td><td>Integración con WhatsApp y formularios</td><td class="hide-m"><small>Módulo 5</small></td><td class="num" data-price="m5">Bs 400</td></tr>
+        <tr><td>06</td><td>Diseño responsive, SEO básico y publicación</td><td class="hide-m"><small>Módulo 6</small></td><td class="num" data-price="m6">Bs 400</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="2">TOTAL DEL PROYECTO</td><td class="hide-m"></td><td class="num" data-total>Bs 5.000</td></tr></tfoot>
+    </table>
+    <div class="total-band">
+      <div class="tb main"><div class="lb">Inversión total</div><div class="am" data-total>Bs 5.000</div><div class="nt">Pago único de desarrollo · montos en bolivianos</div></div>
+      <div class="tb"><div class="lb">50% al iniciar</div><div class="am s" data-pay="0">Bs 2.500</div><div class="nt">Anticipo para comenzar el proyecto</div></div>
+      <div class="tb"><div class="lb">50% contra entrega</div><div class="am s" data-pay="1">Bs 2.500</div><div class="nt">Al publicar y entregar el sitio</div></div>
+    </div>
+    <div class="warn" id="warn"></div>
+    <div class="note">Montos en bolivianos (Bs). No incluyen impuestos de facturación si se requiere factura. Hosting, dominio y servicios externos no forman parte de este monto (ver sección 10).</div>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <h2><span class="num">7</span>Cronograma estimado</h2>
+    <p class="intro">Plazo estimado de <b data-c="weeks">5 semanas</b>, contado desde el pago del anticipo y la entrega de los contenidos (fotos, precios, textos y datos de contacto). Las fechas exactas se acuerdan al iniciar.</p>
+    <div class="timeline">
+      <div class="tl"><div class="ph"><span>Semana 1</span></div><div><b>Inicio, contenidos y diseño final</b><p>Reunión de inicio, recopilación de contenidos, ajustes al diseño sobre los prototipos y aprobación de la guía visual.</p></div></div>
+      <div class="tl"><div class="ph"><span>Semana 2</span></div><div><b>Base técnica, página principal y corporativa</b><p>Estructura del proyecto, base de datos, portada, Nosotros y Contacto.</p></div></div>
+      <div class="tl"><div class="ph"><span>Semana 3</span></div><div><b>Catálogo y WhatsApp</b><p>Listado, categorías, buscador, filtros, página de producto, botón flotante, mensaje prellenado y formulario.</p></div></div>
+      <div class="tl"><div class="ph"><span>Semana 4</span></div><div><b>Panel administrativo</b><p>Inicio de sesión, gestión de productos, precios, imágenes y categorías. Entrega de versión de revisión.</p></div></div>
+      <div class="tl"><div class="ph"><span>Semana 5</span></div><div><b>Optimización, pruebas y publicación</b><p>Responsive, SEO básico, optimización de imágenes, carga inicial de productos, pruebas, capacitación y publicación.</p></div></div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section>
+    <h2><span class="num">8</span>Entregables</h2>
+    <div class="deliv">
+      <div class="dl"><i>1</i><div><b>Sitio web publicado</b><br>Página principal, catálogo, páginas de producto, Nosotros y Contacto.</div></div>
+      <div class="dl"><i>2</i><div><b>Panel administrativo</b><br>Con usuario de acceso para el equipo de SHOKPROTEIN.</div></div>
+      <div class="dl"><i>3</i><div><b>Carga inicial del catálogo</b><br>Hasta 20 productos con la información que entregue el cliente.</div></div>
+      <div class="dl"><i>4</i><div><b>Guía de identidad visual</b><br>Paleta, tipografías y componentes del sitio.</div></div>
+      <div class="dl"><i>5</i><div><b>Capacitación</b><br>Una sesión en vivo sobre el uso del panel y un video tutorial breve.</div></div>
+      <div class="dl"><i>6</i><div><b>Código fuente y accesos</b><br>Código del proyecto y accesos a los servicios a nombre del cliente.</div></div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section>
+    <h2><span class="num">9</span>Condiciones de pago propuestas</h2>
+    <div class="grid2">
+      <div class="tc"><h3>Forma de pago</h3><ul><li><b data-pay="0">Bs 2.500</b> (50%) al iniciar el proyecto</li><li><b data-pay="1">Bs 2.500</b> (50%) contra entrega del sitio publicado</li><li>Condiciones propuestas; pueden ajustarse de mutuo acuerdo</li></ul></div>
+      <div class="tc"><h3>Vigencia y garantía</h3><ul><li>Cotización válida por 30 días desde su emisión</li><li>30 días de garantía para corrección de errores sin costo tras la entrega</li><li>Soporte y mantenimiento posterior: opcional, se cotiza aparte</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section>
+    <h2><span class="num">10</span>Exclusiones y ampliaciones futuras</h2>
+    <p class="intro">Lo siguiente <b>no está incluido</b> en el presupuesto de <b data-total>Bs 5.000</b>, salvo contratación adicional:</p>
+    <table>
+      <thead><tr><th>Concepto</th><th class="center">Incluido</th><th class="hide-m">Detalle</th></tr></thead>
+      <tbody>
+        <tr><td>Las 6 partidas descritas en la sección 5</td><td class="center yes">Sí</td><td class="hide-m">Alcance de esta propuesta</td></tr>
+        <tr><td>Pasarelas de pago (tarjeta, QR en línea)</td><td class="center no">No</td><td class="hide-m">Los pedidos se coordinan por WhatsApp</td></tr>
+        <tr><td>Facturación electrónica</td><td class="center no">No</td><td class="hide-m">Se cotiza aparte</td></tr>
+        <tr><td>Inventario avanzado y control de stock</td><td class="center no">No</td><td class="hide-m">El panel permite activar o desactivar productos</td></tr>
+        <tr><td>Sistema POS (punto de venta)</td><td class="center no">No</td><td class="hide-m">Se cotiza aparte</td></tr>
+        <tr><td>Aplicaciones móviles nativas</td><td class="center no">No</td><td class="hide-m">El sitio funciona en el navegador del celular</td></tr>
+        <tr><td>Integraciones con ERP</td><td class="center no">No</td><td class="hide-m">Se cotiza aparte</td></tr>
+        <tr><td>Hosting y dominio</td><td class="center no">No</td><td class="hide-m">Los contrata y paga el cliente; asesoramos en la elección</td></tr>
+        <tr><td>Suscripciones a servicios externos</td><td class="center no">No</td><td class="hide-m">Correo, API de WhatsApp Business u otros</td></tr>
+        <tr><td>Fotografía, redacción y datos de productos</td><td class="center no">No</td><td class="hide-m">El contenido lo aporta SHOKPROTEIN</td></tr>
+      </tbody>
+    </table>
+    <div class="futwrap"><h3 style="font-family:var(--fc);font-weight:700;font-size:17px;letter-spacing:1px;text-transform:uppercase;margin:26px 0 0">Ampliaciones futuras · fuera del presupuesto actual</h3>
+    <div class="future">
+      <div class="fu"><b>Carrito de compras</b><span>Pedido de varios productos en un solo mensaje.</span><br><em>Se cotiza aparte</em></div>
+      <div class="fu"><b>Pagos en línea</b><span>QR o tarjeta mediante una pasarela de pago.</span><br><em>Se cotiza aparte</em></div>
+      <div class="fu"><b>Promociones y cupones</b><span>Precios especiales con fechas de vigencia.</span><br><em>Se cotiza aparte</em></div>
+      <div class="fu"><b>Puntos de venta</b><span>Mapa con distribuidores o tiendas aliadas.</span><br><em>Se cotiza aparte</em></div>
+      <div class="fu"><b>Estadísticas</b><span>Productos más vistos y clics en WhatsApp.</span><br><em>Se cotiza aparte</em></div>
+      <div class="fu"><b>Inventario</b><span>Control de stock por producto.</span><br><em>Se cotiza aparte</em></div>
+    </div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section>
+    <h2><span class="num">11</span>Consideraciones técnicas</h2>
+    <div class="grid2">
+      <div class="tc"><h3>Tecnología</h3><p>Aplicación web moderna (por ejemplo, Next.js) con base de datos PostgreSQL, autenticación segura y almacenamiento de imágenes. La herramienta exacta se confirma al iniciar según el hosting elegido.</p></div>
+      <div class="tc"><h3>Hosting y dominio</h3><p>Por cuenta del cliente. Existen planes gratuitos o de bajo costo adecuados para el inicio; asesoramos en la elección y dejamos todo configurado a nombre de SHOKPROTEIN.</p></div>
+      <div class="tc"><h3>Contenidos del cliente</h3><p>SHOKPROTEIN entrega fotos, precios, descripciones, número de WhatsApp, datos de contacto y, si corresponde, ubicación. Los retrasos en los contenidos desplazan el cronograma.</p></div>
+      <div class="tc"><h3>WhatsApp</h3><p>Se usan los enlaces oficiales de WhatsApp (wa.me) con mensaje prellenado: no requieren la API de WhatsApp Business ni tienen costo mensual.</p></div>
+    </div>
+    <div class="clause" style="margin-top:16px">
+      <p><b>Prototipos.</b> Los prototipos que acompañan esta cotización son demostraciones visuales y no un sistema terminado. Las interfaces son referenciales: colores, textos y disposición podrán ajustarse durante el desarrollo respetando el alcance contratado.</p>
+      <p><b>Cambios de alcance.</b> Una vez aprobada la cotización, cualquier funcionalidad nueva o modificación del alcance será evaluada y cotizada por separado, y podrá afectar el plazo de entrega. Las correcciones de errores de lo contratado están cubiertas por la garantía.</p>
+      <p><b>Marca.</b> Logotipos, fotografías y nombres de producto pertenecen a SHOKPROTEIN y se usan únicamente para este proyecto.</p>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section>
+    <h2><span class="num">12</span>Aprobación</h2>
+    <div class="approve">
+      <p>La firma de este documento indica la aceptación del alcance, la inversión de <b data-total>Bs 5.000</b> y las condiciones descritas en la cotización <b data-c="quoteNo">COT-SHK-001</b>.</p>
+      <div class="sign">
+        <div><div class="who">Por el cliente · SHOKPROTEIN</div>
+          <div class="sline"></div><div class="sl">Firma</div>
+          <div class="sline"></div><div class="sl">Nombre y cargo</div>
+          <div class="sline"></div><div class="sl">Fecha de aprobación</div></div>
+        <div><div class="who">Por la empresa desarrolladora · <span data-c="devName">Amicornios Soft</span></div>
+          <div class="sline"></div><div class="sl">Firma</div>
+          <div class="sline"></div><div class="sl">Nombre y cargo</div>
+          <div class="sline"></div><div class="sl">Fecha</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="doc-footer"><span data-c="devName">Amicornios Soft</span> · vargascarlos12123@gmail.com · +591 71450557 · Cotización N.º <span data-c="quoteNo">COT-SHK-001</span></footer>
+</main>
+
+<script>
+/* =====================================================================
+   DATOS COMERCIALES EDITABLES
+   Cambia aquí precios, fechas o plazos: el documento se actualiza solo
+   (partidas, tabla, total, pagos y portada).
+   ===================================================================== */
+const CONFIG = {
+  devName:    'Amicornios Soft',
+  quoteNo:    'COT-SHK-001',
+  issued:     '08/10/2026',
+  validUntil: '07/11/2026',
+  weeks:      '5 semanas',
+  prices: { m1:900, m2:800, m3:1200, m4:1300, m5:400, m6:400 },
+  expectedTotal: 5000,          // control: avisa si la suma no coincide
+  payments: [0.5, 0.5],         // 50% al iniciar · 50% contra entrega
+};
+
+(function apply(){
+  const bs = n => 'Bs ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const total = Object.values(CONFIG.prices).reduce((a, b) => a + b, 0);
+  document.querySelectorAll('[data-price]').forEach(e => { const v = CONFIG.prices[e.dataset.price]; if (v != null) e.textContent = bs(v); });
+  document.querySelectorAll('[data-total]').forEach(e => e.textContent = bs(total));
+  document.querySelectorAll('[data-pay]').forEach(e => e.textContent = bs(total * CONFIG.payments[+e.dataset.pay]));
+  document.querySelectorAll('[data-c]').forEach(e => { const v = CONFIG[e.dataset.c]; if (v != null) e.textContent = v; });
+  if (CONFIG.expectedTotal && total !== CONFIG.expectedTotal) {
+    const w = document.getElementById('warn');
+    w.style.display = 'block';
+    w.textContent = `Atención: la suma de las partidas (${bs(total)}) no coincide con el total esperado (${bs(CONFIG.expectedTotal)}).`;
+  }
+})();
+</script>
+</body>
+</html>
