@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FEDAPABENI · Oferta agroforestal amazónica (prototipo)</title>
+  <meta name="description" content="Prototipo demostrativo de la plataforma comercial de FEDAPABENI: directorio de asociaciones, catálogo de productos amazónicos, mapa, noticias y contacto por WhatsApp.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0f3324">
+  <meta property="og:title" content="FEDAPABENI · Plataforma comercial (prototipo)">
+  <meta property="og:description" content="Directorio de asociaciones, catálogo de productos amazónicos y articulación de mercados del norte amazónico de Bolivia.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/images/rio-beni.jpg">
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="../css/prototipo.css">
+  <script>window.FP_BASE = '../';</script>
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <div class="demo-bar">
+    <div class="wrap">
+      <span><strong>Prototipo demostrativo</strong> · Datos, ubicaciones y contactos ficticios, pendientes de validación por FEDAPABENI.</span>
+      <span class="links">
+        <a href="../index.html"><i data-icon="file"></i> Ver cotización</a>
+        <a href="admin/index.html"><i data-icon="dashboard"></i> Panel administrativo (demo)</a>
+      </span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#/" aria-label="FEDAPABENI, inicio">
+        <img src="../assets/logos/logo-provisional.svg" alt="" width="40" height="40">
+        <span><b data-setting="siteName">FEDAPABENI</b><small>Logo provisional · Bosque en pie</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Principal" id="mainNav"></nav>
+      <div class="header-actions">
+        <button class="icon-btn" type="button" data-action="open-search" aria-label="Buscar"><i data-icon="search"></i></button>
+        <a class="btn btn-wa btn-sm hide-sm" data-wa="general" href="#" target="_blank" rel="noopener"><i data-icon="whatsapp"></i> WhatsApp</a>
+        <button class="icon-btn show-sm" type="button" data-action="open-menu" aria-label="Abrir menú" aria-controls="drawer" aria-expanded="false"><i data-icon="menu"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="scrim" data-action="close-menu"></div>
+    <nav class="panel" aria-label="Menú móvil">
+      <div class="top">
+        <a class="brand" href="#/"><img src="../assets/logos/logo-provisional.svg" alt="" width="36" height="36"><span><b>FEDAPABENI</b></span></a>
+        <button class="icon-btn" type="button" data-action="close-menu" aria-label="Cerrar menú"><i data-icon="x"></i></button>
+      </div>
+      <div id="drawerNav"></div>
+      <a class="btn btn-wa" data-wa="general" href="#" target="_blank" rel="noopener" style="margin-top:14px"><i data-icon="whatsapp"></i> Escríbenos por WhatsApp</a>
+      <a class="btn btn-outline" href="admin/index.html" style="margin-top:8px"><i data-icon="dashboard"></i> Panel administrativo (demo)</a>
+      <a class="btn btn-outline" href="../index.html" style="margin-top:8px"><i data-icon="file"></i> Volver a la cotización</a>
+    </nav>
+  </div>
+
+  <main id="main" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a class="brand" href="#/" style="color:#fff"><img src="../assets/logos/logo-provisional.svg" alt="" width="44" height="44"><span><b style="color:#fff">FEDAPABENI</b><small style="color:#8fae9a">Logo provisional</small></span></a>
+          <p data-setting="siteFullName">Federación Departamental de Asociaciones de Productores Agroforestales del Beni</p>
+          <p style="font-size:13px">Plataforma institucional, comercial y de articulación de mercados para las asociaciones y emprendimientos amazónicos del norte de Bolivia.</p>
+        </div>
+        <div>
+          <h4>Explorar</h4>
+          <ul>
+            <li><a href="#/directorio">Directorio de asociaciones</a></li>
+            <li><a href="#/catalogo">Catálogo de productos</a></li>
+            <li><a href="#/mapa">Mapa de organizaciones</a></li>
+            <li><a href="#/noticias">Noticias y ferias</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="#/nosotros">Quiénes somos</a></li>
+            <li><a href="#/nosotros">Modelo “Bosque en Pie”</a></li>
+            <li><a href="#/galeria">Galería multimedia</a></li>
+            <li><a href="#/creditos">Créditos de imágenes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul id="footContact"></ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year">2026</span> FEDAPABENI · Prototipo demostrativo elaborado por Amicornios Soft para la propuesta a IPHAE/FEDAPABENI.</span>
+        <span><a href="../index.html">Cotización</a> · <a href="admin/index.html">Panel (demo)</a> · <a href="#/creditos">Créditos</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <a class="wa-float" data-wa="general" href="#" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp"><i data-icon="whatsapp"></i></a>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+    <button class="lb-btn lb-close" type="button" data-lb="close" aria-label="Cerrar"><i data-icon="x"></i></button>
+    <button class="lb-btn lb-prev" type="button" data-lb="prev" aria-label="Anterior"><i data-icon="chevron-left"></i></button>
+    <figure><img id="lbImg" src="data:," alt=""><figcaption id="lbCap"></figcaption></figure>
+    <button class="lb-btn lb-next" type="button" data-lb="next" aria-label="Siguiente"><i data-icon="chevron-right"></i></button>
+  </div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="scrim" data-action="close-modal"></div>
+    <div class="dialog">
+      <button class="icon-btn close" type="button" data-action="close-modal" aria-label="Cerrar"><i data-icon="x"></i></button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="../js/icons.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="../js/store.js"></script>
+  <script src="../js/prototipo.js"></script>
+</body>
+</html>

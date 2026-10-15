@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel administrativo (demo) · FEDAPABENI</title>
+  <meta name="description" content="Panel administrativo demostrativo del prototipo FEDAPABENI: gestión de asociaciones, productos, categorías, noticias, galería, consultas y configuración.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0f3324">
+  <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/admin.css">
+  <script>window.FP_BASE = '../../';</script>
+</head>
+<body>
+  <a class="skip" href="#adminMain">Saltar al contenido</a>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Menú del panel">
+      <div class="sb-brand">
+        <img src="../../assets/logos/logo-provisional.svg" alt="" width="36" height="36">
+        <div><b>FEDAPABENI</b><small>Panel administrativo</small></div>
+        <button class="icon-btn sb-close" type="button" data-action="close-sb" aria-label="Cerrar menú"><i data-icon="x"></i></button>
+      </div>
+      <nav id="sbNav"></nav>
+      <div class="sb-foot">
+        <a href="../index.html" class="sb-link"><i data-icon="external"></i> Ver sitio público</a>
+        <a href="../../index.html" class="sb-link"><i data-icon="file"></i> Ver cotización</a>
+      </div>
+    </aside>
+    <div class="sb-scrim" data-action="close-sb"></div>
+
+    <div class="content">
+      <div class="demo-alert" role="note">
+        <i data-icon="alert"></i>
+        <div><b>Modo demostración.</b> Este panel no tiene autenticación ni servidor: los cambios se guardan solo en este navegador (localStorage) y se reflejan en el prototipo público. En la versión final habrá inicio de sesión, roles y base de datos en el servidor.</div>
+      </div>
+      <header class="topbar">
+        <button class="icon-btn menu-btn" type="button" data-action="open-sb" aria-label="Abrir menú"><i data-icon="menu"></i></button>
+        <div class="tb-title"><small>Panel administrativo · demo</small><h1 id="pageTitle">Dashboard</h1></div>
+        <div class="tb-actions">
+          <button class="btn btn-light" type="button" data-action="export"><i data-icon="download"></i><span class="hide-sm">Exportar JSON</span></button>
+          <button class="btn btn-danger-light" type="button" data-action="reset"><i data-icon="reset"></i><span class="hide-sm">Restaurar datos de ejemplo</span></button>
+        </div>
+      </header>
+      <main id="adminMain" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="scrim" data-action="close-modal"></div>
+    <div class="dialog" id="mDialog"></div>
+  </div>
+
+  <script src="../../js/icons.js"></script>
+  <script src="../../js/data.js"></script>
+  <script src="../../js/store.js"></script>
+  <script src="../../js/admin.js"></script>
+</body>
+</html>

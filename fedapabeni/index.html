@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Propuesta técnica y económica · Plataforma web comercial FEDAPABENI · Amicornios Soft</title>
+  <meta name="description" content="Propuesta técnica y económica de Amicornios Soft para el diseño, desarrollo e implementación de la plataforma web comercial de FEDAPABENI (convocatoria IPHAE).">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0f3324">
+  <meta property="og:title" content="Propuesta: Plataforma web comercial FEDAPABENI">
+  <meta property="og:description" content="Directorio, catálogo comercial, mapa, WhatsApp, noticias y panel administrativo. 18 días calendario.">
+  <meta property="og:image" content="assets/images/preview-desktop.jpg">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/cotizacion.css">
+</head>
+<body>
+  <a class="skip" href="#resumen">Saltar al contenido</a>
+
+  <!-- Barra de acciones -->
+  <header class="appbar no-pdf" id="appbar">
+    <div class="appbar-in">
+      <a class="ab-brand" href="#portada" aria-label="Inicio de la propuesta">
+        <img src="assets/logos/amicornios-soft.svg" alt="" width="32" height="32">
+        <span><b>Amicornios Soft</b><small>Propuesta · FEDAPABENI</small></span>
+      </a>
+      <nav class="ab-nav" aria-label="Secciones de la propuesta" id="abNav">
+        <a href="#resumen">Resumen</a>
+        <a href="#solucion">Solución</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#cronograma">Cronograma</a>
+        <a href="#presupuesto">Presupuesto</a>
+        <a href="#entregables">Entregables</a>
+        <a href="#prototipo">Prototipo</a>
+      </nav>
+      <div class="ab-actions">
+        <a class="btn btn-ghost hide-sm" href="prototipo/index.html"><i data-icon="eye"></i> Prototipo</a>
+        <button class="btn btn-gold" type="button" data-action="pdf"><i data-icon="download"></i><span class="hide-xs">Exportar cotización a PDF</span><span class="show-xs">PDF</span></button>
+        <button class="icon-btn ab-menu" type="button" data-action="toc" aria-label="Índice" aria-expanded="false" aria-controls="tocPanel"><i data-icon="list"></i></button>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  </header>
+
+  <nav class="toc-panel no-pdf" id="tocPanel" aria-label="Índice" hidden>
+    <ol>
+      <li><a href="#carta">Carta de presentación</a></li>
+      <li><a href="#resumen">Resumen ejecutivo</a></li>
+      <li><a href="#tdr">Comprensión de los Términos de Referencia</a></li>
+      <li><a href="#solucion">Solución propuesta</a></li>
+      <li><a href="#modulos">Módulos incluidos</a></li>
+      <li><a href="#cronograma">Metodología y cronograma</a></li>
+      <li><a href="#presupuesto">Presupuesto detallado</a></li>
+      <li><a href="#entregables">Productos y entregables</a></li>
+      <li><a href="#equipo">Proponente y equipo</a></li>
+      <li><a href="#garantia">Garantía, capacitación y transferencia</a></li>
+      <li><a href="#requerimientos">Requerimientos a FEDAPABENI</a></li>
+      <li><a href="#condiciones">Condiciones comerciales</a></li>
+      <li><a href="#prototipo">Prototipo interactivo</a></li>
+      <li><a href="#referencias">Referencias del proyecto</a></li>
+    </ol>
+  </nav>
+
+  <div id="doc">
+
+  <!-- ============ PORTADA ============ -->
+  <section class="cover" id="portada" data-pdf-skip>
+    <div class="cover-bg" aria-hidden="true"></div>
+    <div class="wrap cover-in">
+      <div class="cover-top">
+        <span class="pill"><i data-icon="file"></i> Propuesta técnica y económica</span>
+        <span class="pill ghost">Cotización N.º <span data-f="quoteNo"></span></span>
+      </div>
+      <p class="kicker">Consultoría por producto · Convocatoria IPHAE – FEDAPABENI</p>
+      <h1>Diseño, desarrollo e implementación de la <em>plataforma web comercial</em> de FEDAPABENI</h1>
+      <p class="cover-lead">Una herramienta institucional, comercial y de articulación de mercados para visibilizar a las asociaciones y emprendimientos amazónicos del norte de Bolivia y conectar su oferta con compradores.</p>
+
+      <dl class="cover-grid">
+        <div><dt>Empresa proponente</dt><dd><span data-f="companyName"></span></dd></div>
+        <div><dt>Cliente</dt><dd>FEDAPABENI</dd></div>
+        <div><dt>Institución contratante</dt><dd>IPHAE</dd></div>
+        <div><dt>Fecha de elaboración</dt><dd><span data-f="date"></span></dd></div>
+        <div class="hl"><dt>Presupuesto total</dt><dd><span data-total></span></dd></div>
+        <div class="hl"><dt>Plazo de ejecución</dt><dd>18 días calendario</dd></div>
+      </dl>
+
+      <div class="cover-actions no-pdf">
+        <a class="btn btn-gold btn-lg" href="prototipo/index.html"><i data-icon="eye"></i> Ver prototipo interactivo</a>
+        <button class="btn btn-ghost btn-lg" type="button" data-action="pdf"><i data-icon="download"></i> Exportar cotización a PDF</button>
+      </div>
+      <p class="edit-hint no-pdf"><i data-icon="pencil"></i> Los campos resaltados y los montos del presupuesto son editables. Los cambios se guardan en este navegador y se incluyen en el PDF.</p>
+    </div>
+  </section>
+
+  <main class="wrap main">
+
+  <!-- ============ CARTA ============ -->
+  <section class="sec" id="carta" data-pdf-break>
+    <header class="sec-head"><span class="num">00</span><div><p class="eyebrow">Presentación</p><h2>Carta de presentación</h2></div></header>
+    <div class="letter card">
+      <p class="muted"><span data-f="companyCity"></span>, <span data-f="date"></span></p>
+      <p>Señores<br><b>Instituto para el Hombre, Agricultura y Ecología – IPHAE</b><br>En coordinación con la <b>Federación Departamental de Asociaciones de Productores Agroforestales del Beni – FEDAPABENI</b><br>Riberalta, Beni</p>
+      <p><b>Ref.: Propuesta técnica y económica — Consultoría por producto para el diseño, desarrollo e implementación de una página web comercial para FEDAPABENI.</b></p>
+      <p>De nuestra consideración:</p>
+      <p>Mediante la presente, <b data-f="companyName"></b> presenta su propuesta técnica y económica para la consultoría de referencia, en conformidad con los Términos de Referencia publicados por IPHAE (octubre de 2026).</p>
+      <p>Proponemos una plataforma moderna, segura, adaptable a dispositivos móviles y <b>administrable por la propia FEDAPABENI</b>, que integra los componentes institucionales, comerciales y administrativos exigidos: directorio de organizaciones, fichas individuales, catálogo comercial, formularios, WhatsApp, mapa georreferenciado, galería, noticias, panel de administración, capacitación, garantía de 90 días y funcionamiento durante el primer año.</p>
+      <p>El monto total de nuestra oferta es de <b data-total></b> (<span data-total-words></span>), con un plazo de ejecución de <b>18 días calendario</b>, inferior al máximo de 20 días establecido. Acompañamos un <b>prototipo navegable</b> para que IPHAE y FEDAPABENI puedan evaluar desde ahora la propuesta funcional y visual.</p>
+      <p>Quedamos a disposición para cualquier aclaración o presentación técnica.</p>
+      <p>Atentamente,</p>
+      <div class="sign-block">
+        <div class="sign-line"></div>
+        <p><b data-f="companyRep"></b><br><span data-f="companyName"></span><br><span class="muted">NIT: <span data-f="companyNit"></span></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESUMEN EJECUTIVO ============ -->
+  <section class="sec" id="resumen" data-pdf-break>
+    <header class="sec-head"><span class="num">01</span><div><p class="eyebrow">Resumen ejecutivo</p><h2>Una vitrina digital para la oferta amazónica organizada</h2></div></header>
+
+    <div class="kpis">
+      <div class="kpi"><b>18</b><span>días calendario de ejecución</span></div>
+      <div class="kpi"><b>14</b><span>módulos funcionales</span></div>
+      <div class="kpi"><b>90</b><span>días de garantía técnica</span></div>
+      <div class="kpi"><b>12</b><span>meses de hosting y funcionamiento</span></div>
+    </div>
+
+    <div class="cols-2">
+      <article class="card pad">
+        <h3><i data-icon="alert"></i> El problema</h3>
+        <p>Las asociaciones y emprendimientos agroforestales del norte amazónico producen pulpas de asaí, copoazú y majo, cacao silvestre, harina de plátano y otros productos del bosque, pero su oferta, sus capacidades productivas y sus contactos comerciales tienen poca visibilidad digital. Los compradores no cuentan con un punto único para conocer quién produce, qué, cuánto y cómo contactarlo.</p>
+      </article>
+      <article class="card pad">
+        <h3><i data-icon="target"></i> El objetivo</h3>
+        <p>Diseñar, desarrollar, implementar y poner en funcionamiento una plataforma web <b>comercial, institucional y de articulación de mercados</b> que presente a FEDAPABENI como articuladora de la oferta amazónica y, al mismo tiempo, visibilice individualmente a cada asociación afiliada, sus productos y capacidades.</p>
+      </article>
+    </div>
+
+    <article class="card pad">
+      <h3><i data-icon="award"></i> Beneficios para FEDAPABENI y sus asociaciones</h3>
+      <ul class="ticks cols">
+        <li><b>Presencia institucional sólida:</b> historia, objetivos, cobertura y modelo “Bosque en Pie”.</li>
+        <li><b>Visibilidad individual:</b> cada asociación con su ficha, fotos, productos, capacidades y contacto.</li>
+        <li><b>Más oportunidades comerciales:</b> catálogo por categorías, solicitudes de compra y WhatsApp directo.</li>
+        <li><b>Origen georreferenciado:</b> mapa con la ubicación de organizaciones y territorios.</li>
+        <li><b>Autonomía:</b> el personal de FEDAPABENI actualiza todo desde un panel, sin depender del proveedor.</li>
+        <li><b>Impacto social:</b> beneficio indirecto para aproximadamente <b>720 familias</b> productoras y recolectoras (dato de los TDR).</li>
+      </ul>
+    </article>
+
+    <article class="card pad">
+      <h3><i data-icon="layers"></i> Alcance general de la propuesta</h3>
+      <p>Incluye análisis y arquitectura, diseño UX/UI responsive, desarrollo de los módulos institucionales y comerciales, panel de administración, integración con WhatsApp, formularios y mapas, galería y noticias, seguridad y SEO básico, hosting, dominio y SSL por 12 meses, despliegue, pruebas, capacitación práctica, manual de administración, transferencia total de accesos y código, informe final y garantía de 90 días. <b>No se reconocerán costos adicionales</b> por conceptos necesarios para dejar la plataforma operativa durante el primer año.</p>
+    </article>
+  </section>
+
+  <!-- ============ TDR ============ -->
+  <section class="sec" id="tdr" data-pdf-break>
+    <header class="sec-head"><span class="num">02</span><div><p class="eyebrow">Comprensión del servicio</p><h2>Cumplimiento de los Términos de Referencia</h2><p class="lead">Revisamos el documento oficial de TDR publicado por IPHAE (CEBEM, octubre de 2026). Cada requisito tiene una respuesta concreta en esta propuesta.</p></div></header>
+    <div class="table-wrap"><table class="tbl" id="tdrTable"><caption class="sr-only">Matriz de cumplimiento de los TDR</caption></table></div>
+    <aside class="callout">
+      <h3><i data-icon="info"></i> Observaciones de alineación con el documento oficial</h3>
+      <ul>
+        <li>Los TDR exigen un <b>módulo institucional</b> (objetivos, trayectoria, cobertura territorial, organizaciones afiliadas y modelo “Bosque en Pie”, §6.4). Se incorporó como sección “Nosotros” en el prototipo y como módulo 1 de esta propuesta.</li>
+        <li>Los TDR piden un <b>formulario de solicitudes de información y consultas/compras</b> (§6.8) y capacitación en <b>administración de consultas</b> (§15). Se agregó una bandeja de consultas al panel administrativo.</li>
+        <li>El plazo propuesto de <b>18 días</b> cumple el requisito de un cronograma <b>inferior a 20 días</b> (§8); el monto de <b data-total></b> no supera el techo de <b>Bs 37.000</b> (§9).</li>
+        <li>La forma y porcentajes de pago serán establecidos en el contrato (§19); la referencia de pago de esta propuesta es negociable.</li>
+        <li>Los TDR fijan como fecha límite de presentación el <b>jueves 15 de octubre de 2026</b> (§18), al correo <a href="mailto:iphae_riberalta@yahoo.com">iphae_riberalta@yahoo.com</a>.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ SOLUCIÓN ============ -->
+  <section class="sec" id="solucion">
+    <header class="sec-head"><span class="num">03</span><div><p class="eyebrow">Solución propuesta</p><h2>Arquitectura moderna, administrable y sin dependencia del proveedor</h2></div></header>
+
+    <div class="arch card pad">
+      <h3><i data-icon="server"></i> Arquitectura general de la plataforma</h3>
+      <div class="arch-diagram" role="img" aria-label="Diagrama: visitantes acceden por HTTPS al sitio público; el personal de FEDAPABENI usa el panel de administración; ambos se apoyan en el CMS y la base de datos en el hosting, con integraciones a WhatsApp, OpenStreetMap y correo.">
+        <div class="arch-col">
+          <div class="node user"><i data-icon="users"></i><b>Compradores y público</b><span>Computadora, tableta, celular</span></div>
+          <div class="node user"><i data-icon="user"></i><b>Personal de FEDAPABENI</b><span>Usuarios con roles y contraseña</span></div>
+        </div>
+        <div class="arch-arrow"><span>HTTPS · SSL</span></div>
+        <div class="arch-col">
+          <div class="node core"><i data-icon="globe"></i><b>Sitio público responsive</b><span>Inicio · Nosotros · Directorio · Catálogo · Mapa · Noticias · Galería · Contacto</span></div>
+          <div class="node core"><i data-icon="dashboard"></i><b>Panel de administración (CMS)</b><span>Organizaciones · Productos · Categorías · Noticias · Galería · Consultas · Ajustes</span></div>
+        </div>
+        <div class="arch-arrow"><span>Servidor</span></div>
+        <div class="arch-col">
+          <div class="node data"><i data-icon="database"></i><b>Base de datos y archivos</b><span>MySQL/MariaDB · imágenes optimizadas · copias de seguridad</span></div>
+          <div class="node ext"><i data-icon="link"></i><b>Integraciones</b><span>WhatsApp (enlaces click-to-chat) · Leaflet + OpenStreetMap · correo SMTP</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols-2">
+      <article class="card pad">
+        <h3><i data-icon="code"></i> Tecnologías sugeridas para la implementación real</h3>
+        <table class="tbl compact">
+          <tbody>
+            <tr><th scope="row">Gestor de contenidos</th><td>WordPress (código abierto, licencia GPL) con tema a medida y tipos de contenido propios: organizaciones, productos, categorías, noticias/eventos y consultas.</td></tr>
+            <tr><th scope="row">Backend</th><td>PHP 8.x + MySQL/MariaDB; campos personalizados y roles de usuario (administrador, editor).</td></tr>
+            <tr><th scope="row">Frontend</th><td>HTML5, CSS3 y JavaScript; diseño mobile-first, imágenes WebP y carga diferida.</td></tr>
+            <tr><th scope="row">Mapas</th><td>Leaflet.js + OpenStreetMap (sin costo de licencias ni claves de pago).</td></tr>
+            <tr><th scope="row">Infraestructura</th><td>Hosting con SSL Let’s Encrypt, copias de seguridad automáticas y correo SMTP para formularios.</td></tr>
+          </tbody>
+        </table>
+        <p class="small muted">Alternativa evaluable en la fase de arquitectura: CMS headless (Strapi) + frontend Next.js. Recomendamos WordPress por su menor costo operativo, la facilidad de uso para el personal y la gran disponibilidad de proveedores en Bolivia, lo que evita dependencia técnica (TDR §13).</p>
+      </article>
+      <div class="stack">
+        <article class="card pad">
+          <h3><i data-icon="smartphone"></i> Diseño responsive</h3>
+          <p>Diseño mobile-first validado en computadoras, tabletas y celulares: navegación simple, botones grandes, WhatsApp siempre visible y páginas livianas para conexiones móviles de la región.</p>
+        </article>
+        <article class="card pad">
+          <h3><i data-icon="sliders"></i> Administración de contenido</h3>
+          <p>Formularios sencillos para crear y editar organizaciones, productos, fotografías, textos, noticias y eventos; bandeja de consultas; usuarios con roles. Sin conocimientos técnicos.</p>
+        </article>
+        <article class="card pad">
+          <h3><i data-icon="trending"></i> Escalabilidad y mantenimiento</h3>
+          <p>Estructura preparada para nuevas organizaciones, productos y módulos (pagos en línea, multilenguaje, trazabilidad). Código documentado y entregado, actualizaciones de seguridad y copias de respaldo.</p>
+        </article>
+      </div>
+    </div>
+
+    <aside class="callout">
+      <h3><i data-icon="info"></i> Sobre el prototipo</h3>
+      <p>El prototipo que acompaña esta propuesta está construido con <b>HTML, CSS y JavaScript</b> (sin servidor) para demostrar la experiencia de uso, la navegación y las funciones principales. La solución definitiva se implementará con <b>backend, base de datos y CMS</b>, con autenticación real, almacenamiento en servidor y envío de formularios por correo.</p>
+    </aside>
+  </section>
+
+  <!-- ============ MÓDULOS ============ -->
+  <section class="sec" id="modulos" data-pdf-break>
+    <header class="sec-head"><span class="num">04</span><div><p class="eyebrow">Módulos incluidos</p><h2>14 módulos para una plataforma completa</h2><p class="lead">Componentes institucionales, comerciales y administrativos exigidos por los TDR (§6.4 a §6.13), sin costos adicionales.</p></div></header>
+    <div class="modules" id="modules" data-pdf-split="2"></div>
+  </section>
+
+  <!-- ============ CRONOGRAMA ============ -->
+  <section class="sec" id="cronograma">
+    <header class="sec-head"><span class="num">05</span><div><p class="eyebrow">Metodología y cronograma</p><h2>18 días calendario, con entregables verificables</h2><p class="lead">Trabajo por fases cortas e iterativas, con validaciones de IPHAE y FEDAPABENI en cada producto (consultoría por producto, TDR §19).</p></div></header>
+
+    <div class="method" id="method"></div>
+
+    <div class="card pad gantt-card">
+      <div class="gantt-top">
+        <h3><i data-icon="calendar"></i> Cronograma de ejecución</h3>
+        <label class="date-ctl no-pdf">Fecha de orden de inicio
+          <input type="date" class="input" id="startDate" aria-describedby="startHelp">
+          <small id="startHelp">Opcional: calcula las fechas reales.</small>
+        </label>
+      </div>
+      <div class="gantt" id="gantt"></div>
+      <p class="small muted" id="ganttNote"></p>
+    </div>
+
+    <div class="table-wrap"><table class="tbl" id="phaseTable"><caption class="sr-only">Actividades, responsables, productos y fechas</caption></table></div>
+  </section>
+
+  <!-- ============ PRESUPUESTO ============ -->
+  <section class="sec" id="presupuesto" data-pdf-break>
+    <header class="sec-head"><span class="num">06</span><div><p class="eyebrow">Propuesta económica</p><h2>Presupuesto detallado</h2><p class="lead">Montos en bolivianos. Incluye todos los costos necesarios para el cumplimiento integral del servicio y el funcionamiento durante el primer año (TDR §9, §12 y §16).</p></div></header>
+
+    <div class="budget-tools no-pdf">
+      <p><i data-icon="pencil"></i> Puede modificar los montos: los subtotales, porcentajes y el total se recalculan automáticamente y se reflejan en el PDF.</p>
+      <button class="btn btn-light btn-sm" type="button" data-action="reset-budget"><i data-icon="reset"></i> Restablecer montos</button>
+    </div>
+    <div class="table-wrap"><table class="tbl budget" id="budgetTable"><caption class="sr-only">Presupuesto detallado por concepto</caption></table></div>
+    <div id="budgetAlert" role="status" aria-live="polite"></div>
+
+    <div class="total-band">
+      <div><span>Total de la propuesta</span><b data-total></b><small data-total-words></small></div>
+      <div class="ceil"><span>Techo presupuestario (TDR §9)</span><b>Bs 37.000,00</b><small id="ceilDiff"></small></div>
+    </div>
+
+    <div class="cols-2">
+      <div class="card pad">
+        <h3><i data-icon="layers"></i> Desglose por componentes solicitados (TDR §12)</h3>
+        <div class="table-wrap"><table class="tbl compact" id="componentTable"></table></div>
+      </div>
+      <div class="card pad">
+        <h3><i data-icon="server"></i> Funcionamiento durante el primer año (TDR §16)</h3>
+        <p>El rubro “Hosting y despliegue por un año” cubre los servicios técnicos necesarios durante 12 meses:</p>
+        <ul class="ticks">
+          <li>Hosting con recursos suficientes para el sitio, imágenes y base de datos.</li>
+          <li>Registro del dominio por 1 año, <b>a nombre de FEDAPABENI</b> (extensión y disponibilidad: <span class="pending-inline">pendiente de confirmación</span>).</li>
+          <li>Certificado SSL (HTTPS) y renovaciones automáticas.</li>
+          <li>Copias de seguridad periódicas y monitoreo básico.</li>
+        </ul>
+        <p class="small muted">Concluido el primer año, los costos de funcionamiento serán asumidos por FEDAPABENI mediante el mecanismo de contribución de sus organizaciones afiliadas (TDR §16).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ENTREGABLES ============ -->
+  <section class="sec" id="entregables">
+    <header class="sec-head"><span class="num">07</span><div><p class="eyebrow">Productos y entregables</p><h2>Lo que FEDAPABENI recibe</h2></div></header>
+    <div class="deliv-grid" id="delivHighlights" data-pdf-split="3"></div>
+    <div class="table-wrap"><table class="tbl" id="delivTable"><caption class="sr-only">Productos y entregables según TDR §7</caption></table></div>
+  </section>
+
+  <!-- ============ EQUIPO ============ -->
+  <section class="sec" id="equipo">
+    <header class="sec-head"><span class="num">08</span><div><p class="eyebrow">Proponente</p><h2>Perfil, experiencia y equipo responsable</h2></div></header>
+    <div class="cols-2">
+      <article class="card pad">
+        <h3><i data-icon="building"></i> <span data-f="companyName"></span></h3>
+        <p>Equipo de consultores y desarrolladores con base en Cochabamba, Bolivia, dedicado al diseño y desarrollo de sitios web y aplicaciones móviles, integraciones con terceros y soluciones administrables por el cliente (según el perfil publicado en <a href="https://soft.amicornios.com/" target="_blank" rel="noopener">soft.amicornios.com</a>).</p>
+        <table class="tbl compact">
+          <tbody>
+            <tr><th scope="row">Razón social</th><td><span data-f="companyLegal"></span></td></tr>
+            <tr><th scope="row">NIT</th><td><span data-f="companyNit"></span></td></tr>
+            <tr><th scope="row">Representante</th><td><span data-f="companyRep"></span></td></tr>
+            <tr><th scope="row">Ciudad</th><td><span data-f="companyCity"></span></td></tr>
+            <tr><th scope="row">Correo</th><td><span data-f="companyEmail"></span></td></tr>
+            <tr><th scope="row">WhatsApp</th><td><span data-f="companyPhone"></span></td></tr>
+            <tr><th scope="row">Sitio web</th><td><a href="https://soft.amicornios.com/" target="_blank" rel="noopener">soft.amicornios.com</a></td></tr>
+          </tbody>
+        </table>
+      </article>
+      <article class="card pad">
+        <h3><i data-icon="cap"></i> Capacidades técnicas</h3>
+        <ul class="ticks">
+          <li>Desarrollo web: WordPress, Next.js, React, HTML, CSS y JavaScript.</li>
+          <li>Backend: PHP, Laravel, Node.js, Express, Strapi, Python; MySQL y PostgreSQL.</li>
+          <li>Aplicaciones móviles: Flutter, React Native, Java.</li>
+          <li>Integraciones: autenticación, pasarelas de pago, calendarios de reservas, generación de códigos QR, APIs REST.</li>
+          <li>Catálogos con venta por WhatsApp, directorios con registro de usuarios y plataformas administrables.</li>
+        </ul>
+        <p class="small muted">Fuente: servicios y tecnologías publicados en soft.amicornios.com.</p>
+      </article>
+    </div>
+
+    <h3 class="sub">Experiencia específica relacionada (portafolio publicado)</h3>
+    <div class="exp-grid" id="experience" data-pdf-split="2"></div>
+
+    <h3 class="sub">Equipo responsable</h3>
+    <div class="table-wrap"><table class="tbl" id="teamTable"><caption class="sr-only">Equipo responsable</caption></table></div>
+    <p class="small muted no-pdf"><i data-icon="pencil"></i> Complete los nombres del equipo antes de enviar la propuesta. No se incluyen datos que no hayan sido confirmados.</p>
+  </section>
+
+  <!-- ============ GARANTÍA ============ -->
+  <section class="sec" id="garantia">
+    <header class="sec-head"><span class="num">09</span><div><p class="eyebrow">Garantía, soporte, capacitación y transferencia</p><h2>Continuidad garantizada para FEDAPABENI</h2></div></header>
+    <div class="cols-2">
+      <article class="card pad">
+        <h3><i data-icon="shield"></i> Garantía y soporte técnico — 90 días</h3>
+        <p>Durante <b>90 días calendario</b> posteriores a la puesta en funcionamiento corregiremos, sin costo adicional, los errores atribuibles al desarrollo (TDR §14):</p>
+        <ul class="ticks">
+          <li>Funcionamiento de los módulos contratados y de la programación.</li>
+          <li>Visualización, formularios, enlaces y navegación.</li>
+          <li>Atención por WhatsApp y correo; diagnóstico en 1 día hábil y corrección según severidad.</li>
+        </ul>
+        <p class="small muted">La garantía no comprende modificaciones o nuevos módulos fuera del alcance contratado.</p>
+      </article>
+      <article class="card pad">
+        <h3><i data-icon="cap"></i> Capacitación práctica obligatoria</h3>
+        <p>Sesiones prácticas (presenciales o virtuales, a coordinar) para el personal designado, antes de la recepción definitiva (TDR §15):</p>
+        <ul class="ticks cols">
+          <li>Administración de contenidos</li>
+          <li>Registro y actualización de organizaciones</li>
+          <li>Registro y actualización de productos</li>
+          <li>Incorporación de fotografías</li>
+          <li>Publicación de noticias</li>
+          <li>Administración de consultas y formularios</li>
+          <li>Gestión básica del catálogo</li>
+          <li>Administración general de la plataforma</li>
+        </ul>
+      </article>
+    </div>
+    <article class="card pad">
+      <h3><i data-icon="lock"></i> Propiedad y transferencia de accesos (TDR §13)</h3>
+      <p>Una vez cumplidas las obligaciones contractuales, FEDAPABENI tendrá <b>control total</b> de su plataforma. Entregaremos:</p>
+      <ul class="ticks cols">
+        <li>Usuario y contraseña de administrador</li>
+        <li>Acceso al hosting</li>
+        <li>Acceso al dominio (registrado a nombre de FEDAPABENI)</li>
+        <li>Base de datos (copia exportada)</li>
+        <li>Código fuente de los desarrollos del proyecto</li>
+        <li>Archivos gráficos y recursos digitales</li>
+        <li>Manual básico de administración</li>
+        <li>Toda otra credencial necesaria</li>
+      </ul>
+      <p class="small">El consultor <b>no</b> mantendrá bajo su control exclusivo credenciales, dominio, hosting ni base de datos. La solución usa tecnologías abiertas y ampliamente conocidas para que FEDAPABENI pueda contratar a cualquier otro proveedor en el futuro.</p>
+    </article>
+  </section>
+
+  <!-- ============ REQUERIMIENTOS ============ -->
+  <section class="sec" id="requerimientos">
+    <header class="sec-head"><span class="num">10</span><div><p class="eyebrow">Requerimientos a FEDAPABENI</p><h2>Insumos necesarios para cumplir el plazo</h2></div></header>
+    <div class="cols-2">
+      <article class="card pad">
+        <ul class="ticks">
+          <li>Designación de una persona de contacto y del personal a capacitar.</li>
+          <li>Información institucional: historia, objetivos, cobertura territorial y modelo “Bosque en Pie”.</li>
+          <li>Datos validados de cada asociación: nombre completo, ubicación, descripción, capacidades y contactos.</li>
+          <li>Listado de productos con presentaciones, disponibilidad y características.</li>
+        </ul>
+      </article>
+      <article class="card pad">
+        <ul class="ticks">
+          <li>Fotografías y videos propios (organizaciones, productos, territorios).</li>
+          <li>Logotipo oficial en buena resolución y lineamientos de identidad, si existen.</li>
+          <li>Número(s) de WhatsApp comercial y correo institucional.</li>
+          <li>Datos para el registro del dominio a nombre de FEDAPABENI y validaciones oportunas de cada producto.</li>
+        </ul>
+      </article>
+    </div>
+    <p class="small muted">La información será proporcionada y validada por FEDAPABENI según el cronograma de coordinación (TDR §20). Los retrasos en su entrega se registrarán y no se considerarán incumplimiento del consultor.</p>
+  </section>
+
+  <!-- ============ CONDICIONES ============ -->
+  <section class="sec" id="condiciones">
+    <header class="sec-head"><span class="num">11</span><div><p class="eyebrow">Condiciones comerciales</p><h2>Condiciones de la oferta</h2></div></header>
+    <div class="conds">
+      <div class="cond"><i data-icon="clock"></i><b>18 días calendario</b><span>Plazo de ejecución desde la firma del contrato u orden de inicio.</span></div>
+      <div class="cond"><i data-icon="shield"></i><b>90 días</b><span>Garantía técnica posterior a la puesta en funcionamiento.</span></div>
+      <div class="cond"><i data-icon="server"></i><b>12 meses</b><span>Hosting, dominio, SSL y funcionamiento incluidos.</span></div>
+      <div class="cond"><i data-icon="wallet"></i><b>Pago negociable</b><span>Sujeto a aprobación contractual, vinculado a la aceptación de productos.</span></div>
+      <div class="cond"><i data-icon="calendar"></i><b><span data-f="validity"></span> días</b><span>Vigencia de la cotización desde su fecha de elaboración.</span></div>
+      <div class="cond"><i data-icon="wallet"></i><b data-total></b><span>Monto total, en bolivianos, dentro del techo de Bs 37.000.</span></div>
+    </div>
+    <article class="card pad">
+      <h3><i data-icon="handshake"></i> Forma de pago de referencia (negociable)</h3>
+      <div class="table-wrap"><table class="tbl compact" id="payTable"></table></div>
+      <p class="small muted">Referencia sujeta a lo que establezca el contrato (TDR §19). Régimen de facturación y retenciones impositivas: <span class="pending-inline">pendiente de confirmación</span>.</p>
+    </article>
+  </section>
+
+  <!-- ============ PROTOTIPO ============ -->
+  <section class="sec" id="prototipo" data-pdf-break>
+    <header class="sec-head"><span class="num">12</span><div><p class="eyebrow">Prototipo interactivo</p><h2>Vea y pruebe la plataforma antes de contratar</h2><p class="lead">Un prototipo navegable con datos demostrativos que muestra cómo se verá y funcionará el producto final.</p></div></header>
+    <div class="proto">
+      <figure class="shot desktop"><img src="assets/images/preview-desktop.jpg" alt="Vista de escritorio de la página de inicio del prototipo" width="1366" height="854" loading="lazy"><figcaption>Inicio — escritorio</figcaption></figure>
+      <figure class="shot mobile"><img src="assets/images/preview-mobile.jpg" alt="Vista móvil del catálogo del prototipo" width="390" height="780" loading="lazy"><figcaption>Catálogo — celular</figcaption></figure>
+      <figure class="shot admin"><img src="assets/images/preview-admin.jpg" alt="Panel administrativo demostrativo" width="1366" height="854" loading="lazy"><figcaption>Panel administrativo</figcaption></figure>
+    </div>
+    <div class="cols-2">
+      <article class="card pad">
+        <h3><i data-icon="check-circle"></i> Qué puede probar</h3>
+        <ul class="ticks">
+          <li>Buscador global y filtros por categoría, organización, ubicación y rubro.</li>
+          <li>Perfiles de asociaciones con fotos, productos, contacto y mapa.</li>
+          <li>Fichas de producto con galería y consulta por WhatsApp.</li>
+          <li>Mapa interactivo (Leaflet + OpenStreetMap) con enlaces a perfiles.</li>
+          <li>Noticias, ferias y oportunidades con filtros; galería con visor de imágenes y videos.</li>
+          <li>Formularios validados de contacto y solicitud de compra.</li>
+          <li>Panel administrativo: crear, editar y eliminar registros; bandeja de consultas.</li>
+        </ul>
+      </article>
+      <article class="card pad proto-cta">
+        <h3><i data-icon="external"></i> Acceso al prototipo</h3>
+        <p>Enlace: <a id="protoLink" href="prototipo/index.html" target="_blank" rel="noopener"><span data-f="prototypeUrl"></span></a></p>
+        <p class="small muted">Los datos, ubicaciones y contactos del prototipo son ficticios y deben ser validados por FEDAPABENI. Las fotografías provienen de Wikimedia Commons con licencias libres.</p>
+        <div class="row-btns no-pdf">
+          <a class="btn btn-primary" href="prototipo/index.html"><i data-icon="eye"></i> Abrir prototipo</a>
+          <a class="btn btn-light" href="prototipo/admin/index.html"><i data-icon="dashboard"></i> Panel administrativo</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ REFERENCIAS ============ -->
+  <section class="sec" id="referencias">
+    <header class="sec-head"><span class="num">13</span><div><p class="eyebrow">Referencias del proyecto</p><h2>Fuentes y enlaces</h2></div></header>
+    <div class="refs" id="refs" data-pdf-split="2"></div>
+  </section>
+
+  <!-- ============ FIRMA ============ -->
+  <section class="sec" id="firma">
+    <div class="closing card pad">
+      <h2>Gracias por su consideración</h2>
+      <p>Estamos listos para iniciar al día siguiente de la orden de inicio y entregar una plataforma que fortalezca la articulación comercial de la oferta amazónica.</p>
+      <div class="sign-grid">
+        <div><div class="sign-line"></div><b data-f="companyRep"></b><span><span data-f="companyName"></span> · Proponente</span></div>
+        <div><div class="sign-line"></div><b data-f="clientContact"></b><span>IPHAE / FEDAPABENI · Recepción</span></div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+  </div>
+
+  <footer class="doc-foot no-pdf">
+    <div class="wrap">
+      <span><span data-f="companyName"></span> · <span data-f="companyEmail"></span> · <span data-f="companyPhone"></span></span>
+      <span>Cotización N.º <span data-f="quoteNo"></span> · <a href="prototipo/index.html">Prototipo</a> · <a href="prototipo/admin/index.html">Panel demo</a> · <button class="linklike" type="button" data-action="reset-all">Restablecer campos editados</button></span>
+    </div>
+  </footer>
+
+  <div class="pdf-overlay no-pdf" id="pdfOverlay" hidden role="alertdialog" aria-live="assertive" aria-label="Generando PDF">
+    <div class="pdf-box"><div class="spinner" aria-hidden="true"></div><b>Generando PDF…</b><span id="pdfStatus">Preparando documento</span></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="js/icons.js" defer></script>
+  <script src="js/cotizacion.js" defer></script>
+  <script src="js/pdf.js" defer></script>
+</body>
+</html>
