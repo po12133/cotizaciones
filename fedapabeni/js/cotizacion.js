@@ -1,49 +1,75 @@
 /*
  * Cotización FEDAPABENI — contenido estructurado, campos editables y presupuesto con recálculo.
- * Los cambios se guardan en localStorage y son leídos por pdf.js al exportar.
+ * Los datos que cambian (campos, montos, plazo, fases, entregas y pagos) vienen de ../datos.json.
+ * Las ediciones hechas en la página se guardan en localStorage y son leídas por pdf.js al exportar;
+ * se descartan solas cuando datos.json cambia.
  */
 (function (global) {
   'use strict';
 
-  const KEY = 'fedapabeni-cotizacion-v1';
-  const CEILING = 37000;
+  const KEY = 'fedapabeni-cotizacion-v2';
+  const DATA_URL = 'datos.json';
 
-  /* ================= datos ================= */
+  /* ================= datos (se completan desde datos.json) ================= */
   // Campos editables. Valor vacío = marcador visible "[Por completar …]". No se inventan datos legales.
-  const FIELD_DEFAULTS = {
-    quoteNo: 'AMS-FEDA-2026-01',
-    date: '15 de octubre de 2026',
-    validity: '15',
-    companyName: 'Amicornios Soft',
-    companyLegal: '',
-    companyNit: '',
-    companyRep: '',
-    companyCity: 'Cochabamba, Bolivia',
-    companyEmail: 'vargascarlos12123@gmail.com', // Publicado en soft.amicornios.com
-    companyPhone: '+591 71450557', // Publicado en soft.amicornios.com
-    clientContact: '',
-    prototypeUrl: '',
-    team1: '', team2: '', team3: '', team4: '',
-  };
+  let FIELD_DEFAULTS = {};
+  let CEILING = 0;
+  let PLAZO = {};
+  let BUDGET = [];
+  let GROUPS = {};
+  let PHASES = [];
+  let DELIVERABLES = [];
+  let PAY = [];
+  let TDR = [];
+
+  function applyData(d) {
+    FIELD_DEFAULTS = Object.assign({}, d.campos);
+    CEILING = Number(d.techo) || 0;
+    PLAZO = {
+      days: Number(d.plazo.diasCalendario) || 0,
+      max: Number(d.plazo.maximoTdr) || 0,
+      warranty: Number(d.plazo.garantiaDias) || 0,
+      hosting: Number(d.plazo.hostingMeses) || 0,
+      start: d.plazo.fechaInicio || '',
+    };
+    GROUPS = d.presupuesto.grupos;
+    BUDGET = d.presupuesto.items.map(function (b) {
+      return { id: b.id, group: b.grupo, concept: b.concepto, desc: b.descripcion, comp: b.componente, amount: Number(b.monto) || 0 };
+    });
+    PHASES = d.fases.map(function (p) {
+      return { name: p.nombre, s: p.inicio, e: p.fin, who: p.responsables, acts: p.actividades, prod: p.productos, ms: p.entregas || [] };
+    });
+    DELIVERABLES = d.entregables.map(function (x) { return [x.producto, x.forma, x.dia]; });
+    PAY = d.pagos.map(function (p) { return [Number(p.porcentaje) || 0, p.contra, p.dia]; });
+    const p1 = PHASES[0] || { s: 1, e: 1 };
+    TDR = [
+      ['§6.1', 'Análisis y arquitectura', 'Producto 1: requerimientos, estructura, categorías, catálogo y directorio (días ' + p1.s + '–' + p1.e + ').'],
+      ['§6.2', 'Diseño UX/UI adaptable', 'Producto 2 y módulo 13: diseño mobile-first para computadoras, tabletas y celulares.'],
+      ['§6.3', 'Desarrollo web', 'Módulos 1 a 14, institucionales y comerciales.'],
+      ['§6.4', 'Módulo institucional', 'Módulo 1: objetivos, trayectoria, cobertura, afiliadas y “Bosque en Pie”.'],
+      ['§6.5', 'Directorio de organizaciones', 'Módulo 2: AAGROPAMA, ACOPALT, APPAA-VD, AIPRANCA, ARPHAE, AJORA y otras.'],
+      ['§6.6', 'Fichas individuales', 'Módulo 5: nombre, ubicación, descripción, productos, fotos, capacidades, contacto y canales.'],
+      ['§6.7', 'Catálogo comercial', 'Módulos 3 y 4: categorías, disponibilidad, presentaciones y características.'],
+      ['§6.8', 'Contacto y oportunidades', 'Módulos 6 y 7: formulario de contacto, de solicitudes/compras y WhatsApp.'],
+      ['§6.9', 'Mapa y georreferenciación', 'Módulo 8: Leaflet + OpenStreetMap con enlaces a perfiles.'],
+      ['§6.10', 'Galería y noticias', 'Módulos 9 y 10: fotos, videos, noticias, ferias, eventos y oportunidades.'],
+      ['§6.11', 'Panel de administración', 'Módulo 11: crear y editar organizaciones, productos, fotos, textos y noticias.'],
+      ['§6.12', 'Seguridad y posicionamiento', 'Módulo 12: SSL, seguridad básica, SEO básico y buenas prácticas.'],
+      ['§6.13 · §15', 'Capacitación', 'Módulo 14: capacitación práctica en los 8 temas obligatorios.'],
+      ['§6.14', 'Implementación', 'Fase 8: hosting, dominio, pruebas y puesta en producción.'],
+      ['§6.15 · §16', 'Funcionamiento por un año', 'Hosting, dominio y SSL por ' + PLAZO.hosting + ' meses incluidos en el monto.'],
+      ['§8', 'Cronograma inferior a ' + PLAZO.max + ' días', PLAZO.days + ' días calendario, con actividades, responsables, productos y fechas.'],
+      ['§13', 'Propiedad y transferencia', 'Entrega de credenciales, hosting, dominio, base de datos, código y recursos.'],
+      ['§14', 'Garantía mínima de 90 días', PLAZO.warranty + ' días de corrección de errores sin costo adicional.'],
+    ];
+  }
+
   const FIELD_LABELS = {
     companyLegal: 'razón social', companyNit: 'NIT', companyRep: 'nombre del representante legal', clientContact: 'responsable designado por IPHAE/FEDAPABENI',
     prototypeUrl: 'URL pública del prototipo', team1: 'nombre', team2: 'nombre', team3: 'nombre', team4: 'nombre', quoteNo: 'número', date: 'fecha',
     companyName: 'empresa', companyCity: 'ciudad', companyEmail: 'correo', companyPhone: 'teléfono', validity: 'días',
   };
 
-  const BUDGET = [
-    { id: 'diseno', group: 'A', concept: 'Diseño UI/UX responsive', desc: 'Arquitectura de información, prototipo, diseño visual del sitio y del panel, adaptación a celular y tableta.', comp: 'diseno', amount: 4000 },
-    { id: 'directorio', group: 'A', concept: 'Directorio de asociaciones', desc: 'Directorio con buscador y filtros; fichas individuales con fotos, productos, capacidades y contacto.', comp: 'desarrollo', amount: 4000 },
-    { id: 'catalogo', group: 'A', concept: 'Catálogo y fichas de productos', desc: 'Catálogo por categorías con filtros y ordenamiento; fichas con galería, presentación y disponibilidad.', comp: 'desarrollo', amount: 5000 },
-    { id: 'panel', group: 'A', concept: 'Panel administrativo y CMS', desc: 'Gestión de organizaciones, productos, categorías, noticias, galería, consultas, usuarios y ajustes.', comp: 'desarrollo', amount: 6000 },
-    { id: 'contacto', group: 'A', concept: 'WhatsApp, formularios y mapas', desc: 'WhatsApp click-to-chat, formularios de contacto y de compra con aviso por correo, mapa Leaflet/OSM.', comp: 'desarrollo', amount: 3000 },
-    { id: 'noticias', group: 'A', concept: 'Noticias, eventos y multimedia', desc: 'Noticias, ferias, eventos y oportunidades comerciales; galería de fotos y videos.', comp: 'desarrollo', amount: 2000 },
-    { id: 'seo', group: 'B', concept: 'SEO, seguridad y optimización', desc: 'SSL, configuración segura, copias de respaldo, rendimiento, metadatos, sitemap y Search Console.', comp: 'implementacion', amount: 2000 },
-    { id: 'hosting', group: 'B', concept: 'Hosting y despliegue por un año', desc: 'Hosting, dominio y SSL por 12 meses; configuración, pruebas y puesta en producción.', comp: 'hosting', amount: 1500 },
-    { id: 'capacitacion', group: 'C', concept: 'Capacitación y documentación', desc: 'Capacitación práctica al personal de FEDAPABENI y manual básico de administración.', comp: 'capacitacion', amount: 1500 },
-    { id: 'garantia', group: 'C', concept: 'Pruebas, garantía y soporte', desc: 'Pruebas funcionales y en dispositivos; garantía y soporte técnico de 90 días.', comp: 'soporte', amount: 3000 },
-  ];
-  const GROUPS = { A: 'Diseño y desarrollo de la plataforma', B: 'Implementación, seguridad y funcionamiento', C: 'Capacitación, pruebas y garantía' };
   const COMPONENTS = [
     ['diseno', 'Diseño'],
     ['desarrollo', 'Desarrollo y programación'],
@@ -71,20 +97,6 @@
     { icon: 'cap', title: 'Capacitación y documentación', tdr: '§6.13 · §15', desc: 'Capacitación práctica y manual para que FEDAPABENI administre su plataforma.', feats: ['8 temas obligatorios de los TDR', 'Manual básico de administración', 'Antes de la recepción definitiva'] },
   ];
 
-  // Fases: [inicio, fin] en días calendario (inclusive). who: A = Amicornios Soft, F = FEDAPABENI, I = IPHAE
-  const PHASES = [
-    { name: 'Inicio, levantamiento de requerimientos y arquitectura', s: 1, e: 3, who: 'A · F · I', acts: 'Reunión de inicio, relevamiento de contenidos, estructura del sitio, catálogo y directorio.', prod: 'P1 · Documento de requerimientos y arquitectura', ms: [3] },
-    { name: 'Diseño UX/UI y propuesta gráfica', s: 3, e: 6, who: 'A · F', acts: 'Mapa de navegación, diseño de páginas clave y panel, validación con FEDAPABENI.', prod: 'P2 · Diseño UX/UI aprobado', ms: [6] },
-    { name: 'Desarrollo base, CMS y panel de administración', s: 5, e: 11, who: 'A', acts: 'Instalación, tipos de contenido, roles, panel y plantillas responsive.', prod: 'Avance demostrable', ms: [] },
-    { name: 'Directorio, fichas y catálogo comercial', s: 7, e: 12, who: 'A', acts: 'Directorio con filtros, perfiles, catálogo, fichas de producto y buscador.', prod: 'P4 · Directorio · P5 · Catálogo', ms: [12] },
-    { name: 'Contacto, WhatsApp, mapa, galería y noticias', s: 9, e: 13, who: 'A', acts: 'Formularios, WhatsApp, mapa Leaflet/OSM, galería y noticias.', prod: 'P3 · Plataforma funcional · P6 · Contacto y mapa', ms: [13] },
-    { name: 'Carga inicial de contenidos', s: 10, e: 14, who: 'F · A', acts: 'FEDAPABENI entrega y valida contenidos; carga asistida de organizaciones y productos.', prod: 'Contenido inicial publicado', ms: [] },
-    { name: 'SEO, seguridad, optimización y pruebas', s: 13, e: 15, who: 'A · F', acts: 'Pruebas funcionales y en dispositivos, seguridad, rendimiento y SEO básico.', prod: 'Informe de pruebas', ms: [] },
-    { name: 'Despliegue: hosting, dominio, SSL y producción', s: 15, e: 16, who: 'A · F', acts: 'Configuración de hosting y dominio, SSL, publicación y verificación.', prod: 'P8 · Página publicada y funcionando', ms: [16] },
-    { name: 'Capacitación y manual de administración', s: 16, e: 17, who: 'A · F', acts: 'Capacitación práctica al personal designado y entrega del manual.', prod: 'P7 · Panel y capacitación · P9 · Manual', ms: [17] },
-    { name: 'Cierre: código, accesos e informe final', s: 17, e: 18, who: 'A · I · F', acts: 'Transferencia de accesos, código y recursos; informe final y recepción.', prod: 'P10 · Código y accesos · P11 · Informe final', ms: [18] },
-  ];
-
   const METHOD = [
     ['search', 'Descubrir', 'Requerimientos y arquitectura validados con IPHAE y FEDAPABENI.'],
     ['palette', 'Diseñar', 'Prototipo y diseño UX/UI aprobados antes de programar.'],
@@ -93,45 +105,10 @@
     ['cap', 'Entregar', 'Publicación, capacitación, manual y transferencia total.'],
   ];
 
-  const DELIVERABLES = [
-    ['Documento de requerimientos, estructura y arquitectura de la plataforma', 'Documento PDF: requerimientos, mapa del sitio, estructura de catálogo y directorio, arquitectura técnica.', 3],
-    ['Diseño UX/UI y propuesta gráfica de la página', 'Diseños de páginas clave (escritorio y móvil) y guía visual.', 6],
-    ['Página web desarrollada y funcional, con módulos institucionales y comerciales', 'Plataforma operativa en entorno de pruebas.', 13],
-    ['Directorio digital de organizaciones y emprendimientos', 'Directorio con fichas de las organizaciones indicadas por FEDAPABENI.', 12],
-    ['Catálogo comercial de productos amazónicos', 'Catálogo por categorías con fichas de productos.', 12],
-    ['Sistema de contacto, formularios, integración con WhatsApp y mapa', 'Formularios con aviso por correo, WhatsApp y mapa georreferenciado.', 13],
-    ['Panel de administración y capacitación al personal de FEDAPABENI', 'Usuarios administradores creados y sesiones de capacitación con lista de asistencia.', 17],
-    ['Página publicada, configurada, probada y funcionando', 'Sitio en el dominio de FEDAPABENI con SSL.', 16],
-    ['Manual básico para administración y actualización de contenidos', 'Manual en PDF con capturas paso a paso.', 17],
-    ['Entrega de código fuente y accesos administrativos', 'Repositorio/archivo del código, base de datos, recursos gráficos y acta de credenciales.', 18],
-    ['Informe final de la consultoría con recomendaciones de sostenibilidad', 'Trabajos realizados, estado final y recomendaciones para el segundo año.', 18],
-  ];
-
   const HIGHLIGHTS = [
     ['globe', 'Plataforma web funcional'], ['code', 'Código fuente'], ['database', 'Base de datos y estructura'],
     ['lock', 'Accesos administrativos'], ['server', 'Dominio y hosting configurados'], ['book', 'Manual de administración'],
     ['cap', 'Capacitación al personal'], ['shield', 'Garantía mínima de 90 días'], ['calendar', 'Hosting durante el primer año'],
-  ];
-
-  const TDR = [
-    ['§6.1', 'Análisis y arquitectura', 'Producto 1: requerimientos, estructura, categorías, catálogo y directorio (días 1–3).'],
-    ['§6.2', 'Diseño UX/UI adaptable', 'Producto 2 y módulo 13: diseño mobile-first para computadoras, tabletas y celulares.'],
-    ['§6.3', 'Desarrollo web', 'Módulos 1 a 14, institucionales y comerciales.'],
-    ['§6.4', 'Módulo institucional', 'Módulo 1: objetivos, trayectoria, cobertura, afiliadas y “Bosque en Pie”.'],
-    ['§6.5', 'Directorio de organizaciones', 'Módulo 2: AAGROPAMA, ACOPALT, APPAA-VD, AIPRANCA, ARPHAE, AJORA y otras.'],
-    ['§6.6', 'Fichas individuales', 'Módulo 5: nombre, ubicación, descripción, productos, fotos, capacidades, contacto y canales.'],
-    ['§6.7', 'Catálogo comercial', 'Módulos 3 y 4: categorías, disponibilidad, presentaciones y características.'],
-    ['§6.8', 'Contacto y oportunidades', 'Módulos 6 y 7: formulario de contacto, de solicitudes/compras y WhatsApp.'],
-    ['§6.9', 'Mapa y georreferenciación', 'Módulo 8: Leaflet + OpenStreetMap con enlaces a perfiles.'],
-    ['§6.10', 'Galería y noticias', 'Módulos 9 y 10: fotos, videos, noticias, ferias, eventos y oportunidades.'],
-    ['§6.11', 'Panel de administración', 'Módulo 11: crear y editar organizaciones, productos, fotos, textos y noticias.'],
-    ['§6.12', 'Seguridad y posicionamiento', 'Módulo 12: SSL, seguridad básica, SEO básico y buenas prácticas.'],
-    ['§6.13 · §15', 'Capacitación', 'Módulo 14: capacitación práctica en los 8 temas obligatorios.'],
-    ['§6.14', 'Implementación', 'Fase 8: hosting, dominio, pruebas y puesta en producción.'],
-    ['§6.15 · §16', 'Funcionamiento por un año', 'Hosting, dominio y SSL por 12 meses incluidos en el monto.'],
-    ['§8', 'Cronograma inferior a 20 días', '18 días calendario, con actividades, responsables, productos y fechas.'],
-    ['§13', 'Propiedad y transferencia', 'Entrega de credenciales, hosting, dominio, base de datos, código y recursos.'],
-    ['§14', 'Garantía mínima de 90 días', '90 días de corrección de errores sin costo adicional.'],
   ];
 
   const EXPERIENCE = [
@@ -164,19 +141,21 @@
     ['Wikimedia Commons', 'https://commons.wikimedia.org/', 'Fuente de las fotografías demostrativas (licencias libres).'],
   ];
 
-  const PAY = [['30 %', 'Aprobación de los productos 1 y 2 (requerimientos y diseño)', 'Día 6'], ['40 %', 'Aprobación de los productos 3 a 6 (plataforma, directorio, catálogo, contacto y mapa)', 'Día 13'], ['30 %', 'Recepción definitiva: productos 7 a 11 (publicación, capacitación, manual, accesos e informe)', 'Día 18']];
 
   /* ================= estado ================= */
-  function load() {
+  // `src` guarda el contenido de datos.json con el que se hicieron las ediciones; si el archivo cambia, se descartan.
+  function load(src) {
     let s = {};
     try { s = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { s = {}; }
+    if (s.src !== src) s = {};
     return {
+      src: src,
       fields: Object.assign({}, FIELD_DEFAULTS, s.fields || {}),
       budget: Object.assign({}, Object.fromEntries(BUDGET.map(function (b) { return [b.id, b.amount]; })), s.budget || {}),
-      startDate: s.startDate || '',
+      startDate: s.startDate || PLAZO.start,
     };
   }
-  const state = load();
+  let state = null;
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* almacenamiento no disponible */ } }
 
   /* ================= utilidades ================= */
@@ -219,6 +198,7 @@
   function fmtLong(dt) { return dt.toLocaleDateString('es-BO', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); }
   function dayLabel(d) { return state.startDate ? fmtShort(addDays(state.startDate, d - 1)) : 'Día ' + d; }
 
+  function payPct() { return PAY.reduce(function (s, p) { return s + p[0]; }, 0); }
   function total() { return BUDGET.reduce(function (s, b) { return s + (Number(state.budget[b.id]) || 0); }, 0); }
 
   function toast(msg, type) {
@@ -306,7 +286,8 @@
   }
 
   function renderSchedule() {
-    const days = 18;
+    const days = Math.max(PLAZO.days, ...PHASES.map(function (p) { return p.e; }));
+    document.getElementById('gantt').style.setProperty('--gdays', days);
     let h = '<div class="g-row g-head"><div class="g-label">Fase</div><div class="g-days">';
     for (let d = 1; d <= days; d++) {
       const dt = state.startDate ? addDays(state.startDate, d - 1) : null;
@@ -323,12 +304,12 @@
     document.getElementById('gantt').innerHTML = h;
     const end = state.startDate ? addDays(state.startDate, days - 1) : null;
     document.getElementById('ganttNote').innerHTML = '<span class="lg"><i class="sw a"></i>Amicornios Soft</span> <span class="lg"><i class="sw f"></i>FEDAPABENI (contenidos y validación)</span> <span class="lg"><b>◆</b> Entrega de producto</span> · ' +
-      (end ? 'Inicio: <b>' + esc(fmtLong(addDays(state.startDate, 0))) + '</b> · Conclusión: <b>' + esc(fmtLong(end)) + '</b> (18 días calendario).' : 'Fechas relativas (día 1 = día siguiente a la firma del contrato u orden de inicio).');
+      (end ? 'Inicio: <b>' + esc(fmtLong(addDays(state.startDate, 0))) + '</b> · Conclusión: <b>' + esc(fmtLong(end)) + '</b> (' + PLAZO.days + ' días calendario).' : 'Fechas relativas (día 1 = día siguiente a la firma del contrato u orden de inicio).');
 
     document.getElementById('phaseTable').innerHTML = '<thead><tr><th scope="col">#</th><th scope="col">Fase y actividades</th><th scope="col">Responsables</th><th scope="col">Productos</th><th scope="col">Fechas</th></tr></thead><tbody>' +
       PHASES.map(function (p, i) {
         return '<tr><td><b>' + (i + 1) + '</b></td><td><b>' + esc(p.name) + '</b><br><span class="muted small">' + esc(p.acts) + '</span></td><td class="nowrap">' + esc(p.who) + '</td><td>' + esc(p.prod) + '</td><td class="nowrap">' + esc(dayLabel(p.s)) + (p.e !== p.s ? ' – ' + esc(dayLabel(p.e)) : '') + '</td></tr>';
-      }).join('') + '</tbody><tfoot><tr><td colspan="5" class="small muted">A = Amicornios Soft · F = FEDAPABENI · I = IPHAE (supervisión). Duración total: 18 días calendario, inferior al máximo de 20 días (TDR §8).</td></tr></tfoot>';
+      }).join('') + '</tbody><tfoot><tr><td colspan="5" class="small muted">A = Amicornios Soft · F = FEDAPABENI · I = IPHAE (supervisión). Duración total: ' + PLAZO.days + ' días calendario, ' + (PLAZO.days < PLAZO.max ? 'inferior al' : '<b>no inferior</b> al') + ' máximo de ' + PLAZO.max + ' días (TDR §8).</td></tr></tfoot>';
   }
 
   function renderBudget() {
@@ -375,7 +356,7 @@
     const diff = CEILING - tot;
     document.getElementById('ceilDiff').textContent = diff >= 0 ? 'Margen bajo el techo: ' + money(diff) : 'Excede el techo en ' + money(-diff);
     document.getElementById('budgetAlert').innerHTML = diff < 0
-      ? '<div class="alert">' + icon('alert') + '<span>El total supera el techo de Bs 37.000 establecido en los TDR (§9 y §12). Ajuste los montos antes de enviar la propuesta.</span></div>' : '';
+      ? '<div class="alert">' + icon('alert') + '<span>El total supera el techo de ' + money(CEILING) + ' establecido en los TDR (§9 y §12). Ajuste los montos antes de enviar la propuesta.</span></div>' : '';
     document.querySelector('.total-band').classList.toggle('over', diff < 0);
 
     const comp = {};
@@ -385,7 +366,8 @@
       '</tbody><tfoot><tr><td>Total</td><td class="num nowrap">' + money(tot) + '</td></tr></tfoot>';
 
     document.getElementById('payTable').innerHTML = '<thead><tr><th scope="col">%</th><th scope="col">Contra</th><th scope="col">Estimado</th><th scope="col" class="num">Monto</th></tr></thead><tbody>' +
-      PAY.map(function (p) { return '<tr><td><b>' + p[0] + '</b></td><td>' + esc(p[1]) + '</td><td class="nowrap">' + esc(state.startDate ? fmtShort(addDays(state.startDate, parseInt(p[2].replace(/\D/g, ''), 10) - 1)) : p[2]) + '</td><td class="num nowrap">' + money(tot * parseInt(p[0], 10) / 100) + '</td></tr>'; }).join('') + '</tbody>';
+      PAY.map(function (p) { return '<tr><td><b>' + p[0] + ' %</b></td><td>' + esc(p[1]) + '</td><td class="nowrap">' + esc(dayLabel(p[2])) + '</td><td class="num nowrap">' + money(tot * p[0] / 100) + '</td></tr>'; }).join('') + '</tbody>' +
+      (payPct() !== 100 ? '<tfoot><tr><td colspan="4" class="small"><b>Atención:</b> los porcentajes de pago en datos.json suman ' + payPct() + ' %, no 100 %.</td></tr></tfoot>' : '');
   }
 
   function renderDeliverables() {
@@ -447,7 +429,7 @@
     if (a === 'reset-budget') {
       BUDGET.forEach(function (b) { state.budget[b.id] = b.amount; });
       save(); renderBudget(); updateTotals();
-      toast('Montos restablecidos (total Bs 32.000,00).');
+      toast('Montos restablecidos (total ' + money(total()) + ').');
     } else if (a === 'reset-all') {
       if (!confirm('¿Restablecer todos los campos editados y montos a sus valores originales?')) return;
       try { localStorage.removeItem(KEY); } catch (err) { /* nada */ }
@@ -480,20 +462,37 @@
   }
 
   /* ================= inicio ================= */
-  renderModules();
-  renderTdr();
-  renderMethod();
-  renderSchedule();
-  renderBudget();
-  renderDeliverables();
-  renderExperience();
-  renderRefs();
-  protoUrlControl();
-  document.getElementById('startDate').value = state.startDate;
-  hydrateIcons(document);
-  initFields();
-  paintFields();
-  updateTotals();
+  function paintConfig() {
+    const v = { dias: PLAZO.days, maxDias: PLAZO.max, garantia: PLAZO.warranty, hosting: PLAZO.hosting, techo: money(CEILING) };
+    document.querySelectorAll('[data-c]').forEach(function (el) { el.textContent = v[el.dataset.c]; });
+  }
 
-  global.Quote = { state: state, protoUrl: protoUrl, total: total, money: money, totalWords: totalWords, placeholder: placeholder, toast: toast, esc: esc };
+  function start(src) {
+    applyData(JSON.parse(src));
+    state = load(src);
+    renderModules();
+    renderTdr();
+    renderMethod();
+    renderSchedule();
+    renderBudget();
+    renderDeliverables();
+    renderExperience();
+    renderRefs();
+    protoUrlControl();
+    paintConfig();
+    document.getElementById('startDate').value = state.startDate;
+    hydrateIcons(document);
+    initFields();
+    paintFields();
+    updateTotals();
+    global.Quote = { state: state, plazo: PLAZO, protoUrl: protoUrl, total: total, money: money, totalWords: totalWords, placeholder: placeholder, toast: toast, esc: esc };
+  }
+
+  fetch(DATA_URL, { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(start)
+    .catch(function (err) {
+      console.error(err);
+      document.body.insertAdjacentHTML('afterbegin', '<div class="alert no-pdf" style="margin:16px">No se pudo leer <b>datos.json</b> (' + esc(err.message) + '). Abra la cotización con un servidor estático (por ejemplo <code>npx serve .</code>) y revise que el JSON sea válido.</div>');
+    });
 })(window);

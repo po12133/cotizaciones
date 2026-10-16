@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#0f3324">
   <meta property="og:title" content="Propuesta: Plataforma web comercial FEDAPABENI">
-  <meta property="og:description" content="Directorio, catálogo comercial, mapa, WhatsApp, noticias y panel administrativo. 18 días calendario.">
+  <meta property="og:description" content="Directorio, catálogo comercial, mapa, WhatsApp, noticias y panel administrativo.">
   <meta property="og:image" content="assets/images/preview-desktop.jpg">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,7 +83,7 @@
         <div><dt>Institución contratante</dt><dd>IPHAE</dd></div>
         <div><dt>Fecha de elaboración</dt><dd><span data-f="date"></span></dd></div>
         <div class="hl"><dt>Presupuesto total</dt><dd><span data-total></span></dd></div>
-        <div class="hl"><dt>Plazo de ejecución</dt><dd>18 días calendario</dd></div>
+        <div class="hl"><dt>Plazo de ejecución</dt><dd><span data-c="dias"></span> días calendario</dd></div>
       </dl>
 
       <div class="cover-actions no-pdf">
@@ -105,8 +105,8 @@
       <p><b>Ref.: Propuesta técnica y económica — Consultoría por producto para el diseño, desarrollo e implementación de una página web comercial para FEDAPABENI.</b></p>
       <p>De nuestra consideración:</p>
       <p>Mediante la presente, <b data-f="companyName"></b> presenta su propuesta técnica y económica para la consultoría de referencia, en conformidad con los Términos de Referencia publicados por IPHAE (octubre de 2026).</p>
-      <p>Proponemos una plataforma moderna, segura, adaptable a dispositivos móviles y <b>administrable por la propia FEDAPABENI</b>, que integra los componentes institucionales, comerciales y administrativos exigidos: directorio de organizaciones, fichas individuales, catálogo comercial, formularios, WhatsApp, mapa georreferenciado, galería, noticias, panel de administración, capacitación, garantía de 90 días y funcionamiento durante el primer año.</p>
-      <p>El monto total de nuestra oferta es de <b data-total></b> (<span data-total-words></span>), con un plazo de ejecución de <b>18 días calendario</b>, inferior al máximo de 20 días establecido. Acompañamos un <b>prototipo navegable</b> para que IPHAE y FEDAPABENI puedan evaluar desde ahora la propuesta funcional y visual.</p>
+      <p>Proponemos una plataforma moderna, segura, adaptable a dispositivos móviles y <b>administrable por la propia FEDAPABENI</b>, que integra los componentes institucionales, comerciales y administrativos exigidos: directorio de organizaciones, fichas individuales, catálogo comercial, formularios, WhatsApp, mapa georreferenciado, galería, noticias, panel de administración, capacitación, garantía de <span data-c="garantia"></span> días y funcionamiento durante el primer año.</p>
+      <p>El monto total de nuestra oferta es de <b data-total></b> (<span data-total-words></span>), con un plazo de ejecución de <b><span data-c="dias"></span> días calendario</b>, inferior al máximo de <span data-c="maxDias"></span> días establecido. Acompañamos un <b>prototipo navegable</b> para que IPHAE y FEDAPABENI puedan evaluar desde ahora la propuesta funcional y visual.</p>
       <p>Quedamos a disposición para cualquier aclaración o presentación técnica.</p>
       <p>Atentamente,</p>
       <div class="sign-block">
@@ -121,9 +121,9 @@
     <header class="sec-head"><span class="num">01</span><div><p class="eyebrow">Resumen ejecutivo</p><h2>Una vitrina digital para la oferta amazónica organizada</h2></div></header>
 
     <div class="kpis">
-      <div class="kpi"><b>18</b><span>días calendario de ejecución</span></div>
+      <div class="kpi"><b><span data-c="dias"></span></b><span>días calendario de ejecución</span></div>
       <div class="kpi"><b>14</b><span>módulos funcionales</span></div>
-      <div class="kpi"><b>90</b><span>días de garantía técnica</span></div>
+      <div class="kpi"><b><span data-c="garantia"></span></b><span>días de garantía técnica</span></div>
       <div class="kpi"><b>12</b><span>meses de hosting y funcionamiento</span></div>
     </div>
 
@@ -152,7 +152,7 @@
 
     <article class="card pad">
       <h3><i data-icon="layers"></i> Alcance general de la propuesta</h3>
-      <p>Incluye análisis y arquitectura, diseño UX/UI responsive, desarrollo de los módulos institucionales y comerciales, panel de administración, integración con WhatsApp, formularios y mapas, galería y noticias, seguridad y SEO básico, hosting, dominio y SSL por 12 meses, despliegue, pruebas, capacitación práctica, manual de administración, transferencia total de accesos y código, informe final y garantía de 90 días. <b>No se reconocerán costos adicionales</b> por conceptos necesarios para dejar la plataforma operativa durante el primer año.</p>
+      <p>Incluye análisis y arquitectura, diseño UX/UI responsive, desarrollo de los módulos institucionales y comerciales, panel de administración, integración con WhatsApp, formularios y mapas, galería y noticias, seguridad y SEO básico, hosting, dominio y SSL por <span data-c="hosting"></span> meses, despliegue, pruebas, capacitación práctica, manual de administración, transferencia total de accesos y código, informe final y garantía de <span data-c="garantia"></span> días. <b>No se reconocerán costos adicionales</b> por conceptos necesarios para dejar la plataforma operativa durante el primer año.</p>
     </article>
   </section>
 
@@ -165,7 +165,7 @@
       <ul>
         <li>Los TDR exigen un <b>módulo institucional</b> (objetivos, trayectoria, cobertura territorial, organizaciones afiliadas y modelo “Bosque en Pie”, §6.4). Se incorporó como sección “Nosotros” en el prototipo y como módulo 1 de esta propuesta.</li>
         <li>Los TDR piden un <b>formulario de solicitudes de información y consultas/compras</b> (§6.8) y capacitación en <b>administración de consultas</b> (§15). Se agregó una bandeja de consultas al panel administrativo.</li>
-        <li>El plazo propuesto de <b>18 días</b> cumple el requisito de un cronograma <b>inferior a 20 días</b> (§8); el monto de <b data-total></b> no supera el techo de <b>Bs 37.000</b> (§9).</li>
+        <li>El plazo propuesto de <b><span data-c="dias"></span> días</b> cumple el requisito de un cronograma <b>inferior a <span data-c="maxDias"></span> días</b> (§8); el monto de <b data-total></b> no supera el techo de <b><span data-c="techo"></span></b> (§9).</li>
         <li>La forma y porcentajes de pago serán establecidos en el contrato (§19); la referencia de pago de esta propuesta es negociable.</li>
         <li>Los TDR fijan como fecha límite de presentación el <b>jueves 15 de octubre de 2026</b> (§18), al correo <a href="mailto:iphae_riberalta@yahoo.com">iphae_riberalta@yahoo.com</a>.</li>
       </ul>
@@ -240,7 +240,7 @@
 
   <!-- ============ CRONOGRAMA ============ -->
   <section class="sec" id="cronograma">
-    <header class="sec-head"><span class="num">05</span><div><p class="eyebrow">Metodología y cronograma</p><h2>18 días calendario, con entregables verificables</h2><p class="lead">Trabajo por fases cortas e iterativas, con validaciones de IPHAE y FEDAPABENI en cada producto (consultoría por producto, TDR §19).</p></div></header>
+    <header class="sec-head"><span class="num">05</span><div><p class="eyebrow">Metodología y cronograma</p><h2><span data-c="dias"></span> días calendario, con entregables verificables</h2><p class="lead">Trabajo por fases cortas e iterativas, con validaciones de IPHAE y FEDAPABENI en cada producto (consultoría por producto, TDR §19).</p></div></header>
 
     <div class="method" id="method"></div>
 
@@ -272,7 +272,7 @@
 
     <div class="total-band">
       <div><span>Total de la propuesta</span><b data-total></b><small data-total-words></small></div>
-      <div class="ceil"><span>Techo presupuestario (TDR §9)</span><b>Bs 37.000,00</b><small id="ceilDiff"></small></div>
+      <div class="ceil"><span>Techo presupuestario (TDR §9)</span><b><span data-c="techo"></span></b><small id="ceilDiff"></small></div>
     </div>
 
     <div class="cols-2">
@@ -282,7 +282,7 @@
       </div>
       <div class="card pad">
         <h3><i data-icon="server"></i> Funcionamiento durante el primer año (TDR §16)</h3>
-        <p>El rubro “Hosting y despliegue por un año” cubre los servicios técnicos necesarios durante 12 meses:</p>
+        <p>El rubro “Hosting y despliegue por un año” cubre los servicios técnicos necesarios durante <span data-c="hosting"></span> meses:</p>
         <ul class="ticks">
           <li>Hosting con recursos suficientes para el sitio, imágenes y base de datos.</li>
           <li>Registro del dominio por 1 año, <b>a nombre de FEDAPABENI</b> (extensión y disponibilidad: <span class="pending-inline">pendiente de confirmación</span>).</li>
@@ -346,8 +346,8 @@
     <header class="sec-head"><span class="num">09</span><div><p class="eyebrow">Garantía, soporte, capacitación y transferencia</p><h2>Continuidad garantizada para FEDAPABENI</h2></div></header>
     <div class="cols-2">
       <article class="card pad">
-        <h3><i data-icon="shield"></i> Garantía y soporte técnico — 90 días</h3>
-        <p>Durante <b>90 días calendario</b> posteriores a la puesta en funcionamiento corregiremos, sin costo adicional, los errores atribuibles al desarrollo (TDR §14):</p>
+        <h3><i data-icon="shield"></i> Garantía y soporte técnico — <span data-c="garantia"></span> días</h3>
+        <p>Durante <b><span data-c="garantia"></span> días calendario</b> posteriores a la puesta en funcionamiento corregiremos, sin costo adicional, los errores atribuibles al desarrollo (TDR §14):</p>
         <ul class="ticks">
           <li>Funcionamiento de los módulos contratados y de la programación.</li>
           <li>Visualización, formularios, enlaces y navegación.</li>
@@ -415,12 +415,12 @@
   <section class="sec" id="condiciones">
     <header class="sec-head"><span class="num">11</span><div><p class="eyebrow">Condiciones comerciales</p><h2>Condiciones de la oferta</h2></div></header>
     <div class="conds">
-      <div class="cond"><i data-icon="clock"></i><b>18 días calendario</b><span>Plazo de ejecución desde la firma del contrato u orden de inicio.</span></div>
-      <div class="cond"><i data-icon="shield"></i><b>90 días</b><span>Garantía técnica posterior a la puesta en funcionamiento.</span></div>
-      <div class="cond"><i data-icon="server"></i><b>12 meses</b><span>Hosting, dominio, SSL y funcionamiento incluidos.</span></div>
+      <div class="cond"><i data-icon="clock"></i><b><span data-c="dias"></span> días calendario</b><span>Plazo de ejecución desde la firma del contrato u orden de inicio.</span></div>
+      <div class="cond"><i data-icon="shield"></i><b><span data-c="garantia"></span> días</b><span>Garantía técnica posterior a la puesta en funcionamiento.</span></div>
+      <div class="cond"><i data-icon="server"></i><b><span data-c="hosting"></span> meses</b><span>Hosting, dominio, SSL y funcionamiento incluidos.</span></div>
       <div class="cond"><i data-icon="wallet"></i><b>Pago negociable</b><span>Sujeto a aprobación contractual, vinculado a la aceptación de productos.</span></div>
       <div class="cond"><i data-icon="calendar"></i><b><span data-f="validity"></span> días</b><span>Vigencia de la cotización desde su fecha de elaboración.</span></div>
-      <div class="cond"><i data-icon="wallet"></i><b data-total></b><span>Monto total, en bolivianos, dentro del techo de Bs 37.000.</span></div>
+      <div class="cond"><i data-icon="wallet"></i><b data-total></b><span>Monto total, en bolivianos, dentro del techo de <span data-c="techo"></span>.</span></div>
     </div>
     <article class="card pad">
       <h3><i data-icon="handshake"></i> Forma de pago de referencia (negociable)</h3>

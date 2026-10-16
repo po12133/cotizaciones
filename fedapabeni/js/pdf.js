@@ -108,7 +108,7 @@
       '<div><span>Institución contratante</span><b>IPHAE</b></div>' +
       '<div><span>Fecha de elaboración</span><b>' + fieldText('date') + '</b></div>' +
       '<div class="hl"><span>Presupuesto total</span><b>' + Q().money(Q().total()) + '</b></div>' +
-      '<div class="hl"><span>Plazo de ejecución</span><b>18 días calendario</b></div>' +
+      '<div class="hl"><span>Plazo de ejecución</span><b>' + Q().plazo.days + ' días calendario</b></div>' +
       '</div>' +
       '<div class="foot"><span>' + fieldText('companyEmail') + ' · ' + fieldText('companyPhone') + ' · soft.amicornios.com</span>' +
       '<span>Prototipo: ' + (pub ? '<a href="' + Q().esc(pub) + '">' + Q().esc(pub.replace(/^https?:\/\//, '')) + '</a>' : '<span class="is-empty-pdf">[URL pública del prototipo por publicar]</span>') + '</span></div>' +

@@ -1,0 +1,83 @@
+{
+  "campos": {
+    "quoteNo": "AMS-FEDA-2026-01",
+    "date": "15 de octubre de 2026",
+    "validity": "30",
+    "companyName": "Amicornios Soft",
+    "companyLegal": "Carlos Vargas Merida",
+    "companyNit": "14149549016",
+    "companyRep": "",
+    "companyCity": "Cochabamba, Bolivia",
+    "companyEmail": "vargascarlos12123@gmail.com",
+    "companyPhone": "+591 71450557",
+    "clientContact": "",
+    "prototypeUrl": "",
+    "team1": "",
+    "team2": "",
+    "team3": "",
+    "team4": ""
+  },
+
+  "plazo": {
+    "diasCalendario": 18,
+    "maximoTdr": 20,
+    "garantiaDias": 90,
+    "hostingMeses": 12,
+    "fechaInicio": ""
+  },
+
+  "techo": 37000,
+
+  "presupuesto": {
+    "grupos": {
+      "A": "Diseño y desarrollo de la plataforma",
+      "B": "Implementación, seguridad y funcionamiento",
+      "C": "Capacitación, pruebas y garantía"
+    },
+    "items": [
+      { "id": "diseno", "grupo": "A", "concepto": "Diseño UI/UX responsive", "descripcion": "Arquitectura de información, prototipo, diseño visual del sitio y del panel, adaptación a celular y tableta.", "componente": "diseno", "monto": 4000 },
+      { "id": "directorio", "grupo": "A", "concepto": "Directorio de asociaciones", "descripcion": "Directorio con buscador y filtros; fichas individuales con fotos, productos, capacidades y contacto.", "componente": "desarrollo", "monto": 4000 },
+      { "id": "catalogo", "grupo": "A", "concepto": "Catálogo y fichas de productos", "descripcion": "Catálogo por categorías con filtros y ordenamiento; fichas con galería, presentación y disponibilidad.", "componente": "desarrollo", "monto": 5000 },
+      { "id": "panel", "grupo": "A", "concepto": "Panel administrativo y CMS", "descripcion": "Gestión de organizaciones, productos, categorías, noticias, galería, consultas, usuarios y ajustes.", "componente": "desarrollo", "monto": 6000 },
+      { "id": "contacto", "grupo": "A", "concepto": "WhatsApp, formularios y mapas", "descripcion": "WhatsApp click-to-chat, formularios de contacto y de compra con aviso por correo, mapa Leaflet/OSM.", "componente": "desarrollo", "monto": 3000 },
+      { "id": "noticias", "grupo": "A", "concepto": "Noticias, eventos y multimedia", "descripcion": "Noticias, ferias, eventos y oportunidades comerciales; galería de fotos y videos.", "componente": "desarrollo", "monto": 2000 },
+      { "id": "seo", "grupo": "B", "concepto": "SEO, seguridad y optimización", "descripcion": "SSL, configuración segura, copias de respaldo, rendimiento, metadatos, sitemap y Search Console.", "componente": "implementacion", "monto": 2000 },
+      { "id": "hosting", "grupo": "B", "concepto": "Hosting y despliegue por un año", "descripcion": "Hosting, dominio y SSL por 12 meses; configuración, pruebas y puesta en producción.", "componente": "hosting", "monto": 1500 },
+      { "id": "capacitacion", "grupo": "C", "concepto": "Capacitación y documentación", "descripcion": "Capacitación práctica al personal de FEDAPABENI y manual básico de administración.", "componente": "capacitacion", "monto": 1500 },
+      { "id": "garantia", "grupo": "C", "concepto": "Pruebas, garantía y soporte", "descripcion": "Pruebas funcionales y en dispositivos; garantía y soporte técnico de 90 días.", "componente": "soporte", "monto": 3000 }
+    ]
+  },
+
+  "fases": [
+    { "nombre": "Inicio, levantamiento de requerimientos y arquitectura", "inicio": 1, "fin": 3, "responsables": "A · F · I", "actividades": "Reunión de inicio, relevamiento de contenidos, estructura del sitio, catálogo y directorio.", "productos": "P1 · Documento de requerimientos y arquitectura", "entregas": [3] },
+    { "nombre": "Diseño UX/UI y propuesta gráfica", "inicio": 3, "fin": 6, "responsables": "A · F", "actividades": "Mapa de navegación, diseño de páginas clave y panel, validación con FEDAPABENI.", "productos": "P2 · Diseño UX/UI aprobado", "entregas": [6] },
+    { "nombre": "Desarrollo base, CMS y panel de administración", "inicio": 5, "fin": 11, "responsables": "A", "actividades": "Instalación, tipos de contenido, roles, panel y plantillas responsive.", "productos": "Avance demostrable", "entregas": [] },
+    { "nombre": "Directorio, fichas y catálogo comercial", "inicio": 7, "fin": 12, "responsables": "A", "actividades": "Directorio con filtros, perfiles, catálogo, fichas de producto y buscador.", "productos": "P4 · Directorio · P5 · Catálogo", "entregas": [12] },
+    { "nombre": "Contacto, WhatsApp, mapa, galería y noticias", "inicio": 9, "fin": 13, "responsables": "A", "actividades": "Formularios, WhatsApp, mapa Leaflet/OSM, galería y noticias.", "productos": "P3 · Plataforma funcional · P6 · Contacto y mapa", "entregas": [13] },
+    { "nombre": "Carga inicial de contenidos", "inicio": 10, "fin": 14, "responsables": "F · A", "actividades": "FEDAPABENI entrega y valida contenidos; carga asistida de organizaciones y productos.", "productos": "Contenido inicial publicado", "entregas": [] },
+    { "nombre": "SEO, seguridad, optimización y pruebas", "inicio": 13, "fin": 15, "responsables": "A · F", "actividades": "Pruebas funcionales y en dispositivos, seguridad, rendimiento y SEO básico.", "productos": "Informe de pruebas", "entregas": [] },
+    { "nombre": "Despliegue: hosting, dominio, SSL y producción", "inicio": 15, "fin": 16, "responsables": "A · F", "actividades": "Configuración de hosting y dominio, SSL, publicación y verificación.", "productos": "P8 · Página publicada y funcionando", "entregas": [16] },
+    { "nombre": "Capacitación y manual de administración", "inicio": 16, "fin": 17, "responsables": "A · F", "actividades": "Capacitación práctica al personal designado y entrega del manual.", "productos": "P7 · Panel y capacitación · P9 · Manual", "entregas": [17] },
+    { "nombre": "Cierre: código, accesos e informe final", "inicio": 17, "fin": 18, "responsables": "A · I · F", "actividades": "Transferencia de accesos, código y recursos; informe final y recepción.", "productos": "P10 · Código y accesos · P11 · Informe final", "entregas": [18] }
+  ],
+
+  "entregables": [
+    { "producto": "Documento de requerimientos, estructura y arquitectura de la plataforma", "forma": "Documento PDF: requerimientos, mapa del sitio, estructura de catálogo y directorio, arquitectura técnica.", "dia": 3 },
+    { "producto": "Diseño UX/UI y propuesta gráfica de la página", "forma": "Diseños de páginas clave (escritorio y móvil) y guía visual.", "dia": 6 },
+    { "producto": "Página web desarrollada y funcional, con módulos institucionales y comerciales", "forma": "Plataforma operativa en entorno de pruebas.", "dia": 13 },
+    { "producto": "Directorio digital de organizaciones y emprendimientos", "forma": "Directorio con fichas de las organizaciones indicadas por FEDAPABENI.", "dia": 12 },
+    { "producto": "Catálogo comercial de productos amazónicos", "forma": "Catálogo por categorías con fichas de productos.", "dia": 12 },
+    { "producto": "Sistema de contacto, formularios, integración con WhatsApp y mapa", "forma": "Formularios con aviso por correo, WhatsApp y mapa georreferenciado.", "dia": 13 },
+    { "producto": "Panel de administración y capacitación al personal de FEDAPABENI", "forma": "Usuarios administradores creados y sesiones de capacitación con lista de asistencia.", "dia": 17 },
+    { "producto": "Página publicada, configurada, probada y funcionando", "forma": "Sitio en el dominio de FEDAPABENI con SSL.", "dia": 16 },
+    { "producto": "Manual básico para administración y actualización de contenidos", "forma": "Manual en PDF con capturas paso a paso.", "dia": 17 },
+    { "producto": "Entrega de código fuente y accesos administrativos", "forma": "Repositorio/archivo del código, base de datos, recursos gráficos y acta de credenciales.", "dia": 18 },
+    { "producto": "Informe final de la consultoría con recomendaciones de sostenibilidad", "forma": "Trabajos realizados, estado final y recomendaciones para el segundo año.", "dia": 18 }
+  ],
+
+  "pagos": [
+    { "porcentaje": 30, "contra": "Aprobación de los productos 1 y 2 (requerimientos y diseño)", "dia": 6 },
+    { "porcentaje": 40, "contra": "Aprobación de los productos 3 a 6 (plataforma, directorio, catálogo, contacto y mapa)", "dia": 13 },
+    { "porcentaje": 30, "contra": "Recepción definitiva: productos 7 a 11 (publicación, capacitación, manual, accesos e informe)", "dia": 18 }
+  ]
+}
