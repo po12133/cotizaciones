@@ -10,12 +10,12 @@
     "companyCity": "Cochabamba, Bolivia",
     "companyEmail": "vargascarlos12123@gmail.com",
     "companyPhone": "+591 71450557",
-    "clientContact": "",
-    "prototypeUrl": "",
-    "team1": "",
-    "team2": "",
-    "team3": "",
-    "team4": ""
+    "clientContact": "IPHAE",
+    "prototypeUrl": "https://cotizaciones.amicornios.com/fedapabeni/prototipo/index.html",
+    "team1": "Carlos Vargas",
+    "team2": "Carlos Vargas",
+    "team3": "Carlos Vargas",
+    "team4": "Carlos Vargas"
   },
 
   "plazo": {
@@ -23,7 +23,7 @@
     "maximoTdr": 20,
     "garantiaDias": 90,
     "hostingMeses": 12,
-    "fechaInicio": ""
+    "fechaInicio": "Por definir"
   },
 
   "techo": 37000,
