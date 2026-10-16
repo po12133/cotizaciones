@@ -34,7 +34,7 @@ Todo lo que cambia de una cotización a otra está en [`datos.json`](datos.json)
 | `campos` | Número de cotización, fecha, vigencia, datos de la empresa (razón social, NIT, representante…), URL del prototipo y nombres del equipo (`team1`…`team4`). Un valor vacío `""` aparece como `[Por completar: …]`. |
 | `plazo.diasCalendario` | Días de trabajo. Se usa en portada, carta, KPI, cronograma, condiciones y PDF. |
 | `plazo.maximoTdr` · `garantiaDias` · `hostingMeses` | Máximo de días exigido (20), días de garantía (90) y meses de hosting (12). |
-| `plazo.fechaInicio` | Fecha de orden de inicio (`"2026-10-20"`) para mostrar fechas reales en lugar de “Día N”. Vacío = días relativos. |
+| `plazo.fechaInicio` | Fecha de orden de inicio (`"2026-10-20"` o `"20/10/2026"`) para mostrar fechas reales en lugar de “Día N”. Vacío o un texto como `"Por definir"` = días relativos. |
 | `techo` | Techo presupuestario (37000). |
 | `presupuesto.items[].monto` | Monto de cada rubro. También se puede cambiar `concepto`, `descripcion`, `grupo` y `componente`. |
 | `fases[]` | Cronograma: `inicio` y `fin` (día), `entregas` (días con ◆), responsables, actividades y productos. |
@@ -44,6 +44,18 @@ Todo lo que cambia de una cotización a otra está en [`datos.json`](datos.json)
 Al cambiar `plazo.diasCalendario`, revise también los `inicio`/`fin` de `fases`, los `dia` de `entregables` y `pagos`, que no se ajustan solos. El cronograma se ensancha si alguna fase pasa del plazo, y el texto avisa si el plazo no es inferior al máximo de los TDR.
 
 `datos.json` se carga con `fetch`, así que la cotización **debe abrirse con un servidor estático** (ver arriba); con doble clic aparece un aviso.
+
+### Versión en Word
+
+`cotizacion-fedapabeni-amicornios-soft.docx` se genera desde `datos.json` (y los textos de `js/cotizacion.js`), con portada, carta, todas las secciones, presupuesto, cronograma y enlaces clicables al prototipo, a sus secciones y al panel demo. Después de cambiar el JSON, regenérelo:
+
+```bash
+cd cotizaciones/fedapabeni/herramientas
+npm install      # solo la primera vez
+npm run word
+```
+
+Las ediciones hechas en el navegador no pasan al Word; solo lo que está en `datos.json`.
 
 ### Edición en la página
 
@@ -70,6 +82,8 @@ Es solo una **demostración**: no tiene autenticación ni servidor. Permite crea
 ```text
 fedapabeni/
 ├── datos.json                 Datos editables de la cotización (campos, montos, días)
+├── cotizacion-…-soft.docx     Cotización en Word (generada con herramientas/)
+├── herramientas/              generar-word.js (npm run word)
 ├── index.html                 Cotización
 ├── prototipo/index.html       Prototipo público
 ├── prototipo/admin/index.html Panel demo

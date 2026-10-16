@@ -1,0 +1,11 @@
+{
+  "name": "fedapabeni-herramientas",
+  "private": true,
+  "description": "Genera la cotización en Word a partir de ../datos.json",
+  "scripts": {
+    "word": "node generar-word.js"
+  },
+  "dependencies": {
+    "docx": "^9.5.0"
+  }
+}

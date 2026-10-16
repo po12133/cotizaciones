@@ -30,7 +30,7 @@
       max: Number(d.plazo.maximoTdr) || 0,
       warranty: Number(d.plazo.garantiaDias) || 0,
       hosting: Number(d.plazo.hostingMeses) || 0,
-      start: d.plazo.fechaInicio || '',
+      start: isoDate(d.plazo.fechaInicio),
     };
     GROUPS = d.presupuesto.grupos;
     BUDGET = d.presupuesto.items.map(function (b) {
@@ -152,7 +152,7 @@
       src: src,
       fields: Object.assign({}, FIELD_DEFAULTS, s.fields || {}),
       budget: Object.assign({}, Object.fromEntries(BUDGET.map(function (b) { return [b.id, b.amount]; })), s.budget || {}),
-      startDate: s.startDate || PLAZO.start,
+      startDate: isoDate(s.startDate) || PLAZO.start,
     };
   }
   let state = null;
@@ -192,6 +192,16 @@
   function totalWords(n) {
     const cents = Math.round((n - Math.floor(n)) * 100);
     return words(n) + ' ' + String(cents).padStart(2, '0') + '/100 BOLIVIANOS';
+  }
+  /** Normaliza "2026-10-20" o "20/10/2026" a ISO; cualquier otro texto (p. ej. "Por definir") = sin fecha. */
+  function isoDate(v) {
+    const s = String(v || '').trim();
+    let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    let y, mo, d;
+    if (m) { y = +m[1]; mo = +m[2]; d = +m[3]; } else if ((m = s.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/))) { d = +m[1]; mo = +m[2]; y = +m[3]; } else return '';
+    const dt = new Date(y, mo - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return '';
+    return y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
   }
   function addDays(iso, d) { const dt = new Date(iso + 'T12:00:00'); dt.setDate(dt.getDate() + d); return dt; }
   function fmtShort(dt) { return dt.toLocaleDateString('es-BO', { day: '2-digit', month: 'short' }).replace('.', ''); }
