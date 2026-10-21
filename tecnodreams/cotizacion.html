@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cotización COT-TDR-001 · TecnoDreams – Amicornios Soft</title>
+  <meta name="description" content="Cotización de Amicornios Soft para la modernización y desarrollo personalizado de la tienda en línea de TecnoDreams.">
+  <meta name="theme-color" content="#061d36">
+  <link rel="icon" href="prototipo/assets/brand/favicon.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Brawler:wght@400;700&family=Cinzel:wght@700&family=Montserrat:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root {
+      --navy-950: #031223; --navy-900: #061d36; --navy-800: #0a294b; --navy-700: #123c69;
+      --blue: #2f8cff; --blue-100: #e6f1ff; --ink: #0d1a2b; --ink-2: #33445a; --muted: #627389;
+      --line: #dde4ec; --bg: #e9eef4; --soft: #f4f7fa; --green: #13864a; --green-50: #e9f8ef; --amber-50: #fff6e5;
+      --display: "Brawler", Georgia, serif; --ui: "Montserrat", system-ui, sans-serif; --logo: "Cinzel", Georgia, serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--ui); color: var(--ink); background: var(--bg); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+    /* barra de acciones (solo pantalla) */
+    .toolbar { position: sticky; top: 0; z-index: 10; background: var(--navy-900); color: #fff; box-shadow: 0 6px 20px -10px rgba(0,0,0,.5); }
+    .toolbar .in { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 10px 16px; flex-wrap: wrap; }
+    .toolbar .title { font-weight: 700; font-size: 14px; margin-right: auto; display: flex; align-items: center; gap: 10px; }
+    .toolbar .title img { width: 30px; height: 30px; }
+    .tbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 10px; font: 700 14px var(--ui); border: 1.5px solid rgba(255,255,255,.3); background: transparent; color: #fff; text-decoration: none; cursor: pointer; transition: background .2s; }
+    .tbtn:hover { background: rgba(255,255,255,.1); }
+    .tbtn.primary { background: var(--blue); border-color: var(--blue); box-shadow: 0 8px 18px -8px rgba(47,140,255,.9); }
+    .tbtn.primary:hover { background: #1f7ae8; }
+    @media (max-width: 640px) { .toolbar .title span { display: none; } .tbtn.sec span { display: none; } }
+
+    /* hoja */
+    .sheet { max-width: 210mm; margin: 24px auto 48px; background: #fff; box-shadow: 0 20px 60px -30px rgba(6,29,54,.45); border-radius: 6px; overflow: hidden; }
+    .pad { padding: 0 18mm; }
+    @media (max-width: 760px) { .pad { padding: 0 18px; } .sheet { margin: 0 0 32px; border-radius: 0; } }
+
+    .doc-head { background: var(--navy-900); color: #fff; padding: 14mm 18mm 12mm; position: relative; overflow: hidden; }
+    @media (max-width: 760px) { .doc-head { padding: 24px 18px; } }
+    .doc-head::after { content: ""; position: absolute; right: -40mm; top: -40mm; width: 110mm; height: 110mm; border-radius: 50%; background: radial-gradient(circle, rgba(47,140,255,.35), transparent 70%); }
+    .dh-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; position: relative; z-index: 1; flex-wrap: wrap; }
+    .provider strong { font-size: 18px; display: block; letter-spacing: .01em; }
+    .provider span { font-size: 12px; color: #a9bad0; }
+    .doc-id { text-align: right; font-size: 12px; color: #c9d6e6; }
+    .doc-id .lbl { font-family: var(--display); font-size: 22px; color: #fff; letter-spacing: .08em; display: block; }
+    .doc-id b { color: #fff; }
+    .dh-title { position: relative; z-index: 1; margin-top: 12mm; display: flex; justify-content: space-between; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+    .dh-title .for { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #8cc2ff; font-weight: 700; }
+    .dh-title h1 { font-family: var(--display); font-weight: 400; font-size: 30px; line-height: 1.12; margin: 6px 0 0; max-width: 120mm; }
+    .client-logo { display: flex; align-items: center; gap: 10px; }
+    .client-logo img { width: 44px; height: 44px; }
+    .client-logo strong { font-family: var(--logo); font-size: 22px; display: block; line-height: 1; }
+    .client-logo small { font-family: var(--display); color: #a9bad0; font-size: 12px; }
+    .kpis { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,.14); border-radius: 12px; overflow: hidden; margin-top: 9mm; }
+    .kpis div { background: rgba(3,18,35,.55); padding: 12px 14px; }
+    .kpis b { display: block; font-size: 22px; letter-spacing: -.01em; }
+    .kpis span { font-size: 11.5px; color: #a9bad0; }
+
+    h2.sec { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 400; font-size: 21px; color: var(--navy-900); margin: 0 0 10px; }
+    h2.sec .n { width: 30px; height: 30px; border-radius: 9px; background: var(--navy-900); color: #fff; display: grid; place-items: center; font: 800 13px var(--ui); flex: none; }
+    .block { padding-top: 9mm; }
+    p { margin: 0 0 8px; color: var(--ink-2); }
+    ul.list { margin: 0; padding-left: 18px; color: var(--ink-2); }
+    ul.list li { margin: 3px 0; }
+    .note { display: flex; gap: 10px; background: var(--amber-50); border: 1px solid #f3d7a6; color: #6b4300; border-radius: 10px; padding: 10px 12px; font-size: 12.5px; margin-top: 10px; }
+    .note.blue { background: var(--blue-100); border-color: #c4dcfb; color: var(--navy-800); }
+
+    table { width: 100%; border-collapse: collapse; }
+    .info td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 13.5px; }
+    .info td:first-child { width: 34%; color: var(--muted); font-weight: 600; }
+    .info td:last-child { color: var(--ink); font-weight: 500; }
+    .info tr:last-child td { border-bottom: 0; }
+    .info .price b { color: var(--navy-900); font-size: 15px; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+    .box { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--soft); }
+    .box b { display: block; color: var(--navy-900); font-size: 13.5px; margin-bottom: 2px; }
+    .box span { font-size: 12.5px; color: var(--ink-2); display: block; line-height: 1.5; }
+    .goals { counter-reset: g; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; margin: 0; padding: 0; list-style: none; }
+    @media (max-width: 640px) { .goals { grid-template-columns: 1fr; } }
+    .goals li { counter-increment: g; display: flex; gap: 10px; align-items: flex-start; color: var(--ink-2); padding: 6px 0; border-bottom: 1px dashed var(--line); }
+    .goals li::before { content: counter(g, decimal-leading-zero); font-weight: 800; color: var(--blue); font-size: 12px; margin-top: 2px; }
+
+    .budget th { background: var(--navy-900); color: #fff; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; text-align: left; padding: 9px 10px; }
+    .budget th.r, .budget td.r { text-align: right; white-space: nowrap; }
+    .budget td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 13px; }
+    .budget td.num { color: var(--muted); font-weight: 700; width: 28px; }
+    .budget td .c { font-weight: 700; color: var(--navy-900); display: block; }
+    .budget td .d { color: var(--muted); font-size: 12px; line-height: 1.45; display: block; }
+    .budget tbody tr:nth-child(even) td { background: #fafcfe; }
+    .budget tfoot td { background: var(--navy-900); color: #fff; font-weight: 800; font-size: 15px; padding: 11px 10px; }
+    .budget-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--line); }
+
+    .summary { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; margin-top: 12px; align-items: stretch; }
+    @media (max-width: 640px) { .summary { grid-template-columns: 1fr; } }
+    .sumrow { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2); }
+    .sumrow.off { color: var(--green); font-weight: 700; }
+    .sumrow.tot { border-bottom: 0; font-size: 18px; font-weight: 800; color: var(--navy-900); padding-top: 10px; }
+    .total-card { background: linear-gradient(140deg, var(--navy-800), var(--navy-950)); color: #fff; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; }
+    .total-card small { color: #a9bad0; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; }
+    .total-card b { font-size: 34px; letter-spacing: -.02em; line-height: 1.1; }
+    .total-card span { font-size: 12px; color: #c9d6e6; }
+
+    .pays { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 640px) { .pays { grid-template-columns: 1fr; } }
+    .payc { border: 1px solid var(--line); border-radius: 10px; padding: 12px; position: relative; }
+    .payc .pct { font-size: 24px; font-weight: 800; color: var(--blue); line-height: 1; }
+    .payc b { display: block; font-size: 17px; color: var(--navy-900); margin: 6px 0 2px; }
+    .payc span { font-size: 12.5px; color: var(--ink-2); }
+
+    .plan td, .plan th { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13px; vertical-align: top; }
+    .plan th { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; background: var(--soft); }
+    .plan td:first-child { white-space: nowrap; font-weight: 700; color: var(--navy-900); }
+
+    .excl { columns: 2; column-gap: 20px; }
+    @media (max-width: 640px) { .excl { columns: 1; } }
+    .excl li { break-inside: avoid; }
+
+    .sign { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16mm; }
+    .sign div { border-top: 1.5px solid var(--ink); padding-top: 8px; font-size: 12.5px; color: var(--ink-2); }
+    .sign b { display: block; color: var(--ink); font-size: 13.5px; }
+    .doc-foot { margin-top: 10mm; background: var(--soft); border-top: 1px solid var(--line); padding: 10px 18mm; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); }
+    @media (max-width: 760px) { .doc-foot { padding: 12px 18px; } }
+
+    /* ---------- impresión / PDF A4 ---------- */
+    @page { size: A4; margin: 14mm 0 16mm; }
+    @page :first { margin-top: 0; }
+    @media print {
+      html, body { background: #fff; font-size: 12.5px; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .toolbar, .no-print { display: none !important; }
+      .sheet { margin: 0; max-width: none; box-shadow: none; border-radius: 0; overflow: visible; }
+      .pad { padding: 0 16mm; }
+      .doc-head { padding: 14mm 16mm 10mm; }
+      .block { padding-top: 7mm; break-inside: auto; }
+      h2.sec { break-after: avoid; }
+      .keep, .box, .payc, .summary, .total-card, .sign, .note, tr, .goals li { break-inside: avoid; }
+      .budget thead { display: table-header-group; }
+      .budget tfoot { display: table-row-group; }
+      .page-break { break-before: page; }
+      a { text-decoration: none; }
+      .doc-foot { padding: 8px 16mm; }
+    }
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="i-dl" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 4.5 3h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v8h14v-8"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  </svg>
+
+  <div class="toolbar no-print">
+    <div class="in">
+      <div class="title"><img src="prototipo/assets/brand/icone-td.png" alt=""><span>Cotización COT-TDR-001 · TecnoDreams</span></div>
+      <a class="tbtn sec" href="index.html"><svg class="icon"><use href="#i-left"/></svg><span>Presentación</span></a>
+      <a class="tbtn sec" href="prototipo/index.html"><svg class="icon"><use href="#i-store"/></svg><span>Prototipo</span></a>
+      <button class="tbtn primary" type="button" id="pdf"><svg class="icon"><use href="#i-dl"/></svg>Descargar cotización en PDF</button>
+    </div>
+  </div>
+
+  <article class="sheet">
+    <header class="doc-head">
+      <div class="dh-top">
+        <div class="provider"><strong>Amicornios Soft</strong><span>Desarrollo de software, plataformas web y móviles<br>soft.amicornios.com · vargascarlos12123@gmail.com · +591 71450557</span></div>
+        <div class="doc-id"><span class="lbl">COTIZACIÓN</span>N.º <b>COT-TDR-001</b><br>Emisión: <b>21/10/2026</b><br>Válida hasta: <b>20/11/2026</b></div>
+      </div>
+      <div class="dh-title">
+        <div><span class="for">Propuesta comercial para</span><h1>Modernización y desarrollo personalizado de la tienda en línea</h1></div>
+        <div class="client-logo"><img src="prototipo/assets/brand/icone-td.png" alt=""><div><strong>TecnoDreams</strong><small>O seu lugar é aqui</small></div></div>
+      </div>
+      <div class="kpis">
+        <div><b>Bs 7.000</b><span>Inversión total (precio especial)</span></div>
+        <div><b>30–45 días</b><span>Plazo estimado calendario</span></div>
+        <div><b>13 partidas</b><span>Tienda, panel, migración y despliegue</span></div>
+      </div>
+    </header>
+
+    <div class="pad">
+      <section class="block keep">
+        <h2 class="sec"><span class="n">1</span>Información general</h2>
+        <table class="info">
+          <tr><td>Proyecto</td><td>Modernización y desarrollo personalizado de TecnoDreams</td></tr>
+          <tr><td>Cliente</td><td>TecnoDreams — www.tecnodreams.com (CNPJ 61.298.977/0001-21, según el sitio web). Representante y contacto: por confirmar.</td></tr>
+          <tr><td>Proveedor</td><td>Amicornios Soft — NIT y representante legal: por confirmar</td></tr>
+          <tr><td>Tipo de proyecto</td><td>Desarrollo de plataforma de comercio electrónico</td></tr>
+          <tr><td>Tecnología propuesta</td><td>Next.js, TypeScript, PostgreSQL, Prisma, Tailwind CSS, Redis y Docker</td></tr>
+          <tr><td>Plazo estimado</td><td>30 a 45 días calendario desde el primer pago y la entrega de accesos</td></tr>
+          <tr class="price"><td>Precio especial por cliente antiguo</td><td><b>Bs 7.000</b> (siete mil 00/100 bolivianos)</td></tr>
+        </table>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">2</span>Resumen ejecutivo</h2>
+        <p>TecnoDreams opera hoy su tienda en línea sobre WordPress y WooCommerce, con el constructor Elementor y un conjunto de plugins que resuelven el catálogo, los filtros, el carrito, el envío y la atención por WhatsApp. Proponemos reemplazar esa base por una <strong>plataforma de comercio electrónico desarrollada a medida</strong>, con código propio, que conserve la identidad visual de TecnoDreams y modernice la navegación y la experiencia de compra.</p>
+        <p>La propuesta incluye la tienda completa (portada, catálogo, búsqueda, fichas, carrito, checkout, cuentas y favoritos), un <strong>panel administrativo propio</strong>, la migración de productos y categorías desde WooCommerce y la continuidad de URLs mediante redirecciones. Junto con esta cotización se entrega un prototipo navegable con los productos reales de la tienda.</p>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">3</span>Justificación del proyecto</h2>
+        <p>La modernización responde a necesidades del negocio y a observaciones preliminares sobre el sitio público:</p>
+        <div class="grid2">
+          <div class="box"><b>Lentitud percibida</b><span>La portada carga alrededor de 57 scripts externos y 45 hojas de estilo. Este volumen suele traducirse en tiempos de carga más altos, en especial con datos móviles.</span></div>
+          <div class="box"><b>Dependencia de WordPress y plugins</b><span>Funciones clave dependen de 15 plugins visibles y del tema, con actualizaciones, licencias y compatibilidades que deben gestionarse por separado.</span></div>
+          <div class="box"><b>Experiencia móvil</b><span>La mayor parte de las compras en línea se inicia desde el celular; la nueva interfaz se diseña primero para pantallas pequeñas.</span></div>
+          <div class="box"><b>Catálogo y búsquedas</b><span>Agrupar variantes (hoy publicadas como productos separados), combinar filtros y ofrecer una búsqueda instantánea tolerante a acentos.</span></div>
+          <div class="box"><b>Control sobre el código</b><span>Código y datos propiedad de TecnoDreams, sin depender de licencias ni de cambios de terceros.</span></div>
+          <div class="box"><b>Futuras ampliaciones</b><span>Una arquitectura ordenada facilita sumar integraciones, reportes o nuevas funciones sin conflictos.</span></div>
+        </div>
+        <div class="note"><svg class="icon"><use href="#i-info"/></svg><span>Estos puntos son observaciones sobre el código público de la portada (revisado el 20/10/2026) y necesidades de mejora; no constituyen fallos técnicos comprobados. Al iniciar el proyecto se realizará una medición formal de rendimiento (Core Web Vitals) para comparar el antes y el después.</span></div>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">4</span>Objetivos</h2>
+        <ol class="goals">
+          <li>Mejorar el rendimiento del sitio.</li>
+          <li>Desarrollar una interfaz moderna y responsive.</li>
+          <li>Mantener las funcionalidades principales del comercio electrónico.</li>
+          <li>Crear un panel administrativo personalizado.</li>
+          <li>Optimizar el catálogo, los filtros y el buscador.</li>
+          <li>Implementar una arquitectura escalable.</li>
+          <li>Migrar los datos necesarios de WooCommerce.</li>
+          <li>Mantener la continuidad de URLs mediante redirecciones cuando corresponda.</li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">5</span>Alcance y desglose económico</h2>
+        <p>Cada partida describe lo que se entrega. Los montos están expresados en bolivianos (Bs).</p>
+        <div class="budget-wrap">
+          <table class="budget">
+            <thead><tr><th>#</th><th>Concepto y entregable</th><th class="r">Precio (Bs)</th></tr></thead>
+            <tbody>
+              <tr><td class="num">01</td><td><span class="c">Arquitectura y configuración</span><span class="d">Estructura del proyecto Next.js + TypeScript, base de datos PostgreSQL con Prisma, Redis, entornos y contenedores Docker.</span></td><td class="r">400</td></tr>
+              <tr><td class="num">02</td><td><span class="c">Diseño responsive, header y footer</span><span class="d">Sistema visual con la identidad de TecnoDreams, cabecera con buscador, menú de categorías, menú móvil, carrito y footer completo.</span></td><td class="r">500</td></tr>
+              <tr><td class="num">03</td><td><span class="c">Página principal y promociones</span><span class="d">Banner rotativo, categorías destacadas, productos recomendados, ofertas, novedades, marcas y bloques promocionales editables.</span></td><td class="r">500</td></tr>
+              <tr><td class="num">04</td><td><span class="c">Catálogo y categorías</span><span class="d">Listados por categoría y grupo, ordenamiento, paginación o carga progresiva y páginas de categoría con descripción.</span></td><td class="r">700</td></tr>
+              <tr><td class="num">05</td><td><span class="c">Filtros avanzados</span><span class="d">Filtros combinables por categoría, marca, rango de precios, disponibilidad y ofertas, con conteo de resultados.</span></td><td class="r">500</td></tr>
+              <tr><td class="num">06</td><td><span class="c">Buscador de productos</span><span class="d">Búsqueda instantánea con sugerencias de productos, categorías y marcas, tolerante a acentos.</span></td><td class="r">400</td></tr>
+              <tr><td class="num">07</td><td><span class="c">Ficha individual de producto</span><span class="d">Galería con zoom, precio y descuento, disponibilidad, variantes, cantidad, favoritos, consulta por WhatsApp, especificaciones y relacionados.</span></td><td class="r">600</td></tr>
+              <tr><td class="num">08</td><td><span class="c">Carrito y checkout</span><span class="d">Carrito con cupones, cálculo de envío por CEP, checkout por pasos con validación y confirmación de pedido. Incluye los medios de pago que TecnoDreams defina al inicio.</span></td><td class="r">700</td></tr>
+              <tr><td class="num">09</td><td><span class="c">Panel administrativo</span><span class="d">Resumen de ventas, pedidos y estados, productos, categorías, inventario, clientes, promociones y configuración de la tienda.</span></td><td class="r">900</td></tr>
+              <tr><td class="num">10</td><td><span class="c">Clientes, cuentas y favoritos</span><span class="d">Registro e inicio de sesión, perfil, direcciones, historial de pedidos y lista de favoritos.</span></td><td class="r">400</td></tr>
+              <tr><td class="num">11</td><td><span class="c">Migración de productos y categorías</span><span class="d">Importación desde WooCommerce de productos, precios, imágenes, atributos y categorías, con normalización de datos.</span></td><td class="r">400</td></tr>
+              <tr><td class="num">12</td><td><span class="c">Optimización, SEO y seguridad básica</span><span class="d">Imágenes WebP, metadatos, sitemap, datos estructurados, redirecciones 301 de URLs antiguas, HTTPS y buenas prácticas de seguridad.</span></td><td class="r">500</td></tr>
+              <tr><td class="num">13</td><td><span class="c">Pruebas y despliegue</span><span class="d">Pruebas funcionales en computadora y celular, corrección de errores y publicación en el servidor del cliente.</span></td><td class="r">500</td></tr>
+            </tbody>
+            <tfoot><tr><td></td><td>TOTAL</td><td class="r">Bs 7.000</td></tr></tfoot>
+          </table>
+        </div>
+        <div class="summary">
+          <div class="box" style="background:#fff">
+            <div class="sumrow"><span>Precio regular de referencia</span><span>Bs 10.000</span></div>
+            <div class="sumrow off"><span>Descuento cliente antiguo (30%)</span><span>− Bs 3.000</span></div>
+            <div class="sumrow tot"><span>Total a pagar</span><span>Bs 7.000</span></div>
+          </div>
+          <div class="total-card"><small>Precio especial</small><b>Bs 7.000</b><span>Ahorro de Bs 3.000 sobre la referencia</span></div>
+        </div>
+        <div class="note blue"><svg class="icon"><use href="#i-info"/></svg><span>El precio regular de Bs 10.000 es una referencia comercial de esta propuesta para mostrar el descuento por cliente antiguo; no es una tarifa histórica demostrada. Los precios de productos que se muestran en la tienda están en reales brasileños (R$); esta cotización se expresa en bolivianos (Bs).</span></div>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">6</span>Condiciones de pago</h2>
+        <div class="pays">
+          <div class="payc"><span class="pct">50%</span><b>Bs 3.500</b><span>Al iniciar el proyecto.</span></div>
+          <div class="payc"><span class="pct">30%</span><b>Bs 2.100</b><span>Al presentar el avance funcional (tienda y panel navegables).</span></div>
+          <div class="payc"><span class="pct">20%</span><b>Bs 1.400</b><span>Al finalizar y entregar la plataforma publicada.</span></div>
+        </div>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">7</span>Plazo y cronograma estimado</h2>
+        <table class="plan">
+          <thead><tr><th>Periodo</th><th>Actividades</th><th>Partidas</th></tr></thead>
+          <tbody>
+            <tr><td>Semana 1</td><td>Medición inicial, arquitectura, configuración y diseño responsive.</td><td>01, 02</td></tr>
+            <tr><td>Semanas 2–3</td><td>Página principal, catálogo, filtros, buscador, ficha, carrito, checkout, cuentas y favoritos.</td><td>03–08, 10</td></tr>
+            <tr><td>Semanas 4–5</td><td>Panel administrativo y migración desde WooCommerce. <strong>Entrega del avance funcional.</strong></td><td>09, 11</td></tr>
+            <tr><td>Semanas 5–6</td><td>Optimización, SEO, redirecciones, seguridad, pruebas y despliegue.</td><td>12, 13</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:8px;font-size:12.5px">El plazo de 30 a 45 días calendario corre desde el primer pago y la entrega de accesos, y depende de la revisión oportuna de los avances por parte del cliente.</p>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">8</span>Entregables y requisitos</h2>
+        <div class="grid2">
+          <div class="box" style="background:#fff"><b>Se entrega</b>
+            <ul class="list" style="font-size:13px">
+              <li>Tienda en línea y panel administrativo publicados.</li>
+              <li>Base de datos con productos y categorías migrados.</li>
+              <li>Redirecciones de las URLs antiguas que correspondan.</li>
+              <li>Código fuente en un repositorio a nombre del cliente.</li>
+              <li>Documentación técnica básica de instalación y despliegue.</li>
+            </ul>
+          </div>
+          <div class="box" style="background:#fff"><b>Requiere del cliente</b>
+            <ul class="list" style="font-size:13px">
+              <li>Acceso de administrador a WordPress/WooCommerce o exportación de datos.</li>
+              <li>Hosting y dominio contratados (ver exclusiones).</li>
+              <li>Definición de medios de pago y envío al inicio del proyecto.</li>
+              <li>Revisión y aprobación de los avances.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">9</span>Exclusiones</h2>
+        <p>No se incluye, salvo cotización adicional:</p>
+        <ul class="list excl">
+          <li>Hosting y dominio.</li>
+          <li>Suscripciones de terceros.</li>
+          <li>Integraciones ERP.</li>
+          <li>Facturación fiscal especializada.</li>
+          <li>Aplicaciones móviles nativas.</li>
+          <li>Pasarelas de pago o servicios logísticos no definidos.</li>
+          <li>Nuevas funcionalidades fuera del alcance acordado.</li>
+        </ul>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">10</span>Garantía</h2>
+        <p>Amicornios Soft corregirá sin costo los <strong>errores de implementación</strong> que se reporten durante los <strong>30 días calendario</strong> posteriores a la entrega final. La garantía cubre el funcionamiento de lo descrito en esta cotización y no incluye funcionalidades nuevas, cambios de alcance ni fallas causadas por servicios de terceros o modificaciones hechas por otras personas.</p>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">11</span>Prototipo de referencia</h2>
+        <p>Se adjunta un prototipo navegable en HTML, CSS y JavaScript con los productos, precios e imágenes reales publicados en tecnodreams.com. Sirve para validar diseño y flujos; las compras, pagos, pedidos y datos de ventas del prototipo son simulados. El sistema final se construirá con las tecnologías indicadas en la sección 1.</p>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">12</span>Aceptación</h2>
+        <p>Con la firma de este documento y el primer pago (Bs 3.500), el cliente acepta el alcance, las condiciones y el precio aquí descritos. Validez de la oferta: 30 días desde la fecha de emisión.</p>
+        <div class="sign">
+          <div><b>TecnoDreams</b>Nombre, firma y fecha</div>
+          <div><b>Amicornios Soft</b>Nombre, firma y fecha</div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="doc-foot"><span>Amicornios Soft · soft.amicornios.com · vargascarlos12123@gmail.com · +591 71450557</span><span>COT-TDR-001 · 21/10/2026</span></footer>
+  </article>
+
+  <script>
+    document.getElementById('pdf').addEventListener('click', function () {
+      var t = document.title;
+      document.title = 'Cotizacion-TecnoDreams-COT-TDR-001';
+      window.print();
+      setTimeout(function () { document.title = t; }, 500);
+    });
+  </script>
+</body>
+</html>

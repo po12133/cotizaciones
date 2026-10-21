@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TecnoDreams – O seu lugar é aqui</title>
+  <meta name="description" content="Tecnologia para o seu dia a dia: cadeiras gamer, periféricos, som, simulação e utilidades. Retirada no Bom Retiro, São Paulo.">
+  <meta name="theme-color" content="#061d36">
+  <link rel="icon" href="assets/brand/favicon.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Brawler:wght@400;700&family=Cinzel:wght@700&family=Montserrat:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="home">
+  <div id="site-header"></div>
+  <main id="main">
+
+    <section class="hero" id="hero" aria-label="Destaques"></section>
+
+    <section class="perks" aria-label="Vantagens">
+      <div class="container">
+        <div class="perk"><span class="perk-ic"><svg class="icon" aria-hidden="true"><use href="#i-pix"></use></svg></span><div><strong>Pix, Visa e Mastercard</strong><span>Pague como preferir</span></div></div>
+        <div class="perk"><span class="perk-ic"><svg class="icon" aria-hidden="true"><use href="#i-store"></use></svg></span><div><strong>Ponto de retirada</strong><span>Bom Retiro – São Paulo</span></div></div>
+        <div class="perk"><span class="perk-ic"><svg class="icon fill" aria-hidden="true"><use href="#i-wa"></use></svg></span><div><strong>Atendimento humano</strong><span>Tire dúvidas pelo WhatsApp</span></div></div>
+        <div class="perk"><span class="perk-ic"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span><div><strong>Compra segura</strong><span>Site com conexão HTTPS</span></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><div><span class="eyebrow">Categorias</span><h2>Descubra as novidades</h2></div><a class="link-more" href="catalogo.html">Ver tudo <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div>
+        <div class="cat-grid" id="home-cats"></div>
+      </div>
+    </section>
+
+    <section class="section" style="background:#fff">
+      <div class="container rail-wrap">
+        <div class="section-head"><div><h2>Produtos mais populares</h2><p>Setup gamer e produtividade: equipe seu espaço para jogar, trabalhar e criar com mais conforto.</p></div><div style="display:flex;gap:14px;align-items:center"><a class="link-more" href="categoria.html?c=cadeiras-gamer">Cadeiras gamer <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a><div class="rail-nav"><button type="button" data-rail-prev aria-label="Anterior"><svg class="icon"><use href="#i-left"></use></svg></button><button type="button" data-rail-next aria-label="Próximo"><svg class="icon"><use href="#i-right"></use></svg></button></div></div></div>
+        <div class="rail-track" id="rail-featured"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="promo-duo">
+          <a class="promo-card reveal" href="categoria.html?c=simulacao"><img src="assets/banners/hero-volantes.webp" alt="" loading="lazy" style="object-position:75% center"><div class="promo-copy"><span class="eyebrow" style="color:var(--blue-400)">Simulação</span><h3>Volantes Logitech G29 e G923 com preço especial</h3><p>Force feedback, pedais e câmbio para levar a corrida para casa.</p><span class="btn btn-light btn-sm">Ver ofertas <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span></div></a>
+          <a class="promo-card light reveal" href="catalogo.html?cat=mouse,teclados,fones-de-ouvido,cameras"><img src="assets/banners/tile-setup.webp" alt="" loading="lazy"><div class="promo-copy"><span class="eyebrow">Seleção de temporada</span><h3>Tudo para o seu setup</h3><p>Mouse, teclado, headset e webcam em um só lugar.</p><span class="btn btn-primary btn-sm">Montar setup <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:8px">
+      <div class="container">
+        <div class="section-head"><div><span class="eyebrow" style="color:var(--red-600)">Ofertas</span><h2>Preços promocionais</h2><p id="offers-count"></p></div><a class="link-more" href="catalogo.html?oferta=1">Todas as ofertas <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div>
+        <div class="grid-products cols-5" id="grid-offers"></div>
+      </div>
+    </section>
+
+    <section class="section" style="background:#fff">
+      <div class="container rail-wrap">
+        <div class="section-head"><div><h2>Chegaram agora</h2><p>O lançamento mais recente de cada categoria</p></div><div style="display:flex;gap:14px;align-items:center"><a class="link-more" href="catalogo.html?sort=novidades">Ver novidades <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a><div class="rail-nav"><button type="button" data-rail-prev aria-label="Anterior"><svg class="icon"><use href="#i-left"></use></svg></button><button type="button" data-rail-next aria-label="Próximo"><svg class="icon"><use href="#i-right"></use></svg></button></div></div></div>
+        <div class="rail-track" id="rail-new"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><div><span class="eyebrow">Seleção de temporada</span><h2>Para cada momento do dia</h2></div></div>
+        <div class="season">
+          <a class="reveal" href="categoria.html?c=alexas"><img src="assets/banners/tile-alexa.webp" alt="Amazon Echo" loading="lazy"><span>Alexa</span></a>
+          <a class="reveal" href="categoria.html?c=smartwatch"><img src="assets/banners/tile-smartwatch.webp" alt="Smartwatch Microwear" loading="lazy"><span>Smartwatch</span></a>
+          <a class="reveal" href="categoria.html?c=mesas-gamer"><img src="assets/banners/tile-mesa.webp" alt="Mesa" loading="lazy"><span>Mesas</span></a>
+          <a class="reveal" href="categoria.html?c=carregadores"><img src="assets/banners/tile-carga.webp" alt="Estação de carga" loading="lazy"><span>Estações de Carga Múltipla</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background:#fff">
+      <div class="container">
+        <div class="section-head"><div><span class="eyebrow">Marcas</span><h2>Marcas que você encontra aqui</h2></div></div>
+        <div class="brands" id="brands"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="store-band reveal">
+          <div class="sb-img"><img src="assets/banners/loja-1.webp" alt="Escritório TecnoDreams" loading="lazy"></div>
+          <div class="sb-copy">
+            <span class="eyebrow" style="color:var(--blue-400)">Escritório e ponto de retirada</span>
+            <h3>Compre online e retire em São Paulo</h3>
+            <ul>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg><span id="store-address"></span></li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg><span>Combine o horário de retirada com a equipe</span></li>
+              <li><svg class="icon fill" aria-hidden="true"><use href="#i-wa"></use></svg><span>Atendimento pelo WhatsApp</span></li>
+            </ul>
+            <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-wa" id="store-wa" target="_blank" rel="noopener"><svg class="icon fill" aria-hidden="true"><use href="#i-wa"></use></svg>Combinar retirada</a><a class="btn btn-light" id="store-map" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg>Ver no mapa</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="newsletter reveal">
+          <div><h3>Receba ofertas e lançamentos</h3><p>Novidades da TecnoDreams direto no seu e-mail.</p></div>
+          <form id="newsletter" novalidate><label class="sr-only" for="nl-email">E-mail</label><input id="nl-email" type="email" placeholder="Seu melhor e-mail" autocomplete="email"><button class="btn btn-accent" type="submit">Quero receber</button></form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
