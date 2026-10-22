@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Módulos · WhatsApp Bot · Amicornios Soft</title>
+  <meta name="description" content="Catálogo de módulos de la plataforma WhatsApp Bot con funcionalidades, dependencias, precios de implementación y mensualidad.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="modulos">
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Catálogo de módulos</span>
+        <h1>Diez módulos sobre una integración base</h1>
+        <p>Cada módulo indica qué incluye, de qué depende, cuánto cuesta implementarlo y su mensualidad. Agréguelos a la cotización o pruebe su prototipo interactivo.</p>
+        <div class="row wrap mt-2">
+          <div class="segmented" id="filter" role="tablist" aria-label="Filtrar módulos">
+            <button class="active" data-f="all">Todos</button>
+            <button data-f="atencion">Atención</button>
+            <button data-f="comercio">Comercio</button>
+            <button data-f="gestion">Gestión</button>
+          </div>
+          <span class="grow"></span>
+          <a class="btn btn-primary" href="cotizador.html" id="go-quote">Ir al cotizador</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section tight" style="padding-top:12px">
+      <div class="container modules-layout">
+        <nav class="modules-toc" id="toc" aria-label="Índice de módulos"></nav>
+        <div id="module-list" class="stack"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/modules.js"></script>
+  <script src="js/pricing.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/modulos-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhatsApp Bot · Amicornios Soft</title>
+  <meta name="description" content="Plataforma de automatización de WhatsApp Business: atención 24/7, IA, citas, catálogo, ventas y CRM en un solo panel.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/whatsapp.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="inicio" data-hero="1">
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow"><i data-icon="whatsapp" class="sm"></i>Sobre WhatsApp Business Cloud API</span>
+          <h1>Automatiza tu WhatsApp. Atiende, agenda y vende desde una sola plataforma.</h1>
+          <p class="lead">Transforma WhatsApp en tu centro de atención, reservas y ventas con automatizaciones inteligentes, agentes de IA y un panel de administración completo.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="modulos.html"><i data-icon="layers"></i>Explorar módulos</a>
+            <a class="btn btn-light btn-lg" href="prototipos/index.html"><i data-icon="play"></i>Ver demostración</a>
+            <a class="btn btn-light btn-lg" href="cotizador.html"><i data-icon="file"></i>Crear cotización</a>
+          </div>
+          <div class="hero-meta">
+            <span><i data-icon="clock" class="sm"></i>Atención 24/7</span>
+            <span><i data-icon="shield" class="sm"></i>API oficial de Meta</span>
+            <span><i data-icon="settings" class="sm"></i>Sin programar</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-float hf-1"><span class="hf-icon"><i data-icon="calendar"></i></span><div><strong>Cita confirmada</strong><small>Jue 23 · 10:30 · Pediatría</small></div></div>
+          <div class="hero-float hf-2"><span class="hf-icon"><i data-icon="cart"></i></span><div><strong>Pedido #1048</strong><small>Bs 420 · Pago QR en revisión</small></div></div>
+          <div class="phone compact wa" id="hero-phone"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Métricas de la propuesta -->
+    <section class="section tight">
+      <div class="container">
+        <div class="proof-grid reveal">
+          <div><strong>10</strong><span>módulos combinables</span></div>
+          <div><strong>4</strong><span>planes listos para contratar</span></div>
+          <div><strong>14</strong><span>prototipos interactivos</span></div>
+          <div><strong>Bs</strong><span>precios en bolivianos, sin sorpresas</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section class="section" id="beneficios">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Beneficios</span>
+          <h2>Todo lo que su equipo hace por WhatsApp, ordenado y automatizado</h2>
+          <p>Cada mensaje entra a una plataforma que responde, deriva, agenda, vende y mide. Usted decide qué se automatiza y qué atiende una persona.</p>
+        </div>
+        <div class="feature-grid" id="benefits"></div>
+      </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section class="section alt" id="como-funciona">
+      <div class="container">
+        <div class="section-head center reveal">
+          <span class="eyebrow">Cómo funciona</span>
+          <h2>Un número, una plataforma, todo su equipo</h2>
+          <p>Conectamos su número empresarial a la API oficial de WhatsApp. Los mensajes pasan por el bot, la IA o un asesor, y todo queda registrado en el panel.</p>
+        </div>
+        <div class="flow-diagram reveal" id="flow-diagram"></div>
+      </div>
+    </section>
+
+    <!-- Sectores -->
+    <section class="section" id="sectores">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Sectores</span>
+          <h2>Pensado para negocios que viven de conversar con sus clientes</h2>
+          <p>Elija un sector para ver una conversación de ejemplo y los módulos recomendados. Cada demostración puede probarse en el simulador.</p>
+        </div>
+        <div class="sector-layout reveal">
+          <div class="sector-tabs" id="sector-tabs" role="tablist" aria-label="Sectores"></div>
+          <div id="sector-panel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Módulos -->
+    <section class="section alt" id="modulos">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Módulos</span>
+          <h2>Arme su plataforma por piezas</h2>
+          <p>Empiece con lo esencial y agregue módulos cuando los necesite. Todos comparten la integración base y el mismo panel.</p>
+        </div>
+        <div class="module-mini-grid" id="module-mini"></div>
+        <div class="row wrap mt-3">
+          <a class="btn btn-primary" href="modulos.html">Ver detalle de módulos<i data-icon="arrowRight" class="sm"></i></a>
+          <a class="btn" href="cotizador.html">Calcular mi inversión</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recorrido -->
+    <section class="section" id="recorrido">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Implementación</span>
+          <h2>De la reunión a producción en pocas semanas</h2>
+        </div>
+        <div class="steps reveal">
+          <div class="step"><h3>Diagnóstico</h3><p>Revisamos sus procesos de atención, servicios, productos y horarios.</p></div>
+          <div class="step"><h3>Configuración</h3><p>Conectamos su número, cargamos menús, catálogo, agenda y base de conocimiento.</p></div>
+          <div class="step"><h3>Pruebas</h3><p>Su equipo prueba los flujos con conversaciones reales antes del lanzamiento.</p></div>
+          <div class="step"><h3>Lanzamiento</h3><p>Capacitación, puesta en producción y acompañamiento durante el primer mes.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planes teaser -->
+    <section class="section alt" id="planes">
+      <div class="container">
+        <div class="section-head center reveal">
+          <span class="eyebrow">Planes</span>
+          <h2>Paquetes listos o una configuración a medida</h2>
+          <p>Contrate un plan con límites definidos o combine módulos en el cotizador. Descuentos de hasta 20% en la suscripción anual.</p>
+        </div>
+        <div class="plan-mini-grid" id="plan-mini"></div>
+        <div class="center mt-3"><a class="btn" href="planes.html">Comparar planes en detalle<i data-icon="arrowRight" class="sm"></i></a></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-band reveal">
+          <div>
+            <h2>Pruebe la plataforma antes de decidir</h2>
+            <p>Converse con el bot, agende una cita, haga un pedido y vea cómo llega todo al panel administrativo.</p>
+          </div>
+          <div class="btn-group">
+            <a class="btn btn-primary btn-lg" href="prototipos/whatsapp.html"><i data-icon="phone"></i>Abrir simulador</a>
+            <a class="btn btn-light btn-lg" href="cotizador.html">Crear cotización</a>
+          </div>
+        </div>
+        <p class="small muted center mt-3" id="sim-note"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/modules.js"></script>
+  <script src="js/plans.js"></script>
+  <script src="js/sectors.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/wa-script.js"></script>
+  <script src="js/landing.js"></script>
+</body>
+</html>

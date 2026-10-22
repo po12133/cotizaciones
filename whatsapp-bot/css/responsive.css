@@ -1,0 +1,133 @@
+/* ==========================================================================
+   Ajustes responsive: tablet (≤1080px), tablet vertical (≤860px) y móvil (≤600px).
+   ========================================================================== */
+
+@media (max-width: 1080px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+  .hero h1 { max-width: 20ch; }
+  .hero-visual { max-width: 380px; margin: 0 auto; width: 100%; }
+  .sector-layout { grid-template-columns: 1fr; }
+  .sector-tabs { flex-direction: row; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .sector-tabs::-webkit-scrollbar { display: none; }
+  .sector-tab { width: auto; flex: none; }
+  .flow-diagram { flex-wrap: wrap; }
+  .flow-node { flex: 1 1 calc(33% - 40px); }
+  .plan-mini-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .steps { grid-template-columns: repeat(2, 1fr); }
+
+  /* Cotizador y catálogo */
+  .quote-layout { grid-template-columns: 1fr; }
+  .quote-summary { position: static; }
+  .plans-grid { grid-template-columns: repeat(2, 1fr); }
+  .modules-layout { grid-template-columns: 1fr; }
+  .modules-toc { position: static; display: flex; flex-direction: row; overflow-x: auto; gap: 6px; scrollbar-width: none; }
+  .modules-toc a { flex: none; }
+  .module-detail { grid-template-columns: 1fr; }
+
+  /* Panel */
+  .app { grid-template-columns: 76px 1fr; }
+  .sidebar .nav-label, .sidebar .sb-brand-text, .sidebar .sb-section, .sidebar .sb-foot-text { display: none; }
+  .sidebar .sb-link { justify-content: center; padding: 10px; }
+  .sidebar .sb-brand { justify-content: center; }
+  .grid-dash { grid-template-columns: 1fr 1fr; }
+  .grid-dash .span-2, .grid-dash .span-3 { grid-column: 1 / -1; }
+  .inbox { grid-template-columns: 300px 1fr; }
+  .inbox-side { display: none; }
+  .inbox.show-side .inbox-side { display: flex; position: absolute; right: 0; top: 0; bottom: 0; width: min(340px, 100%); z-index: 20; box-shadow: var(--shadow-lg); }
+  .split { grid-template-columns: 1fr; }
+  .split .phone-col { position: static; }
+  .split.phone-first .phone-col { order: -1; }
+}
+
+@media (max-width: 860px) {
+  :root { --header-h: 60px; }
+  .site-nav { display: none; }
+  .site-header .nav-toggle { display: inline-flex; }
+  .header-cta { display: none; }
+  .site-header.nav-open .site-nav {
+    display: flex; flex-direction: column; position: absolute; top: var(--header-h); left: 0; right: 0;
+    padding: 12px 16px 18px; margin: 0; background: var(--surface); border-bottom: 1px solid var(--border); box-shadow: var(--shadow-lg);
+  }
+  .site-header.nav-open .site-nav a { color: var(--text-2) !important; padding: 12px; }
+  .site-header.nav-open { background: var(--surface) !important; }
+  .site-header.nav-open .brand { color: var(--text) !important; }
+  .site-header.nav-open .btn-ghost { color: var(--text) !important; }
+  .proof-grid { grid-template-columns: 1fr 1fr; }
+  .module-mini-grid { grid-template-columns: 1fr; }
+  .sector-panel { grid-template-columns: 1fr; }
+  .sector-panel .phone { max-width: 320px; }
+  .form-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+
+  .app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed; inset: 0 auto 0 0; width: 264px; z-index: 400; transform: translateX(-100%); transition: transform .25s var(--ease);
+    box-shadow: var(--shadow-lg);
+  }
+  .sidebar .nav-label, .sidebar .sb-brand-text, .sidebar .sb-section, .sidebar .sb-foot-text { display: revert; }
+  .sidebar .sb-link { justify-content: flex-start; padding: 9px 12px; }
+  .sidebar .sb-brand { justify-content: flex-start; }
+  .app.sb-open .sidebar { transform: none; }
+  .app.sb-open .sb-scrim { display: block; }
+  .topbar .sb-toggle { display: inline-flex; }
+  .grid-dash, .kpis { grid-template-columns: 1fr 1fr; }
+  .inbox { grid-template-columns: 1fr; height: calc(100vh - 150px); }
+  .inbox-list { display: flex; }
+  .inbox-thread { display: none; }
+  .inbox.thread-open .inbox-list { display: none; }
+  .inbox.thread-open .inbox-thread { display: flex; }
+  .inbox-thread .back-btn { display: inline-flex; }
+  .cal-grid .cal-cell { min-height: 74px; }
+  .cal-cell .cal-ev { display: none; }
+  .cal-cell .cal-dots { display: flex; }
+  .kanban { grid-template-columns: repeat(4, 260px); overflow-x: auto; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 14.5px; }
+  .container { padding: 0 16px; }
+  .section { padding: 60px 0; }
+  .section.tight { padding: 36px 0; }
+  .hero { padding-bottom: 64px; padding-top: calc(var(--header-h) + 40px); }
+  .hero-cta .btn { flex: 1 1 100%; }
+  .hero-float { display: none; }
+  .hero-visual .phone { transform: none; }
+  .flow-diagram { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); }
+  .plan-mini-grid, .steps { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .cta-band { padding: 28px 22px; }
+  .sector-panel { padding: 18px; }
+  .form-grid, .form-grid.cols-3 { grid-template-columns: 1fr; }
+  .modal-root { padding: 0; place-items: end stretch; }
+  .modal, .modal.lg, .modal.xl, .modal.sm { width: 100%; max-height: 92vh; border-radius: 20px 20px 0 0; }
+  .toast-stack { left: 16px; right: 16px; bottom: 16px; max-width: none; }
+  .phone { max-width: 100%; border-radius: 34px; }
+  .phone-screen { height: 600px; border-radius: 26px; }
+  .plans-grid { grid-template-columns: 1fr; }
+  .card-head { flex-wrap: wrap; }
+
+  .main { padding: 16px; }
+  .topbar { padding: 0 12px; }
+  .topbar .tb-search { display: none; }
+  .page-head { flex-direction: column; align-items: stretch; }
+  .page-head .btn-group { width: 100%; }
+  .kpis { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpi { padding: 14px; }
+  .kpi .kpi-value { font-size: 1.35rem; }
+  .grid-dash { grid-template-columns: 1fr; }
+  .table { font-size: .85rem; }
+  .table th, .table td { padding: 10px; }
+  .hide-sm { display: none !important; }
+  .cal-grid .cal-cell { min-height: 56px; padding: 4px; }
+  .cal-weekday { font-size: .66rem; }
+  .proto-grid { grid-template-columns: 1fr; }
+  .store-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stepper { gap: 4px; }
+  .stepper .st-label { display: none; }
+}
+
+@media print {
+  .site-header, .site-footer, .no-print, .toast-stack { display: none !important; }
+  body { background: #fff; }
+}

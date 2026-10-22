@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cotizador · WhatsApp Bot · Amicornios Soft</title>
+  <meta name="description" content="Cotizador interactivo por módulos de la plataforma WhatsApp Bot, con descuentos por modalidad y exportación a PDF.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/print.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="cotizador">
+  <main class="no-print">
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Cotizador interactivo</span>
+        <h1>Arme su cotización por módulos</h1>
+        <p>Seleccione funcionalidades, ajuste asesores, contactos y modalidad de pago. El resumen se actualiza al instante y se guarda en este navegador.</p>
+      </div>
+    </section>
+
+    <section class="section tight" style="padding-top:8px">
+      <div class="container quote-layout">
+        <div class="stack" id="quote-form">
+          <div id="plan-compare"></div>
+
+          <!-- 1. Cliente -->
+          <section class="card" id="sec-cliente">
+            <div class="card-head">
+              <h3><span class="step-n">1</span>Datos del cliente</h3>
+              <span class="mono small muted" id="quote-number"></span>
+            </div>
+            <div class="card-body"><form class="form-grid" id="client-form" novalidate></form></div>
+          </section>
+
+          <!-- 2. Módulos -->
+          <section class="card" id="sec-modulos">
+            <div class="card-head">
+              <h3><span class="step-n">2</span>Módulos</h3>
+              <div class="row">
+                <span class="small muted" id="mod-count"></span>
+                <button class="btn btn-sm btn-ghost" id="select-all">Seleccionar todos</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="deps-notice"></div>
+              <div class="quote-modules" id="quote-modules"></div>
+            </div>
+          </section>
+
+          <!-- 3. Parámetros -->
+          <section class="card" id="sec-params">
+            <div class="card-head"><h3><span class="step-n">3</span>Parámetros comerciales</h3></div>
+            <div class="card-body stack">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="asesores">Asesores (usuarios del panel)</label>
+                  <div class="stepper-input">
+                    <button type="button" class="btn btn-icon" data-step="-1" aria-label="Quitar asesor"><i data-icon="minus"></i></button>
+                    <input class="input" type="number" id="asesores" min="1" max="50" inputmode="numeric">
+                    <button type="button" class="btn btn-icon" data-step="1" aria-label="Agregar asesor"><i data-icon="plus"></i></button>
+                  </div>
+                  <span class="hint" id="asesores-hint"></span>
+                </div>
+                <div class="field">
+                  <label for="contactos">Contactos activos estimados por mes</label>
+                  <input class="input" type="number" id="contactos" min="0" step="100" inputmode="numeric">
+                  <input type="range" id="contactos-range" min="0" max="30000" step="250" aria-label="Contactos estimados">
+                  <span class="hint" id="contactos-hint"></span>
+                </div>
+              </div>
+
+              <div class="field">
+                <span class="label">Modalidad de suscripción</span>
+                <div class="segmented" id="periodos" role="radiogroup" aria-label="Modalidad"></div>
+                <span class="hint">El descuento por modalidad se aplica solo a la suscripción, no a la implementación.</span>
+              </div>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="promo">Descuento promocional adicional</label>
+                  <div class="input-affix"><input class="input" type="number" id="promo" min="0" step="1" inputmode="numeric"><span class="affix">%</span></div>
+                  <span class="hint" id="promo-hint"></span>
+                  <span class="error-msg"></span>
+                </div>
+                <div class="field">
+                  <label class="switch"><input type="checkbox" id="impl-manual-on"><span class="track"></span>Ajustar costo de implementación</label>
+                  <div class="input-affix"><span class="affix">Bs</span><input class="input" type="number" id="impl-manual" min="0" step="10" disabled inputmode="decimal"></div>
+                  <span class="hint" id="impl-hint"></span>
+                  <span class="error-msg"></span>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="row between">
+                  <span class="label">Servicios adicionales</span>
+                  <button type="button" class="btn btn-sm" id="add-extra"><i data-icon="plus" class="sm"></i>Agregar servicio</button>
+                </div>
+                <div id="extras" class="extras"></div>
+                <span class="hint">Personalizaciones, capacitaciones extra o integraciones a medida. Los montos mensuales se suman a la suscripción sin descuento.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. Costos externos -->
+          <section class="card">
+            <div class="card-head"><h3><span class="step-n">4</span>Costos externos no incluidos</h3><span class="badge warn">Variables</span></div>
+            <div class="card-body">
+              <p class="small">Estos servicios los factura cada proveedor directamente al cliente según su consumo. No se suman al total y no se estiman importes, salvo indicación expresa en observaciones.</p>
+              <div class="ext-grid" id="external"></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Resumen -->
+        <aside class="quote-summary" id="summary" aria-live="polite"></aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- Documento imprimible (se genera al imprimir) -->
+  <div id="print-doc" class="print-doc" aria-hidden="true"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/modules.js"></script>
+  <script src="js/plans.js"></script>
+  <script src="js/pricing.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/quote-doc.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/cotizador.js"></script>
+</body>
+</html>

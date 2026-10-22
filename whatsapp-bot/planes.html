@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Planes · WhatsApp Bot · Amicornios Soft</title>
+  <meta name="description" content="Planes comerciales de la plataforma WhatsApp Bot: Atención, Profesional, Comercio y Empresarial.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="planes">
+  <main>
+    <section class="page-hero">
+      <div class="container center">
+        <span class="eyebrow">Planes</span>
+        <h1>Elija un paquete o personalícelo</h1>
+        <p style="margin-left:auto;margin-right:auto">Paquetes con precio cerrado y límites claros. Si necesita otra combinación, personalice el plan en el cotizador y compárelo con una configuración a medida.</p>
+        <div class="segmented mt-2" id="period" role="radiogroup" aria-label="Modalidad de pago"></div>
+      </div>
+    </section>
+
+    <section class="section tight" style="padding-top:12px">
+      <div class="container">
+        <div class="plans-grid" id="plans"></div>
+        <p class="small muted center mt-3" id="plans-note"></p>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Comparativa</span>
+          <h2>Qué incluye cada plan</h2>
+          <p>La última fila muestra cuánto costarían los mismos módulos contratados por separado, según los precios de referencia por módulo.</p>
+        </div>
+        <div class="card"><div class="table-wrap"><table class="table compare-table" id="compare"></table></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><span class="eyebrow">Preguntas frecuentes</span><h2>Sobre los planes</h2></div>
+        <div class="faq" id="faq"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/modules.js"></script>
+  <script src="js/plans.js"></script>
+  <script src="js/pricing.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/planes-page.js"></script>
+</body>
+</html>
