@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Propuesta COT-TDR-002 · TecnoDreams 2.0 (alcance) – Amicornios Soft</title>
+  <meta name="description" content="Cotización de Amicornios Soft para TecnoDreams 2.0: plataforma de comercio electrónico con panel administrativo avanzado, integración con Excel, Amazon S3, SEO y Google Merchant Center.">
+  <meta name="theme-color" content="#061d36">
+  <link rel="icon" href="prototipo/assets/brand/favicon.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Brawler:wght@400;700&family=Cinzel:wght@700&family=Montserrat:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root {
+      --navy-950: #031223; --navy-900: #061d36; --navy-800: #0a294b; --navy-700: #123c69;
+      --blue: #2f8cff; --blue-100: #e6f1ff; --ink: #0d1a2b; --ink-2: #33445a; --muted: #627389;
+      --line: #dde4ec; --bg: #e9eef4; --soft: #f4f7fa; --green: #13864a; --green-50: #e9f8ef; --amber-50: #fff6e5;
+      --display: "Brawler", Georgia, serif; --ui: "Montserrat", system-ui, sans-serif; --logo: "Cinzel", Georgia, serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--ui); color: var(--ink); background: var(--bg); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+    /* barra de acciones (solo pantalla) */
+    .toolbar { position: sticky; top: 0; z-index: 10; background: var(--navy-900); color: #fff; box-shadow: 0 6px 20px -10px rgba(0,0,0,.5); }
+    .toolbar .in { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 10px 16px; flex-wrap: wrap; }
+    .toolbar .title { font-weight: 700; font-size: 14px; margin-right: auto; display: flex; align-items: center; gap: 10px; }
+    .toolbar .title img { width: 30px; height: 30px; }
+    .tbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 10px; font: 700 14px var(--ui); border: 1.5px solid rgba(255,255,255,.3); background: transparent; color: #fff; text-decoration: none; cursor: pointer; transition: background .2s; }
+    .tbtn:hover { background: rgba(255,255,255,.1); }
+    .tbtn.primary { background: var(--blue); border-color: var(--blue); box-shadow: 0 8px 18px -8px rgba(47,140,255,.9); }
+    .tbtn.primary:hover { background: #1f7ae8; }
+    @media (max-width: 640px) { .toolbar .title span { display: none; } .tbtn.sec span { display: none; } }
+
+    /* hoja */
+    .sheet { max-width: 210mm; margin: 24px auto 48px; background: #fff; box-shadow: 0 20px 60px -30px rgba(6,29,54,.45); border-radius: 6px; overflow: hidden; }
+    .pad { padding: 0 18mm; }
+    @media (max-width: 760px) { .pad { padding: 0 18px; } .sheet { margin: 0 0 32px; border-radius: 0; } }
+
+    .doc-head { background: var(--navy-900); color: #fff; padding: 14mm 18mm 12mm; position: relative; overflow: hidden; }
+    @media (max-width: 760px) { .doc-head { padding: 24px 18px; } }
+    .doc-head::after { content: ""; position: absolute; right: -40mm; top: -40mm; width: 110mm; height: 110mm; border-radius: 50%; background: radial-gradient(circle, rgba(47,140,255,.35), transparent 70%); }
+    .dh-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; position: relative; z-index: 1; flex-wrap: wrap; }
+    .provider strong { font-size: 18px; display: block; letter-spacing: .01em; }
+    .provider span { font-size: 12px; color: #a9bad0; }
+    .doc-id { text-align: right; font-size: 12px; color: #c9d6e6; }
+    .doc-id .lbl { font-family: var(--display); font-size: 22px; color: #fff; letter-spacing: .08em; display: block; }
+    .doc-id b { color: #fff; }
+    .dh-title { position: relative; z-index: 1; margin-top: 12mm; display: flex; justify-content: space-between; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+    .dh-title .for { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #8cc2ff; font-weight: 700; }
+    .dh-title h1 { font-family: var(--display); font-weight: 400; font-size: 30px; line-height: 1.12; margin: 6px 0 0; max-width: 120mm; }
+    .client-logo { display: flex; align-items: center; gap: 10px; }
+    .client-logo img { width: 44px; height: 44px; }
+    .client-logo strong { font-family: var(--logo); font-size: 22px; display: block; line-height: 1; }
+    .client-logo small { font-family: var(--display); color: #a9bad0; font-size: 12px; }
+    .kpis { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,.14); border-radius: 12px; overflow: hidden; margin-top: 9mm; }
+    .kpis div { background: rgba(3,18,35,.55); padding: 12px 14px; }
+    .kpis b { display: block; font-size: 22px; letter-spacing: -.01em; }
+    .kpis span { font-size: 11.5px; color: #a9bad0; }
+
+    h2.sec { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 400; font-size: 21px; color: var(--navy-900); margin: 0 0 10px; }
+    h2.sec .n { width: 30px; height: 30px; border-radius: 9px; background: var(--navy-900); color: #fff; display: grid; place-items: center; font: 800 13px var(--ui); flex: none; }
+    .block { padding-top: 9mm; }
+    p { margin: 0 0 8px; color: var(--ink-2); }
+    ul.list { margin: 0; padding-left: 18px; color: var(--ink-2); }
+    ul.list li { margin: 3px 0; }
+    .note { display: flex; gap: 10px; background: var(--amber-50); border: 1px solid #f3d7a6; color: #6b4300; border-radius: 10px; padding: 10px 12px; font-size: 12.5px; margin-top: 10px; }
+    .note.blue { background: var(--blue-100); border-color: #c4dcfb; color: var(--navy-800); }
+
+    table { width: 100%; border-collapse: collapse; }
+    .info td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 13.5px; }
+    .info td:first-child { width: 34%; color: var(--muted); font-weight: 600; }
+    .info td:last-child { color: var(--ink); font-weight: 500; }
+    .info tr:last-child td { border-bottom: 0; }
+    .info .price b { color: var(--navy-900); font-size: 15px; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+    .box { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--soft); }
+    .box b { display: block; color: var(--navy-900); font-size: 13.5px; margin-bottom: 2px; }
+    .box span { font-size: 12.5px; color: var(--ink-2); display: block; line-height: 1.5; }
+    .goals { counter-reset: g; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; margin: 0; padding: 0; list-style: none; }
+    @media (max-width: 640px) { .goals { grid-template-columns: 1fr; } }
+    .goals li { counter-increment: g; display: flex; gap: 10px; align-items: flex-start; color: var(--ink-2); padding: 6px 0; border-bottom: 1px dashed var(--line); }
+    .goals li::before { content: counter(g, decimal-leading-zero); font-weight: 800; color: var(--blue); font-size: 12px; margin-top: 2px; }
+
+    .budget th { background: var(--navy-900); color: #fff; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; text-align: left; padding: 9px 10px; }
+    .budget th.r, .budget td.r { text-align: right; white-space: nowrap; }
+    .budget td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 13px; }
+    .budget td.num { color: var(--muted); font-weight: 700; width: 28px; }
+    .budget td .c { font-weight: 700; color: var(--navy-900); display: block; }
+    .budget td .d { color: var(--muted); font-size: 12px; line-height: 1.45; display: block; }
+    .budget tbody tr:nth-child(even) td { background: #fafcfe; }
+    .budget tfoot td { background: var(--navy-900); color: #fff; font-weight: 800; font-size: 15px; padding: 11px 10px; }
+    .budget-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--line); }
+
+    .summary { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; margin-top: 12px; align-items: stretch; }
+    @media (max-width: 640px) { .summary { grid-template-columns: 1fr; } }
+    .sumrow { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2); }
+    .sumrow.off { color: var(--green); font-weight: 700; }
+    .sumrow.tot { border-bottom: 0; font-size: 18px; font-weight: 800; color: var(--navy-900); padding-top: 10px; }
+    .total-card { background: linear-gradient(140deg, var(--navy-800), var(--navy-950)); color: #fff; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; }
+    .total-card small { color: #a9bad0; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; }
+    .total-card b { font-size: 34px; letter-spacing: -.02em; line-height: 1.1; }
+    .total-card span { font-size: 12px; color: #c9d6e6; }
+
+    .pays { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 640px) { .pays { grid-template-columns: 1fr; } }
+    .payc { border: 1px solid var(--line); border-radius: 10px; padding: 12px; position: relative; }
+    .payc .pct { font-size: 24px; font-weight: 800; color: var(--blue); line-height: 1; }
+    .payc b { display: block; font-size: 17px; color: var(--navy-900); margin: 6px 0 2px; }
+    .payc span { font-size: 12.5px; color: var(--ink-2); }
+
+    .plan td, .plan th { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13px; vertical-align: top; }
+    .plan th { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; background: var(--soft); }
+    .plan td:first-child { white-space: nowrap; font-weight: 700; color: var(--navy-900); }
+
+    .excl { columns: 2; column-gap: 20px; }
+    @media (max-width: 640px) { .excl { columns: 1; } }
+    .excl li { break-inside: avoid; }
+
+    .sign { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16mm; }
+    .sign div { border-top: 1.5px solid var(--ink); padding-top: 8px; font-size: 12.5px; color: var(--ink-2); }
+    .sign b { display: block; color: var(--ink); font-size: 13.5px; }
+    .doc-foot { margin-top: 10mm; background: var(--soft); border-top: 1px solid var(--line); padding: 10px 18mm; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); }
+    @media (max-width: 760px) { .doc-foot { padding: 12px 18px; } }
+
+    .budget tfoot tr.sub td { background: var(--soft); color: var(--navy-900); font-size: 13.5px; font-weight: 700; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    .arch-wrap { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 10px; background: #fbfcfe; overflow-x: auto; }
+    .arch { display: block; width: 100%; min-width: 640px; height: auto; }
+    .goals li:nth-child(n) { font-size: 13.5px; }
+
+    /* ---------- impresión / PDF A4 ---------- */
+    @page { size: A4; margin: 14mm 0 16mm; }
+    @page :first { margin-top: 0; }
+    @media print {
+      .arch { min-width: 0; }
+      html, body { background: #fff; font-size: 12.5px; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .toolbar, .no-print { display: none !important; }
+      .sheet { margin: 0; max-width: none; box-shadow: none; border-radius: 0; overflow: visible; }
+      .pad { padding: 0 16mm; }
+      .doc-head { padding: 14mm 16mm 10mm; }
+      .block { padding-top: 7mm; break-inside: auto; }
+      h2.sec { break-after: avoid; }
+      .keep, .arch-wrap, .box, .payc, .summary, .total-card, .sign, .note, tr, .goals li { break-inside: avoid; }
+      .budget thead { display: table-header-group; }
+      .budget tfoot { display: table-row-group; }
+      .page-break { break-before: page; }
+      a { text-decoration: none; }
+      .doc-foot { padding: 8px 16mm; }
+    }
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="i-dl" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 4.5 3h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v8h14v-8"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  </svg>
+
+  <div class="toolbar no-print">
+    <div class="in">
+      <div class="title"><img src="prototipo/assets/brand/icone-td.png" alt=""><span>Cotización COT-TDR-002 · TecnoDreams 2.0</span></div>
+      <a class="tbtn sec" href="index.html"><svg class="icon"><use href="#i-left"/></svg><span>Presentación</span></a>
+      <a class="tbtn sec" href="prototipo/admin.html?demo=1#dashboard"><svg class="icon"><use href="#i-store"/></svg><span>Panel demo</span></a>
+      <button class="tbtn primary" type="button" id="pdf"><svg class="icon"><use href="#i-dl"/></svg>Imprimir / guardar PDF</button>
+    </div>
+  </div>
+
+  <article class="sheet">
+    <header class="doc-head">
+      <div class="dh-top">
+        <div class="provider"><strong>Amicornios Soft</strong><span>Desarrollo de software, plataformas web y móviles<br>soft.amicornios.com · vargascarlos12123@gmail.com · +591 71450557</span></div>
+        <div class="doc-id"><span class="lbl">COTIZACIÓN</span>N.º <b>COT-TDR-002</b><br>Emisión: <b>27/10/2026</b><br>Válida hasta: <b>26/11/2026</b></div>
+      </div>
+      <div class="dh-title">
+        <div><span class="for">Propuesta comercial para</span><h1>TecnoDreams 2.0: comercio electrónico con gestión avanzada de catálogo</h1></div>
+        <div class="client-logo"><img src="prototipo/assets/brand/icone-td.png" alt=""><div><strong>TecnoDreams</strong><small>O seu lugar é aqui</small></div></div>
+      </div>
+      <div class="kpis" style="grid-template-columns:repeat(2,1fr)">
+        <div><b>2 meses</b><span>Plazo máximo estimado (8 semanas)</span></div>
+        <div><b>13 módulos</b><span>Alcance detallado en la sección 5</span></div>
+      </div>
+    </header>
+
+    <div class="pad">
+      <section class="block keep">
+        <h2 class="sec"><span class="n">1</span>Información general</h2>
+        <table class="info">
+          <tr><td>Proyecto</td><td>TecnoDreams 2.0: plataforma de comercio electrónico con sistema administrativo avanzado de catálogo</td></tr>
+          <tr><td>Cliente</td><td>TecnoDreams — www.tecnodreams.com (CNPJ 61.298.977/0001-21, según el sitio web). Representante y contacto: por confirmar.</td></tr>
+          <tr><td>Proveedor</td><td>Amicornios Soft — NIT: 14149549016.</td></tr>
+          <tr><td>Tecnología</td><td>Next.js + TypeScript, NestJS, PostgreSQL + Prisma, Redis, Amazon S3 + CloudFront y Docker Compose</td></tr>
+          <tr><td>Plazo estimado</td><td>Hasta 2 meses (8 semanas), sujeto a la validación de las macros de Excel y de las integraciones actuales</td></tr>
+          <tr><td>Versión</td><td>Reemplaza a la cotización COT-TDR-001 (21/10/2026), que contemplaba solo la modernización de la tienda.</td></tr>
+        </table>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">2</span>Resumen ejecutivo</h2>
+        <p>TecnoDreams 2.0 ya no consiste solo en reemplazar WordPress y WooCommerce por una tienda más rápida. El objetivo principal es un <strong>sistema administrativo capaz de gestionar miles de productos de forma eficiente y automatizada</strong>: los precios y la disponibilidad siguen calculándose en Excel con las macros actuales y llegan a la plataforma mediante una API REST; las fotografías se organizan por SKU en Amazon S3; y el catálogo se sincroniza con Google Merchant Center mediante un proceso supervisado.</p>
+        <p>Sobre esa base se construye el catálogo público optimizado, con SEO técnico automatizado, y se migra la información actual desde WooCommerce por etapas, manteniendo el sitio actual operativo hasta validar la nueva plataforma. Junto con esta cotización se entrega un prototipo navegable con un panel que demuestra, con datos simulados, importaciones masivas, gestión de fotografías, precios, SEO y Google Merchant Center.</p>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">3</span>Prioridades del proyecto</h2>
+        <ol class="goals">
+          <li>Base de datos y estructura de productos.</li>
+          <li>Panel administrativo visual.</li>
+          <li>Integración con Excel mediante API REST.</li>
+          <li>Importación y actualización masiva de productos.</li>
+          <li>Automatización de fotografías mediante Amazon S3.</li>
+          <li>Gestión de proveedores, precios e inventario.</li>
+          <li>Migración desde WooCommerce.</li>
+          <li>Catálogo público optimizado.</li>
+          <li>SEO técnico automatizado.</li>
+          <li>Google Merchant Center.</li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">4</span>Arquitectura técnica</h2>
+        <p>Flujo principal: <strong>Excel / Macros → API REST → PostgreSQL → panel administrativo y catálogo público</strong>. Las fotografías se suben a S3 y se distribuyen por CloudFront; Google Merchant Center recibe las actualizaciones del catálogo mediante un proceso independiente y supervisado.</p>
+        <div class="arch-wrap keep"><svg class="arch" viewBox="0 0 980 340" role="img" aria-labelledby="arch-t arch-d" xmlns="http://www.w3.org/2000/svg">
+  <title id="arch-t">Arquitectura técnica de TecnoDreams 2.0</title>
+  <desc id="arch-d">Excel y sus macros envían datos a la API REST en NestJS, que guarda en PostgreSQL; el panel administrativo y el catálogo público en Next.js leen de PostgreSQL. Redis gestiona caché y colas; un proceso supervisado sincroniza el catálogo con Google Merchant Center. Las fotografías se suben a Amazon S3 con URLs firmadas y se distribuyen por CloudFront al catálogo.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#123c69"/></marker>
+  </defs>
+  <g class="lanes" font-family="Montserrat, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#627389" letter-spacing=".08em">
+    <text x="20" y="14">SINCRONIZACIÓN CON GOOGLE</text>
+    <text x="20" y="124">DATOS DEL CATÁLOGO</text>
+    <text x="20" y="234">FOTOGRAFÍAS</text>
+  </g>
+  <g fill="none" stroke="#123c69" stroke-width="1.8" marker-end="url(#ah)">
+    <path d="M210 165H266"/><path d="M460 165H516"/><path d="M710 165H766"/>
+    <path d="M710 186L766 252"/>
+    <path d="M365 130V94" marker-start="url(#ah)"/><path d="M460 55H516"/><path d="M615 130V94"/><path d="M710 55H766"/>
+    <path d="M210 275H266"/><path d="M460 275H516"/><path d="M710 275H766"/>
+  </g>
+  <g font-family="Montserrat, Arial, sans-serif" font-size="9.5" fill="#33445a" text-anchor="middle">
+    <text x="238" y="158">JSON</text><text x="488" y="158">upsert</text>
+    <text x="378" y="115" text-anchor="start">colas</text><text x="628" y="115" text-anchor="start">cambios</text>
+    <text x="738" y="48">feed/API</text>
+    <text x="238" y="268">firmada</text><text x="488" y="268">origen</text><text x="738" y="268">?v=N</text>
+  </g>
+  <g font-family="Montserrat, Arial, sans-serif" text-anchor="middle">
+    <g><rect x="270" y="20" width="190" height="70" rx="12" fill="#e6f1ff" stroke="#8cc2ff"/><text x="365" y="49" font-size="14" font-weight="800" fill="#061d36">Redis</text><text x="365" y="67" font-size="10.5" fill="#33445a">caché y colas de trabajos</text></g>
+    <g><rect x="520" y="20" width="190" height="70" rx="12" fill="#e6f1ff" stroke="#8cc2ff"/><text x="615" y="45" font-size="14" font-weight="800" fill="#061d36">Worker Merchant</text><text x="615" y="62" font-size="10.5" fill="#33445a">proceso independiente</text><text x="615" y="76" font-size="10.5" fill="#33445a">y supervisado</text></g>
+    <g><rect x="770" y="20" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="865" y="49" font-size="14" font-weight="800" fill="#061d36">Google Merchant</text><text x="865" y="67" font-size="10.5" fill="#33445a">Center</text></g>
+    <g><rect x="20" y="130" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="115" y="155" font-size="14" font-weight="800" fill="#061d36">Excel / Macros</text><text x="115" y="172" font-size="10.5" fill="#33445a">precios y disponibilidad</text><text x="115" y="186" font-size="10.5" fill="#33445a">(fuente operativa)</text></g>
+    <g><rect x="270" y="130" width="190" height="70" rx="12" fill="#061d36"/><text x="365" y="159" font-size="14" font-weight="800" fill="#fff">API REST</text><text x="365" y="177" font-size="10.5" fill="#a9bad0">NestJS · validación</text></g>
+    <g><rect x="520" y="130" width="190" height="70" rx="12" fill="#061d36"/><text x="615" y="159" font-size="14" font-weight="800" fill="#fff">PostgreSQL</text><text x="615" y="177" font-size="10.5" fill="#a9bad0">Prisma ORM</text></g>
+    <g><rect x="770" y="130" width="190" height="70" rx="12" fill="#2f8cff"/><text x="865" y="159" font-size="14" font-weight="800" fill="#fff">Panel administrativo</text><text x="865" y="177" font-size="10.5" fill="#e6f1ff">Next.js + TypeScript</text></g>
+    <g><rect x="20" y="240" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="115" y="269" font-size="14" font-weight="800" fill="#061d36">Carga de fotos</text><text x="115" y="287" font-size="10.5" fill="#33445a">desde el panel</text></g>
+    <g><rect x="270" y="240" width="190" height="70" rx="12" fill="#fff6e5" stroke="#f3c77a"/><text x="365" y="265" font-size="14" font-weight="800" fill="#061d36">Amazon S3</text><text x="365" y="283" font-size="10.5" fill="#33445a">productos/SKU/</text><text x="365" y="297" font-size="10.5" fill="#33445a">S1…Sn.webp · SZ.webp</text></g>
+    <g><rect x="520" y="240" width="190" height="70" rx="12" fill="#fff6e5" stroke="#f3c77a"/><text x="615" y="269" font-size="14" font-weight="800" fill="#061d36">CloudFront</text><text x="615" y="287" font-size="10.5" fill="#33445a">CDN de imágenes</text></g>
+    <g><rect x="770" y="240" width="190" height="70" rx="12" fill="#2f8cff"/><text x="865" y="269" font-size="14" font-weight="800" fill="#fff">Catálogo público</text><text x="865" y="287" font-size="10.5" fill="#e6f1ff">Next.js · SEO · checkout</text></g>
+  </g>
+</svg></div>
+        <div class="grid2" style="margin-top:10px">
+          <div class="box"><b>Next.js + TypeScript</b><span>Tienda y panel administrativo, con renderizado en servidor compatible con buscadores.</span></div>
+          <div class="box"><b>NestJS</b><span>Backend y API REST: importaciones, reglas de precios e inventario, autenticación y roles.</span></div>
+          <div class="box"><b>PostgreSQL + Prisma</b><span>Productos, SKU, variaciones, proveedores, precios, pedidos e historial de cambios.</span></div>
+          <div class="box"><b>Redis</b><span>Caché y procesamiento de trabajos en cola (importaciones, imágenes, sincronizaciones).</span></div>
+          <div class="box"><b>Amazon S3 + CloudFront</b><span>Almacenamiento de fotografías por SKU y distribución pública mediante CDN.</span></div>
+          <div class="box"><b>Docker Compose</b><span>Despliegue repetible en el servidor que TecnoDreams elija.</span></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">5</span>Alcance por módulos</h2>
+        <p>Cada módulo describe lo que se entrega dentro de un alcance estándar y previamente definido.</p>
+        <div class="budget-wrap">
+          <table class="budget" id="budget">
+            <thead><tr><th>#</th><th>Módulo y entregable</th></tr></thead>
+            <tbody>
+              <tr><td class="num">01</td><td><span class="c">Arquitectura y base de datos PostgreSQL</span><span class="d">Modelo de datos de productos, SKU, variaciones, proveedores, precios, inventario e imágenes; Prisma, migraciones, índices para miles de productos, Redis y entornos Docker.</span></td></tr>
+              <tr><td class="num">02</td><td><span class="c">Panel administrativo de productos</span><span class="d">Dashboard del catálogo; tabla con búsqueda por SKU y nombre, filtros y paginación en servidor; selección múltiple; edición, publicación y cambio a borrador masivos; detección de duplicados; editor individual; roles y registro de cambios.</span></td></tr>
+              <tr><td class="num">03</td><td><span class="c">API REST e integración con Excel</span><span class="d">API en NestJS con token para las macros, endpoints de importación y consulta, validación y documentación (OpenAPI); adaptación de las macros existentes para enviar los datos.</span></td></tr>
+              <tr><td class="num">04</td><td><span class="c">Importaciones y actualizaciones masivas</span><span class="d">Carga de Excel/CSV o recepción por API, vista previa, validación de SKU, duplicados, productos nuevos y existentes, procesamiento en cola con progreso, resumen, historial y detalle de errores.</span></td></tr>
+              <tr><td class="num">05</td><td><span class="c">Gestión de imágenes con Amazon S3</span><span class="d">Estructura productos/SKU/ con S1…Sn y SZ.webp, subidas mediante URLs firmadas, conversión a WebP, URLs versionadas, distribución por CloudFront y permisos restringidos.</span></td></tr>
+              <tr><td class="num">06</td><td><span class="c">Proveedores, precios e inventario</span><span class="d">Proveedores, costo, precio de venta, moneda y disponibilidad; reglas automáticas (sin disponibilidad → borrador), actualizaciones masivas e historial de cambios.</span></td></tr>
+              <tr><td class="num">07</td><td><span class="c">Migración desde WooCommerce</span><span class="d">Productos, SKU, categorías, marcas, atributos, variaciones, precios, descripciones, fotografías, datos SEO y URLs actuales, con redirecciones 301; por etapas (ver sección 7).</span></td></tr>
+              <tr><td class="num">08</td><td><span class="c">Catálogo público, filtros y buscador</span><span class="d">Portada, categorías y ficha de producto con el diseño del prototipo; filtros combinables, buscador tolerante a acentos y rendimiento con miles de productos.</span></td></tr>
+              <tr><td class="num">09</td><td><span class="c">Carrito, checkout y pedidos</span><span class="d">Carrito, cálculo de envío por CEP, checkout por pasos, cuentas de clientes y gestión de pedidos y estados en el panel. Incluye el medio de pago que TecnoDreams defina al inicio.</span></td></tr>
+              <tr><td class="num">10</td><td><span class="c">SEO técnico automatizado</span><span class="d">SEO por producto, metadescripciones, URLs amigables, canonical, sitemap XML, robots.txt y datos estructurados (ver sección 6).</span></td></tr>
+              <tr><td class="num">11</td><td><span class="c">Google Merchant Center</span><span class="d">Sincronización mediante Merchant API o feed automático, según la evaluación técnica; proceso independiente y supervisado, validaciones previas, estados enviado, procesado, aprobado y rechazado, reintentos e historial.</span></td></tr>
+              <tr><td class="num">12</td><td><span class="c">Seguridad, pruebas y optimización</span><span class="d">Autenticación y roles, protección de la API, respaldos, pruebas funcionales y de carga, medición de rendimiento (Core Web Vitals) y correcciones.</span></td></tr>
+              <tr><td class="num">13</td><td><span class="c">Despliegue y capacitación</span><span class="d">Despliegue con Docker Compose en el servidor del cliente, documentación técnica y de uso, y capacitación del equipo en el panel, las importaciones y las fotografías.</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">6</span>Módulos clave en detalle</h2>
+        <div class="grid2">
+          <div class="box"><b>Excel y API REST</b><span>Excel sigue siendo la fuente operativa de los precios y la disponibilidad calculados por sus macros. Las macros envían las filas a la API con un token propio; el backend valida, actualiza por SKU y registra cada cambio. La compatibilidad con las macros existentes debe validarse antes de comprometer una migración sin modificaciones.</span></div>
+          <div class="box"><b>Fotografías en Amazon S3</b><span>Cada producto tiene su carpeta productos/SKU/. S1.webp es la imagen principal; S2.webp, S3.webp… forman la galería; SZ.webp es la imagen para Google Merchant Center (sin ella, el producto queda pendiente). Al reemplazar una imagen se genera una URL versionada. Cargas seguras con URLs firmadas, permisos restringidos y distribución por CloudFront; sin credenciales de AWS en el navegador.</span></div>
+          <div class="box"><b>SEO técnico automatizado</b><span>SEO automático por producto, metadescripciones, URLs amigables, canonical, sitemap XML, robots.txt, datos estructurados Product, Offer y BreadcrumbList, renderizado compatible con motores de búsqueda y conservación de URLs existentes con redirecciones 301.</span></div>
+          <div class="box"><b>Google Merchant Center</b><span>Integración mediante Merchant API o feed automático, según la evaluación técnica. Un proceso independiente valida (SKU, precio, SZ.webp, marca) y envía los cambios; los estados enviado, procesado, aprobado y rechazado se muestran por separado, y los dos últimos dependen siempre de la respuesta de Google.</span></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">7</span>Migración desde WooCommerce</h2>
+        <p>Se migran productos, SKU, categorías, marcas, atributos, variaciones, precios, descripciones, fotografías, datos SEO existentes y URLs actuales, generando las redirecciones 301 correspondientes. WordPress se mantiene operativo hasta validar la nueva plataforma.</p>
+        <table class="plan">
+          <thead><tr><th>Etapa</th><th>Actividades</th></tr></thead>
+          <tbody>
+            <tr><td>1. Inventario</td><td>Exportación de catálogo, medios, URLs y datos SEO desde WooCommerce.</td></tr>
+            <tr><td>2. Normalización</td><td>Nombres, SKU, marcas y variaciones; registro de productos con datos faltantes.</td></tr>
+            <tr><td>3. Importación de prueba</td><td>Carga a PostgreSQL con el mismo validador de las importaciones de Excel; informe de importados, omitidos y errores.</td></tr>
+            <tr><td>4. Fotografías</td><td>Conversión a WebP y organización por SKU en S3.</td></tr>
+            <tr><td>5. Validación en paralelo</td><td>Revisión por muestreo con TecnoDreams mientras WordPress sigue publicado.</td></tr>
+            <tr><td>6. Puesta en producción</td><td>Migración final, redirecciones 301 y cambio de DNS, con posibilidad de volver atrás.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">8</span>Condiciones de pago</h2>
+        <div class="pays">
+          <div class="payc"><span class="pct">50%</span><b>Anticipo</b><span>Al iniciar el proyecto.</span></div>
+          <div class="payc"><span class="pct">30%</span><b>Avance funcional</b><span>Al presentar el avance funcional: panel, importación desde Excel y migración de prueba operativos.</span></div>
+          <div class="payc"><span class="pct">20%</span><b>Entrega final</b><span>A la entrega de la plataforma publicada.</span></div>
+        </div>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">9</span>Plazo y cronograma estimado</h2>
+        <table class="plan">
+          <thead><tr><th>Periodo</th><th>Actividades</th><th>Módulos</th></tr></thead>
+          <tbody>
+            <tr><td>Semanas 1–2</td><td>Relevamiento de macros e integraciones, arquitectura, base de datos y API REST.</td><td>01, 03</td></tr>
+            <tr><td>Semanas 3–4</td><td>Panel administrativo, importaciones masivas, fotografías en S3, proveedores y precios, migración de prueba. <strong>Avance funcional.</strong></td><td>02, 04–07</td></tr>
+            <tr><td>Semanas 5–6</td><td>Catálogo público, carrito, checkout y pedidos, SEO técnico y Google Merchant Center.</td><td>08–11</td></tr>
+            <tr><td>Semanas 7–8</td><td>Seguridad, pruebas, migración final en paralelo, despliegue y capacitación.</td><td>12–13</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:8px;font-size:12.5px">El plazo máximo de 2 meses (8 semanas) corre desde el anticipo y la entrega de accesos. Para cumplirlo, TecnoDreams debe entregar las macros, accesos y cuentas (WooCommerce, AWS, Google Merchant Center) durante la primera semana y revisar cada avance en un máximo de 2 días hábiles; está sujeto a la validación de las macros de Excel y de las integraciones actuales.</p>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">10</span>Entregables y requisitos</h2>
+        <div class="grid2">
+          <div class="box" style="background:#fff"><b>Se entrega</b>
+            <ul class="list" style="font-size:13px">
+              <li>Catálogo público y panel administrativo publicados.</li>
+              <li>API REST documentada y macros adaptadas para enviar datos.</li>
+              <li>Base de datos con el catálogo migrado y redirecciones 301.</li>
+              <li>Fotografías organizadas por SKU en S3 y servidas por CloudFront.</li>
+              <li>Sincronización con Google Merchant Center configurada.</li>
+              <li>Código fuente en un repositorio a nombre del cliente, documentación y capacitación.</li>
+            </ul>
+          </div>
+          <div class="box" style="background:#fff"><b>Requiere del cliente</b>
+            <ul class="list" style="font-size:13px">
+              <li>Copia de los archivos Excel y macros actuales, y una persona que explique su funcionamiento.</li>
+              <li>Acceso de administrador a WordPress/WooCommerce.</li>
+              <li>Cuentas de AWS y Google Merchant Center a su nombre, con los accesos necesarios.</li>
+              <li>Hosting, dominio y medio de pago definidos al inicio.</li>
+              <li>Revisión y aprobación de los avances.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">11</span>Condiciones y exclusiones</h2>
+        <p>La propuesta incluye el desarrollo de los módulos indicados dentro de un alcance estándar y previamente definido. No incluye:</p>
+        <ul class="list excl">
+          <li>Hosting y servidores.</li>
+          <li>Consumo de Amazon S3.</li>
+          <li>Consumo de CDN.</li>
+          <li>Dominio.</li>
+          <li>Suscripciones de terceros.</li>
+          <li>Comisiones de pasarelas de pago.</li>
+          <li>Integraciones extraordinarias con ERP.</li>
+          <li>Facturación fiscal especializada.</li>
+          <li>Funcionalidades adicionales no contempladas.</li>
+        </ul>
+        <div class="note"><svg class="icon"><use href="#i-info"/></svg><span>La compatibilidad con las macros existentes debe validarse antes de comprometer una migración sin modificaciones. Si la validación muestra cambios mayores a los previstos, se informarán antes de ejecutarlos.</span></div>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">12</span>Garantía</h2>
+        <p>Amicornios Soft corregirá sin costo los <strong>errores de implementación</strong> que se reporten durante los <strong>30 días calendario</strong> posteriores a la entrega final. La garantía cubre el funcionamiento de lo descrito en esta cotización y no incluye funcionalidades nuevas, cambios de alcance ni fallas causadas por servicios de terceros o modificaciones hechas por otras personas.</p>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">13</span>Prototipo de referencia</h2>
+        <p>Se adjunta un prototipo navegable en HTML, CSS y JavaScript. La tienda usa los productos, precios e imágenes reales publicados en tecnodreams.com; el panel demuestra la importación de 300 productos de prueba, la detección de duplicados, la actualización masiva de precios, la gestión de fotografías, el SEO y Google Merchant Center. <strong>Las conexiones con Excel, Amazon S3 y Google están simuladas en el navegador</strong>, igual que ventas, costos, proveedores y estados de sincronización. El sistema final se construirá con las tecnologías de la sección 4.</p>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">14</span>Aceptación</h2>
+        <p>Con la firma de este documento y el anticipo, el cliente acepta el alcance y las condiciones aquí descritos. Validez de la oferta: 30 días desde la fecha de emisión.</p>
+        <div class="sign">
+          <div><b>TecnoDreams</b>Nombre, firma y fecha</div>
+          <div><b>Amicornios Soft</b>Nombre, firma y fecha</div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="doc-foot"><span>Amicornios Soft · soft.amicornios.com · vargascarlos12123@gmail.com · +591 71450557</span><span>COT-TDR-002 · 27/10/2026</span></footer>
+  </article>
+
+  <script>
+    document.getElementById('pdf').addEventListener('click', function () {
+      var t = document.title;
+      document.title = 'Cotizacion-TecnoDreams-COT-TDR-002';
+      window.print();
+      setTimeout(function () { document.title = t; }, 500);
+    });
+  </script>
+</body>
+</html>
