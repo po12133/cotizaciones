@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TecnoDreams · Propuesta de modernización – Amicornios Soft</title>
-  <meta name="description" content="Propuesta de Amicornios Soft para modernizar la tienda en línea de TecnoDreams con una plataforma propia, rápida y sin dependencia de WordPress.">
+  <title>TecnoDreams 2.0 · Propuesta – Amicornios Soft</title>
+  <meta name="description" content="Propuesta de Amicornios Soft para TecnoDreams 2.0: comercio electrónico con panel administrativo avanzado, importaciones masivas desde Excel, fotografías en Amazon S3, SEO y Google Merchant Center.">
   <meta name="theme-color" content="#061d36">
   <link rel="icon" href="prototipo/assets/brand/favicon.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -184,6 +184,23 @@
     footer { background: var(--navy-950); color: #7f93ab; font-size: 13px; padding: 22px 0; }
     footer .wrap { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 
+    .g5 { grid-template-columns: repeat(5, 1fr); }
+    @media (max-width: 1100px) { .g5 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .g5 { grid-template-columns: 1fr; } }
+    .g5 .card { padding: 20px; }
+    .g5 .card h3 { font-size: 16px; }
+    .g5 .card p { font-size: 14px; }
+    .prio { counter-reset: p; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 28px; }
+    @media (max-width: 760px) { .prio { grid-template-columns: 1fr; } }
+    .prio li { counter-increment: p; display: grid; grid-template-columns: 44px 1fr; gap: 0 12px; align-items: start; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+    .prio li::before { content: counter(p, decimal-leading-zero); grid-row: span 2; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--navy-900); color: #fff; font-weight: 800; font-size: 14px; }
+    .prio li:nth-child(-n+4)::before { background: var(--blue); }
+    .prio b { color: var(--navy-900); font-size: 15.5px; }
+    .prio span { color: var(--ink-2); font-size: 14px; }
+    .arch-card { background: var(--bg); border: 1px solid var(--line); border-radius: 18px; padding: 18px; overflow-x: auto; }
+    .arch { display: block; width: 100%; min-width: 760px; height: auto; }
+    .hero .ctas .btn { min-height: 46px; padding: 0 18px; font-size: 14.5px; }
+
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
     .reveal.in { opacity: 1; transform: none; }
     @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
@@ -208,6 +225,12 @@
     <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
     <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
     <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
     <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
@@ -217,10 +240,11 @@
 
   <header class="nav">
     <div class="wrap">
-      <a class="brand" href="#inicio"><img src="prototipo/assets/brand/icone-td.png" alt="" width="38" height="38"><span><strong>TecnoDreams</strong><small>Propuesta de modernización · Amicornios Soft</small></span></a>
+      <a class="brand" href="#inicio"><img src="prototipo/assets/brand/icone-td.png" alt="" width="38" height="38"><span><strong>TecnoDreams 2.0</strong><small>Propuesta comercial · Amicornios Soft</small></span></a>
       <nav class="links" aria-label="Secciones">
         <a class="txt" href="#situacion">Situación actual</a>
-        <a class="txt" href="#prototipo">Prototipo</a>
+        <a class="txt" href="#prototipo">Panel demo</a>
+        <a class="txt" href="#arquitectura">Arquitectura</a>
         <a class="txt" href="#inversion">Inversión</a>
         <a class="btn btn-sm btn-ghost-light" href="cotizacion.html"><svg class="icon"><use href="#i-doc"/></svg>Ver cotización</a>
         <a class="btn btn-sm btn-blue" href="prototipo/index.html">Explorar prototipo</a>
@@ -232,18 +256,21 @@
     <section class="hero" style="padding:0">
       <img class="bg" src="prototipo/assets/banners/hero-perifericos.webp" alt="">
       <div class="wrap">
-        <span class="kicker">Propuesta para TecnoDreams</span>
-        <h1>Una tienda en línea <em>más rápida, moderna y 100% propia</em></h1>
-        <p class="lead">Proponemos reemplazar el sitio actual en WordPress y WooCommerce por una plataforma de comercio electrónico desarrollada a medida: conserva la identidad de TecnoDreams, mejora la experiencia de compra en el celular y pone el catálogo, los pedidos y las promociones en un panel propio, sin depender de plugins.</p>
+        <span class="kicker">TecnoDreams 2.0 · Propuesta para TecnoDreams</span>
+        <h1>Miles de productos, <em>administrados desde un solo panel</em></h1>
+        <p class="lead">Una plataforma de comercio electrónico propia con un sistema administrativo avanzado: importaciones masivas desde Excel mediante API REST, fotografías automatizadas en Amazon S3, proveedores, precios e inventario, SEO técnico y sincronización con Google Merchant Center. Sus macros de Excel se conservan.</p>
         <div class="ctas">
-          <a class="btn btn-blue" href="prototipo/index.html">Explorar prototipo <svg class="icon"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost-light" href="cotizacion.html"><svg class="icon"><use href="#i-doc"/></svg>Ver cotización</a>
+          <a class="btn btn-blue" href="cotizacion.html"><svg class="icon"><use href="#i-doc"/></svg>Ver cotización</a>
+          <a class="btn btn-ghost-light" href="prototipo/index.html"><svg class="icon"><use href="#i-store"/></svg>Explorar prototipo</a>
+          <a class="btn btn-ghost-light" href="prototipo/admin.html?demo=1#dashboard"><svg class="icon"><use href="#i-panel"/></svg>Ver panel administrativo</a>
+          <a class="btn btn-ghost-light" href="prototipo/admin.html?demo=1#demos"><svg class="icon"><use href="#i-upload"/></svg>Probar importación masiva</a>
+          <a class="btn btn-ghost-light" href="#arquitectura"><svg class="icon"><use href="#i-layers"/></svg>Ver arquitectura técnica</a>
         </div>
         <div class="figures">
-          <div><strong>Bs 7.000</strong><span>Precio especial cliente antiguo</span></div>
-          <div><strong>30–45 días</strong><span>Plazo estimado calendario</span></div>
-          <div><strong>0 plugins</strong><span>Código propio, sin WordPress</span></div>
-          <div><strong>86 productos</strong><span>Reales, ya cargados en el prototipo</span></div>
+          <div><strong>Bs 8.000</strong><span>Precio especial cliente antiguo</span></div>
+          <div><strong>2 meses</strong><span>Plazo máximo estimado</span></div>
+          <div><strong>300 productos</strong><span>Importación de prueba en el panel demo</span></div>
+          <div><strong>Excel</strong><span>Se mantiene como fuente de precios</span></div>
         </div>
       </div>
     </section>
@@ -281,31 +308,53 @@
 
     <section>
       <div class="wrap">
-        <div class="head reveal"><span class="kicker">Por qué modernizar</span><h2>Los retos que resuelve la nueva plataforma</h2><p>Cada plugin agrega peso, actualizaciones y puntos de falla. Un sistema propio carga solo lo necesario y crece al ritmo de la tienda.</p></div>
-        <div class="grid g3">
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-zap"/></svg></div><h3>Velocidad percibida</h3><p>Muchos recursos cargándose en cada página hacen que la tienda se sienta lenta, sobre todo en datos móviles. Las páginas se generan optimizadas y las imágenes se sirven en WebP.</p></div>
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-plug"/></svg></div><h3>Dependencia de plugins</h3><p>Funciones clave dependen de WordPress, Elementor y extensiones de terceros, con licencias y actualizaciones que pueden entrar en conflicto. Todo pasa a ser código propio.</p></div>
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-phone"/></svg></div><h3>Experiencia móvil</h3><p>Diseño pensado primero para el celular: menú lateral, filtros en panel, barra de compra fija y checkout por pasos.</p></div>
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-search"/></svg></div><h3>Catálogo y búsqueda</h3><p>Búsqueda instantánea tolerante a acentos, filtros combinables con conteo en vivo y variantes de color agrupadas en una sola ficha.</p></div>
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-code"/></svg></div><h3>Control del código</h3><p>TecnoDreams es dueña del código y de los datos. Sin licencias de plugins ni sorpresas en cada actualización.</p></div>
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-grow"/></svg></div><h3>Lista para crecer</h3><p>Nuevas funciones (cupones, integraciones, reportes) se agregan sobre una base ordenada, sin pelear con el tema o los plugins.</p></div>
-        </div>
+        <div class="head reveal"><span class="kicker">Prioridades</span><h2>Primero el catálogo y su administración; después la vitrina</h2><p>TecnoDreams 2.0 no es solo una tienda más rápida: es el sistema que permite gestionar miles de productos sin trabajo manual. El orden de construcción refleja esa prioridad.</p></div>
+        <ol class="prio reveal">
+          <li><b>Base de datos y estructura de productos</b><span>SKU, variaciones, proveedores, precios e imágenes en PostgreSQL.</span></li>
+          <li><b>Panel administrativo visual</b><span>Tablas con filtros, edición y publicación masiva.</span></li>
+          <li><b>Integración con Excel mediante API REST</b><span>Las macros envían precios y disponibilidad.</span></li>
+          <li><b>Importación y actualización masiva</b><span>Validación, duplicados, progreso e historial.</span></li>
+          <li><b>Fotografías automatizadas con Amazon S3</b><span>Carpeta por SKU: S1, galería y SZ para Google.</span></li>
+          <li><b>Proveedores, precios e inventario</b><span>Reglas automáticas y registro de cambios.</span></li>
+          <li><b>Migración desde WooCommerce</b><span>Por etapas, con WordPress funcionando.</span></li>
+          <li><b>Catálogo público optimizado</b><span>Filtros, buscador y fichas rápidas.</span></li>
+          <li><b>SEO técnico automatizado</b><span>Metadatos, sitemap, datos estructurados y 301.</span></li>
+          <li><b>Google Merchant Center</b><span>Sincronización supervisada del catálogo.</span></li>
+        </ol>
       </div>
     </section>
 
     <section class="white">
       <div class="wrap">
-        <div class="head reveal"><span class="kicker">Antes y después</span><h2>Qué cambia para TecnoDreams y sus clientes</h2></div>
+        <div class="head reveal"><span class="kicker">Beneficios</span><h2>Lo que gana TecnoDreams</h2></div>
+        <div class="grid g5">
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-clock"/></svg></div><h3>Menos trabajo manual</h3><p>Precios, stock y publicación se actualizan solos desde Excel.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-upload"/></svg></div><h3>Importaciones masivas</h3><p>Cientos o miles de filas validadas antes de grabar.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-table"/></svg></div><h3>Excel se conserva</h3><p>Las macros siguen calculando; solo cambia el destino.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-panel"/></svg></div><h3>Administración visual</h3><p>Estados, errores y pendientes a la vista en un panel.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-image"/></svg></div><h3>Fotos automáticas</h3><p>Cada SKU encuentra sus imágenes en S3 sin subirlas una por una.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-grid"/></svg></div><h3>Catálogo escalable</h3><p>Pensado para miles de productos con paginación y búsqueda en servidor.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-zap"/></svg></div><h3>Mejor rendimiento</h3><p>Páginas livianas e imágenes WebP servidas por CDN.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-search"/></svg></div><h3>Preparación SEO</h3><p>Metadatos, sitemap y datos estructurados generados por producto.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-globe"/></svg></div><h3>Integración con Google</h3><p>Catálogo sincronizado con Merchant Center y errores visibles.</p></div>
+          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-plug"/></svg></div><h3>Menos plugins</h3><p>Código propio en lugar de 15 extensiones de WordPress.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head reveal"><span class="kicker">Antes y después</span><h2>Qué cambia en el día a día</h2></div>
         <div class="table-scroll reveal">
           <table class="compare">
-            <thead><tr><th>Aspecto</th><th>Sitio actual</th><th>Nueva plataforma</th></tr></thead>
+            <thead><tr><th>Aspecto</th><th>Hoy</th><th>TecnoDreams 2.0</th></tr></thead>
             <tbody>
-              <tr><th>Base técnica</th><td>WordPress + WooCommerce + Elementor y 15 plugins visibles</td><td>Next.js + TypeScript + PostgreSQL, código propio</td></tr>
-              <tr><th>Catálogo</th><td>Variantes de color publicadas como productos separados</td><td>Variantes agrupadas en una ficha, filtros por marca, precio y disponibilidad</td></tr>
-              <tr><th>Compra</th><td>Carrito y envío vía plugins</td><td>Carrito, cupones, envío por CEP y checkout por pasos con validación</td></tr>
-              <tr><th>Administración</th><td>Panel genérico de WordPress</td><td>Panel propio: pedidos, productos, stock, promociones y configuración</td></tr>
-              <tr><th>SEO</th><td>Depende de la configuración de plugins</td><td>URLs limpias, redirecciones 301, sitemap y datos estructurados de producto</td></tr>
-              <tr><th>Mantenimiento</th><td>Actualizaciones de núcleo, tema y cada plugin</td><td>Una sola base de código desplegada con Docker</td></tr>
+              <tr><th>Precios y disponibilidad</th><td>Se calculan en Excel y se trasladan al sitio</td><td>Las macros envían los datos a la API; la plataforma actualiza y registra cada cambio</td></tr>
+              <tr><th>Altas y cambios masivos</th><td>Producto por producto en WooCommerce</td><td>Importación con vista previa, validación de SKU, duplicados y resumen de errores</td></tr>
+              <tr><th>Fotografías</th><td>Se suben manualmente a cada producto</td><td>Carpeta por SKU en S3 (S1, galería, SZ) asociada automáticamente y servida por CDN</td></tr>
+              <tr><th>Google</th><td>Depende de plugins de feed</td><td>Sincronización supervisada con estados enviado, procesado, aprobado y rechazado</td></tr>
+              <tr><th>Base técnica</th><td>WordPress + WooCommerce + Elementor y 15 plugins visibles</td><td>Next.js, NestJS y PostgreSQL con código propio</td></tr>
+              <tr><th>SEO</th><td>Configuración de plugins</td><td>SEO automático por producto, sitemap, canonical, datos estructurados y 301</td></tr>
             </tbody>
           </table>
         </div>
@@ -314,58 +363,85 @@
 
     <section class="dark" id="prototipo">
       <div class="wrap">
-        <div class="head reveal"><span class="kicker">Prototipo navegable</span><h2>Vea cómo quedaría su tienda</h2><p>El prototipo usa los productos, precios, fotos y fichas técnicas reales de TecnoDreams. Todo es interactivo: buscar, filtrar, agregar al carrito, comprar (simulado) y administrar desde el panel.</p></div>
+        <div class="head reveal"><span class="kicker">Prototipo navegable</span><h2>Pruebe el panel administrativo</h2><p>El panel demuestra en el navegador las herramientas de TecnoDreams 2.0: importe 300 productos de prueba, detecte duplicados, actualice 100 precios, asocie fotografías y simule la sincronización con Google. La tienda usa los productos, precios y fotos reales de TecnoDreams; las integraciones con Excel, S3 y Google están <strong>simuladas</strong> y señalizadas como tales.</p></div>
         <div class="preview reveal">
-          <div class="laptop"><div class="bar"><i></i><i></i><i></i></div><div class="screen" data-scale-host="1440"><iframe src="prototipo/index.html" title="Vista previa de la tienda en computadora" loading="lazy" width="1440" height="900"></iframe></div></div>
+          <div class="laptop"><div class="bar"><i></i><i></i><i></i></div><div class="screen" data-scale-host="1440"><iframe src="prototipo/admin.html?demo=1#dashboard" title="Vista previa del panel administrativo" loading="lazy" width="1440" height="900"></iframe></div></div>
           <div class="phone"><div class="screen" data-scale-host="390"><iframe src="prototipo/catalogo.html" title="Vista previa de la tienda en celular" loading="lazy" width="390" height="800"></iframe></div></div>
         </div>
         <div class="pages reveal">
-          <a href="prototipo/index.html"><svg class="icon"><use href="#i-store"/></svg>Página principal</a>
+          <a href="prototipo/admin.html?demo=1#dashboard"><svg class="icon"><use href="#i-panel"/></svg>Panel administrativo</a>
+          <a href="prototipo/admin.html?demo=1#demos"><svg class="icon"><use href="#i-zap"/></svg>Demostraciones guiadas</a>
+          <a href="prototipo/admin.html?demo=1#importacoes"><svg class="icon"><use href="#i-upload"/></svg>Importación masiva</a>
+          <a href="prototipo/admin.html?demo=1#produtos"><svg class="icon"><use href="#i-table"/></svg>Gestión de productos</a>
+          <a href="prototipo/admin.html?demo=1#fotos"><svg class="icon"><use href="#i-image"/></svg>Fotografías S3</a>
+          <a href="prototipo/admin.html?demo=1#merchant"><svg class="icon"><use href="#i-globe"/></svg>Google Merchant</a>
+          <a href="prototipo/index.html"><svg class="icon"><use href="#i-store"/></svg>Tienda: portada</a>
           <a href="prototipo/catalogo.html"><svg class="icon"><use href="#i-grid"/></svg>Catálogo con filtros</a>
-          <a href="prototipo/categoria.html?c=cadeiras-gamer"><svg class="icon"><use href="#i-box"/></svg>Categoría</a>
           <a href="prototipo/producto.html?id=806"><svg class="icon"><use href="#i-search"/></svg>Ficha de producto</a>
-          <a href="prototipo/carrito.html"><svg class="icon"><use href="#i-bag"/></svg>Carrito</a>
-          <a href="prototipo/checkout.html"><svg class="icon"><use href="#i-card"/></svg>Checkout</a>
-          <a href="prototipo/favoritos.html"><svg class="icon"><use href="#i-heart"/></svg>Favoritos</a>
-          <a href="prototipo/mi-cuenta.html"><svg class="icon"><use href="#i-user"/></svg>Mi cuenta</a>
-          <a href="prototipo/admin.html"><svg class="icon"><use href="#i-panel"/></svg>Panel administrativo</a>
+          <a href="prototipo/carrito.html"><svg class="icon"><use href="#i-bag"/></svg>Carrito y checkout</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="white" id="arquitectura">
+      <div class="wrap">
+        <div class="head reveal"><span class="kicker">Arquitectura técnica</span><h2>Excel alimenta la plataforma; la plataforma alimenta la tienda y Google</h2><p>Flujo principal: Excel / Macros → API REST → PostgreSQL → panel administrativo y catálogo público. Las fotografías se procesan en S3 y se distribuyen por CloudFront; Google Merchant Center recibe los cambios mediante un proceso independiente y supervisado.</p></div>
+        <div class="arch-card reveal"><svg class="arch" viewBox="0 0 980 340" role="img" aria-labelledby="arch-t arch-d" xmlns="http://www.w3.org/2000/svg">
+  <title id="arch-t">Arquitectura técnica de TecnoDreams 2.0</title>
+  <desc id="arch-d">Excel y sus macros envían datos a la API REST en NestJS, que guarda en PostgreSQL; el panel administrativo y el catálogo público en Next.js leen de PostgreSQL. Redis gestiona caché y colas; un proceso supervisado sincroniza el catálogo con Google Merchant Center. Las fotografías se suben a Amazon S3 con URLs firmadas y se distribuyen por CloudFront al catálogo.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#123c69"/></marker>
+  </defs>
+  <g class="lanes" font-family="Montserrat, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#627389" letter-spacing=".08em">
+    <text x="20" y="14">SINCRONIZACIÓN CON GOOGLE</text>
+    <text x="20" y="124">DATOS DEL CATÁLOGO</text>
+    <text x="20" y="234">FOTOGRAFÍAS</text>
+  </g>
+  <g fill="none" stroke="#123c69" stroke-width="1.8" marker-end="url(#ah)">
+    <path d="M210 165H266"/><path d="M460 165H516"/><path d="M710 165H766"/>
+    <path d="M710 186L766 252"/>
+    <path d="M365 130V94" marker-start="url(#ah)"/><path d="M460 55H516"/><path d="M615 130V94"/><path d="M710 55H766"/>
+    <path d="M210 275H266"/><path d="M460 275H516"/><path d="M710 275H766"/>
+  </g>
+  <g font-family="Montserrat, Arial, sans-serif" font-size="9.5" fill="#33445a" text-anchor="middle">
+    <text x="238" y="158">JSON</text><text x="488" y="158">upsert</text>
+    <text x="378" y="115" text-anchor="start">colas</text><text x="628" y="115" text-anchor="start">cambios</text>
+    <text x="738" y="48">feed/API</text>
+    <text x="238" y="268">firmada</text><text x="488" y="268">origen</text><text x="738" y="268">?v=N</text>
+  </g>
+  <g font-family="Montserrat, Arial, sans-serif" text-anchor="middle">
+    <g><rect x="270" y="20" width="190" height="70" rx="12" fill="#e6f1ff" stroke="#8cc2ff"/><text x="365" y="49" font-size="14" font-weight="800" fill="#061d36">Redis</text><text x="365" y="67" font-size="10.5" fill="#33445a">caché y colas de trabajos</text></g>
+    <g><rect x="520" y="20" width="190" height="70" rx="12" fill="#e6f1ff" stroke="#8cc2ff"/><text x="615" y="45" font-size="14" font-weight="800" fill="#061d36">Worker Merchant</text><text x="615" y="62" font-size="10.5" fill="#33445a">proceso independiente</text><text x="615" y="76" font-size="10.5" fill="#33445a">y supervisado</text></g>
+    <g><rect x="770" y="20" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="865" y="49" font-size="14" font-weight="800" fill="#061d36">Google Merchant</text><text x="865" y="67" font-size="10.5" fill="#33445a">Center</text></g>
+    <g><rect x="20" y="130" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="115" y="155" font-size="14" font-weight="800" fill="#061d36">Excel / Macros</text><text x="115" y="172" font-size="10.5" fill="#33445a">precios y disponibilidad</text><text x="115" y="186" font-size="10.5" fill="#33445a">(fuente operativa)</text></g>
+    <g><rect x="270" y="130" width="190" height="70" rx="12" fill="#061d36"/><text x="365" y="159" font-size="14" font-weight="800" fill="#fff">API REST</text><text x="365" y="177" font-size="10.5" fill="#a9bad0">NestJS · validación</text></g>
+    <g><rect x="520" y="130" width="190" height="70" rx="12" fill="#061d36"/><text x="615" y="159" font-size="14" font-weight="800" fill="#fff">PostgreSQL</text><text x="615" y="177" font-size="10.5" fill="#a9bad0">Prisma ORM</text></g>
+    <g><rect x="770" y="130" width="190" height="70" rx="12" fill="#2f8cff"/><text x="865" y="159" font-size="14" font-weight="800" fill="#fff">Panel administrativo</text><text x="865" y="177" font-size="10.5" fill="#e6f1ff">Next.js + TypeScript</text></g>
+    <g><rect x="20" y="240" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="115" y="269" font-size="14" font-weight="800" fill="#061d36">Carga de fotos</text><text x="115" y="287" font-size="10.5" fill="#33445a">desde el panel</text></g>
+    <g><rect x="270" y="240" width="190" height="70" rx="12" fill="#fff6e5" stroke="#f3c77a"/><text x="365" y="265" font-size="14" font-weight="800" fill="#061d36">Amazon S3</text><text x="365" y="283" font-size="10.5" fill="#33445a">productos/SKU/</text><text x="365" y="297" font-size="10.5" fill="#33445a">S1…Sn.webp · SZ.webp</text></g>
+    <g><rect x="520" y="240" width="190" height="70" rx="12" fill="#fff6e5" stroke="#f3c77a"/><text x="615" y="269" font-size="14" font-weight="800" fill="#061d36">CloudFront</text><text x="615" y="287" font-size="10.5" fill="#33445a">CDN de imágenes</text></g>
+    <g><rect x="770" y="240" width="190" height="70" rx="12" fill="#2f8cff"/><text x="865" y="269" font-size="14" font-weight="800" fill="#fff">Catálogo público</text><text x="865" y="287" font-size="10.5" fill="#e6f1ff">Next.js · SEO · checkout</text></g>
+  </g>
+</svg></div>
+        <div class="tech" style="margin-top:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))">
+          <div class="reveal"><small>Tienda y panel</small><strong>Next.js + TypeScript</strong><p>Páginas renderizadas en servidor, rápidas y legibles para Google.</p></div>
+          <div class="reveal"><small>Backend y API</small><strong>NestJS</strong><p>API REST para las macros, reglas de negocio y procesos en cola.</p></div>
+          <div class="reveal"><small>Datos</small><strong>PostgreSQL + Prisma</strong><p>Catálogo, proveedores, precios, pedidos e historial de cambios.</p></div>
+          <div class="reveal"><small>Velocidad</small><strong>Redis</strong><p>Caché y colas de trabajo para importaciones y sincronizaciones.</p></div>
+          <div class="reveal"><small>Imágenes</small><strong>Amazon S3 + CloudFront</strong><p>Fotos por SKU con subidas firmadas y distribución por CDN.</p></div>
+          <div class="reveal"><small>Publicación</small><strong>Docker Compose</strong><p>Despliegue ordenado y repetible en el servidor elegido.</p></div>
         </div>
       </div>
     </section>
 
     <section>
       <div class="wrap">
-        <div class="head reveal"><span class="kicker">Beneficios</span><h2>Lo que gana TecnoDreams</h2></div>
-        <div class="grid g4">
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-zap"/></svg></div><h3>Tienda más ágil</h3><p>Menos peso por página e imágenes optimizadas.</p></div>
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-bag"/></svg></div><h3>Compra más simple</h3><p>Menos pasos del producto al pedido, en cualquier pantalla.</p></div>
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-panel"/></svg></div><h3>Gestión propia</h3><p>Precios, stock, ofertas y pedidos desde un panel claro.</p></div>
-          <div class="card reveal"><div class="ic"><svg class="icon"><use href="#i-shield"/></svg></div><h3>Menos riesgos</h3><p>Sin plugins desactualizados ni conflictos entre extensiones.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="white">
-      <div class="wrap">
-        <div class="head reveal"><span class="kicker">Tecnologías propuestas</span><h2>Herramientas modernas, explicadas en simple</h2><p>Las mismas tecnologías que usan tiendas en línea de alto tráfico, elegidas para que el sitio sea rápido, seguro y fácil de mantener.</p></div>
-        <div class="tech">
-          <div class="reveal"><small>Sitio y panel</small><strong>Next.js + TypeScript</strong><p>Páginas rápidas y bien posicionadas en Google; código ordenado y con menos errores.</p></div>
-          <div class="reveal"><small>Base de datos</small><strong>PostgreSQL + Prisma</strong><p>Productos, pedidos y clientes guardados de forma segura y consistente.</p></div>
-          <div class="reveal"><small>Diseño</small><strong>Tailwind CSS</strong><p>Interfaz moderna y consistente, adaptada a celular, tableta y computadora.</p></div>
-          <div class="reveal"><small>Velocidad</small><strong>Redis</strong><p>Memoria rápida para búsquedas, sesiones y páginas más consultadas.</p></div>
-          <div class="reveal"><small>Publicación</small><strong>Docker</strong><p>Despliegue repetible y ordenado en el servidor que se elija.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="wrap">
-        <div class="head reveal"><span class="kicker">Plan de trabajo</span><h2>De la propuesta a la tienda publicada en 30 a 45 días</h2></div>
+        <div class="head reveal"><span class="kicker">Plan de trabajo</span><h2>De la propuesta a la plataforma publicada en 2 meses</h2><p>Sujeto a la validación de las macros de Excel y de las integraciones actuales.</p></div>
         <div class="timeline reveal">
-          <div class="phase"><small>Semana 1</small><h3>Arquitectura y diseño</h3><p>Medición inicial, base del proyecto, diseño responsive, header y footer.</p></div>
-          <div class="phase"><small>Semanas 2–3</small><h3>Tienda</h3><p>Portada, catálogo, filtros, buscador, ficha, carrito, checkout, cuentas y favoritos.</p></div>
-          <div class="phase"><small>Semanas 4–5</small><h3>Panel y migración</h3><p>Panel administrativo; migración de productos y categorías desde WooCommerce. Avance funcional.</p></div>
-          <div class="phase"><small>Semanas 5–6</small><h3>Pruebas y lanzamiento</h3><p>SEO, redirecciones, seguridad básica, pruebas y publicación.</p></div>
+          <div class="phase"><small>Semanas 1–2</small><h3>Base y API</h3><p>Relevamiento de macros, arquitectura, base de datos y API REST.</p></div>
+          <div class="phase"><small>Semanas 3–4</small><h3>Operación del catálogo</h3><p>Panel, importaciones masivas, fotos en S3, precios e inventario, migración de prueba. Avance funcional.</p></div>
+          <div class="phase"><small>Semanas 5–6</small><h3>Tienda y canales</h3><p>Catálogo público, carrito y pedidos, SEO técnico y Google Merchant Center.</p></div>
+          <div class="phase"><small>Semanas 7–8</small><h3>Puesta en marcha</h3><p>Seguridad, pruebas, migración final en paralelo, despliegue y capacitación.</p></div>
         </div>
       </div>
     </section>
@@ -376,22 +452,22 @@
         <div class="price">
           <div class="price-card reveal">
             <span class="badge">Cliente antiguo</span>
-            <div class="was">Precio regular de referencia: <s>Bs 10.000</s></div>
-            <div class="now">Bs 7.000</div>
-            <span class="off">30% de descuento</span>
+            <div class="was">13 módulos: Bs 7.500 + reserva para ajustes Bs 500</div>
+            <div class="now">Bs 8.000</div>
+            <span class="off">Plazo máximo: 2 meses</span>
             <ul>
-              <li><svg class="icon"><use href="#i-check"/></svg>13 módulos: tienda completa, panel, migración, SEO y despliegue</li>
-              <li><svg class="icon"><use href="#i-check"/></svg>Plazo estimado de 30 a 45 días calendario</li>
-              <li><svg class="icon"><use href="#i-check"/></svg>30 días de garantía de corrección de errores</li>
-              <li><svg class="icon"><use href="#i-check"/></svg>Código fuente propiedad de TecnoDreams</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Panel administrativo, API REST con Excel e importaciones masivas</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Fotografías en S3, precios e inventario, migración desde WooCommerce</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Catálogo público, checkout, SEO técnico y Google Merchant Center</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>30 días de garantía; código fuente propiedad de TecnoDreams</li>
             </ul>
-            <p class="note">El precio regular es una referencia comercial de esta propuesta, no una tarifa histórica. No incluye hosting, dominio ni servicios de terceros.</p>
+            <p class="note">No incluye hosting, servidores, consumo de S3 y CDN, dominio, suscripciones ni comisiones de pasarelas de pago.</p>
           </div>
           <div class="pay reveal">
             <h3>Forma de pago</h3>
-            <div class="pay-row"><span class="pct">50%</span><div><strong>Al iniciar</strong><span>Arranque del proyecto</span></div><b>Bs 3.500</b></div>
-            <div class="pay-row"><span class="pct">30%</span><div><strong>Avance funcional</strong><span>Tienda y panel navegables</span></div><b>Bs 2.100</b></div>
-            <div class="pay-row"><span class="pct">20%</span><div><strong>Entrega final</strong><span>Sitio publicado y entregado</span></div><b>Bs 1.400</b></div>
+            <div class="pay-row"><span class="pct">50%</span><div><strong>Anticipo</strong><span>Al iniciar el proyecto</span></div><b>Bs 4.000</b></div>
+            <div class="pay-row"><span class="pct">30%</span><div><strong>Avance funcional</strong><span>Panel, importación y migración de prueba</span></div><b>Bs 2.400</b></div>
+            <div class="pay-row"><span class="pct">20%</span><div><strong>Entrega</strong><span>Plataforma publicada</span></div><b>Bs 1.600</b></div>
             <a class="btn btn-navy" href="cotizacion.html" style="margin-top:auto"><svg class="icon"><use href="#i-doc"/></svg>Ver cotización detallada</a>
           </div>
         </div>
@@ -401,10 +477,10 @@
     <section class="dark cta">
       <div class="wrap">
         <span class="kicker" style="color:var(--blue-300)">Siguiente paso</span>
-        <h2>Revise el prototipo y la cotización</h2>
-        <p>Navegue la tienda como un cliente, haga una compra de prueba y luego entre al panel para cambiar un precio o crear una oferta: los cambios se ven al instante en la tienda.</p>
+        <h2>Pruebe la importación masiva y revise la cotización</h2>
+        <p>Entre al panel, ejecute el recorrido de demostraciones (importar 300 productos, actualizar precios, asociar fotos, sincronizar con Google) y luego revise la cotización detallada.</p>
         <div class="ctas">
-          <a class="btn btn-blue" href="prototipo/index.html">Explorar prototipo <svg class="icon"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-blue" href="prototipo/admin.html?demo=1#demos">Probar importación masiva <svg class="icon"><use href="#i-arrow"/></svg></a>
           <a class="btn btn-light" href="cotizacion.html"><svg class="icon"><use href="#i-doc"/></svg>Ver cotización</a>
         </div>
         <div class="contact">

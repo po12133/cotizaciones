@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cotización COT-TDR-001 · TecnoDreams – Amicornios Soft</title>
-  <meta name="description" content="Cotización de Amicornios Soft para la modernización y desarrollo personalizado de la tienda en línea de TecnoDreams.">
+  <title>Cotización COT-TDR-002 · TecnoDreams 2.0 – Amicornios Soft</title>
+  <meta name="description" content="Cotización de Amicornios Soft para TecnoDreams 2.0: plataforma de comercio electrónico con panel administrativo avanzado, integración con Excel, Amazon S3, SEO y Google Merchant Center.">
   <meta name="theme-color" content="#061d36">
   <link rel="icon" href="prototipo/assets/brand/favicon.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -126,10 +126,16 @@
     .doc-foot { margin-top: 10mm; background: var(--soft); border-top: 1px solid var(--line); padding: 10px 18mm; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); }
     @media (max-width: 760px) { .doc-foot { padding: 12px 18px; } }
 
+    .budget tfoot tr.sub td { background: var(--soft); color: var(--navy-900); font-size: 13.5px; font-weight: 700; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    .arch-wrap { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 10px; background: #fbfcfe; overflow-x: auto; }
+    .arch { display: block; width: 100%; min-width: 640px; height: auto; }
+    .goals li:nth-child(n) { font-size: 13.5px; }
+
     /* ---------- impresión / PDF A4 ---------- */
     @page { size: A4; margin: 14mm 0 16mm; }
     @page :first { margin-top: 0; }
     @media print {
+      .arch { min-width: 0; }
       html, body { background: #fff; font-size: 12.5px; }
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .toolbar, .no-print { display: none !important; }
@@ -138,7 +144,7 @@
       .doc-head { padding: 14mm 16mm 10mm; }
       .block { padding-top: 7mm; break-inside: auto; }
       h2.sec { break-after: avoid; }
-      .keep, .box, .payc, .summary, .total-card, .sign, .note, tr, .goals li { break-inside: avoid; }
+      .keep, .arch-wrap, .box, .payc, .summary, .total-card, .sign, .note, tr, .goals li { break-inside: avoid; }
       .budget thead { display: table-header-group; }
       .budget tfoot { display: table-row-group; }
       .page-break { break-before: page; }
@@ -157,10 +163,10 @@
 
   <div class="toolbar no-print">
     <div class="in">
-      <div class="title"><img src="prototipo/assets/brand/icone-td.png" alt=""><span>Cotización COT-TDR-001 · TecnoDreams</span></div>
+      <div class="title"><img src="prototipo/assets/brand/icone-td.png" alt=""><span>Cotización COT-TDR-002 · TecnoDreams 2.0</span></div>
       <a class="tbtn sec" href="index.html"><svg class="icon"><use href="#i-left"/></svg><span>Presentación</span></a>
-      <a class="tbtn sec" href="prototipo/index.html"><svg class="icon"><use href="#i-store"/></svg><span>Prototipo</span></a>
-      <button class="tbtn primary" type="button" id="pdf"><svg class="icon"><use href="#i-dl"/></svg>Descargar cotización en PDF</button>
+      <a class="tbtn sec" href="prototipo/admin.html?demo=1#dashboard"><svg class="icon"><use href="#i-store"/></svg><span>Panel demo</span></a>
+      <button class="tbtn primary" type="button" id="pdf"><svg class="icon"><use href="#i-dl"/></svg>Imprimir / guardar PDF</button>
     </div>
   </div>
 
@@ -168,16 +174,16 @@
     <header class="doc-head">
       <div class="dh-top">
         <div class="provider"><strong>Amicornios Soft</strong><span>Desarrollo de software, plataformas web y móviles<br>soft.amicornios.com · vargascarlos12123@gmail.com · +591 71450557</span></div>
-        <div class="doc-id"><span class="lbl">COTIZACIÓN</span>N.º <b>COT-TDR-001</b><br>Emisión: <b>21/10/2026</b><br>Válida hasta: <b>20/11/2026</b></div>
+        <div class="doc-id"><span class="lbl">COTIZACIÓN</span>N.º <b>COT-TDR-002</b><br>Emisión: <b>27/10/2026</b><br>Válida hasta: <b>26/11/2026</b></div>
       </div>
       <div class="dh-title">
-        <div><span class="for">Propuesta comercial para</span><h1>Modernización y desarrollo personalizado de la tienda en línea</h1></div>
+        <div><span class="for">Propuesta comercial para</span><h1>TecnoDreams 2.0: comercio electrónico con gestión avanzada de catálogo</h1></div>
         <div class="client-logo"><img src="prototipo/assets/brand/icone-td.png" alt=""><div><strong>TecnoDreams</strong><small>O seu lugar é aqui</small></div></div>
       </div>
       <div class="kpis">
-        <div><b>Bs 7.000</b><span>Inversión total (precio especial)</span></div>
-        <div><b>30–45 días</b><span>Plazo estimado calendario</span></div>
-        <div><b>13 partidas</b><span>Tienda, panel, migración y despliegue</span></div>
+        <div><b>Bs 8.000</b><span>Inversión total (precio especial)</span></div>
+        <div><b>2 meses</b><span>Plazo máximo estimado (8 semanas)</span></div>
+        <div><b>13 módulos</b><span>Más reserva para ajustes y contingencias</span></div>
       </div>
     </header>
 
@@ -185,125 +191,195 @@
       <section class="block keep">
         <h2 class="sec"><span class="n">1</span>Información general</h2>
         <table class="info">
-          <tr><td>Proyecto</td><td>Modernización y desarrollo personalizado de TecnoDreams</td></tr>
+          <tr><td>Proyecto</td><td>TecnoDreams 2.0: plataforma de comercio electrónico con sistema administrativo avanzado de catálogo</td></tr>
           <tr><td>Cliente</td><td>TecnoDreams — www.tecnodreams.com (CNPJ 61.298.977/0001-21, según el sitio web). Representante y contacto: por confirmar.</td></tr>
-          <tr><td>Proveedor</td><td>Amicornios Soft — NIT y representante legal: por confirmar</td></tr>
-          <tr><td>Tipo de proyecto</td><td>Desarrollo de plataforma de comercio electrónico</td></tr>
-          <tr><td>Tecnología propuesta</td><td>Next.js, TypeScript, PostgreSQL, Prisma, Tailwind CSS, Redis y Docker</td></tr>
-          <tr><td>Plazo estimado</td><td>30 a 45 días calendario desde el primer pago y la entrega de accesos</td></tr>
-          <tr class="price"><td>Precio especial por cliente antiguo</td><td><b>Bs 7.000</b> (siete mil 00/100 bolivianos)</td></tr>
+          <tr><td>Proveedor</td><td>Amicornios Soft — NIT: 14149549016.</td></tr>
+          <tr><td>Tecnología</td><td>Next.js + TypeScript, NestJS, PostgreSQL + Prisma, Redis, Amazon S3 + CloudFront y Docker Compose</td></tr>
+          <tr><td>Plazo estimado</td><td>Hasta 2 meses (8 semanas), sujeto a la validación de las macros de Excel y de las integraciones actuales</td></tr>
+          <tr class="price"><td>Precio especial por cliente antiguo</td><td><b>Bs 8.000</b> (ocho mil 00/100 bolivianos)</td></tr>
+          <tr><td>Versión</td><td>Reemplaza a la cotización COT-TDR-001 (21/10/2026), que contemplaba solo la modernización de la tienda.</td></tr>
         </table>
       </section>
 
       <section class="block">
         <h2 class="sec"><span class="n">2</span>Resumen ejecutivo</h2>
-        <p>TecnoDreams opera hoy su tienda en línea sobre WordPress y WooCommerce, con el constructor Elementor y un conjunto de plugins que resuelven el catálogo, los filtros, el carrito, el envío y la atención por WhatsApp. Proponemos reemplazar esa base por una <strong>plataforma de comercio electrónico desarrollada a medida</strong>, con código propio, que conserve la identidad visual de TecnoDreams y modernice la navegación y la experiencia de compra.</p>
-        <p>La propuesta incluye la tienda completa (portada, catálogo, búsqueda, fichas, carrito, checkout, cuentas y favoritos), un <strong>panel administrativo propio</strong>, la migración de productos y categorías desde WooCommerce y la continuidad de URLs mediante redirecciones. Junto con esta cotización se entrega un prototipo navegable con los productos reales de la tienda.</p>
-      </section>
-
-      <section class="block">
-        <h2 class="sec"><span class="n">3</span>Justificación del proyecto</h2>
-        <p>La modernización responde a necesidades del negocio y a observaciones preliminares sobre el sitio público:</p>
-        <div class="grid2">
-          <div class="box"><b>Lentitud percibida</b><span>La portada carga alrededor de 57 scripts externos y 45 hojas de estilo. Este volumen suele traducirse en tiempos de carga más altos, en especial con datos móviles.</span></div>
-          <div class="box"><b>Dependencia de WordPress y plugins</b><span>Funciones clave dependen de 15 plugins visibles y del tema, con actualizaciones, licencias y compatibilidades que deben gestionarse por separado.</span></div>
-          <div class="box"><b>Experiencia móvil</b><span>La mayor parte de las compras en línea se inicia desde el celular; la nueva interfaz se diseña primero para pantallas pequeñas.</span></div>
-          <div class="box"><b>Catálogo y búsquedas</b><span>Agrupar variantes (hoy publicadas como productos separados), combinar filtros y ofrecer una búsqueda instantánea tolerante a acentos.</span></div>
-          <div class="box"><b>Control sobre el código</b><span>Código y datos propiedad de TecnoDreams, sin depender de licencias ni de cambios de terceros.</span></div>
-          <div class="box"><b>Futuras ampliaciones</b><span>Una arquitectura ordenada facilita sumar integraciones, reportes o nuevas funciones sin conflictos.</span></div>
-        </div>
-        <div class="note"><svg class="icon"><use href="#i-info"/></svg><span>Estos puntos son observaciones sobre el código público de la portada (revisado el 20/10/2026) y necesidades de mejora; no constituyen fallos técnicos comprobados. Al iniciar el proyecto se realizará una medición formal de rendimiento (Core Web Vitals) para comparar el antes y el después.</span></div>
+        <p>TecnoDreams 2.0 ya no consiste solo en reemplazar WordPress y WooCommerce por una tienda más rápida. El objetivo principal es un <strong>sistema administrativo capaz de gestionar miles de productos de forma eficiente y automatizada</strong>: los precios y la disponibilidad siguen calculándose en Excel con las macros actuales y llegan a la plataforma mediante una API REST; las fotografías se organizan por SKU en Amazon S3; y el catálogo se sincroniza con Google Merchant Center mediante un proceso supervisado.</p>
+        <p>Sobre esa base se construye el catálogo público optimizado, con SEO técnico automatizado, y se migra la información actual desde WooCommerce por etapas, manteniendo el sitio actual operativo hasta validar la nueva plataforma. Junto con esta cotización se entrega un prototipo navegable con un panel que demuestra, con datos simulados, importaciones masivas, gestión de fotografías, precios, SEO y Google Merchant Center.</p>
       </section>
 
       <section class="block keep">
-        <h2 class="sec"><span class="n">4</span>Objetivos</h2>
+        <h2 class="sec"><span class="n">3</span>Prioridades del proyecto</h2>
         <ol class="goals">
-          <li>Mejorar el rendimiento del sitio.</li>
-          <li>Desarrollar una interfaz moderna y responsive.</li>
-          <li>Mantener las funcionalidades principales del comercio electrónico.</li>
-          <li>Crear un panel administrativo personalizado.</li>
-          <li>Optimizar el catálogo, los filtros y el buscador.</li>
-          <li>Implementar una arquitectura escalable.</li>
-          <li>Migrar los datos necesarios de WooCommerce.</li>
-          <li>Mantener la continuidad de URLs mediante redirecciones cuando corresponda.</li>
+          <li>Base de datos y estructura de productos.</li>
+          <li>Panel administrativo visual.</li>
+          <li>Integración con Excel mediante API REST.</li>
+          <li>Importación y actualización masiva de productos.</li>
+          <li>Automatización de fotografías mediante Amazon S3.</li>
+          <li>Gestión de proveedores, precios e inventario.</li>
+          <li>Migración desde WooCommerce.</li>
+          <li>Catálogo público optimizado.</li>
+          <li>SEO técnico automatizado.</li>
+          <li>Google Merchant Center.</li>
         </ol>
       </section>
 
       <section class="block">
+        <h2 class="sec"><span class="n">4</span>Arquitectura técnica</h2>
+        <p>Flujo principal: <strong>Excel / Macros → API REST → PostgreSQL → panel administrativo y catálogo público</strong>. Las fotografías se suben a S3 y se distribuyen por CloudFront; Google Merchant Center recibe las actualizaciones del catálogo mediante un proceso independiente y supervisado.</p>
+        <div class="arch-wrap keep"><svg class="arch" viewBox="0 0 980 340" role="img" aria-labelledby="arch-t arch-d" xmlns="http://www.w3.org/2000/svg">
+  <title id="arch-t">Arquitectura técnica de TecnoDreams 2.0</title>
+  <desc id="arch-d">Excel y sus macros envían datos a la API REST en NestJS, que guarda en PostgreSQL; el panel administrativo y el catálogo público en Next.js leen de PostgreSQL. Redis gestiona caché y colas; un proceso supervisado sincroniza el catálogo con Google Merchant Center. Las fotografías se suben a Amazon S3 con URLs firmadas y se distribuyen por CloudFront al catálogo.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#123c69"/></marker>
+  </defs>
+  <g class="lanes" font-family="Montserrat, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#627389" letter-spacing=".08em">
+    <text x="20" y="14">SINCRONIZACIÓN CON GOOGLE</text>
+    <text x="20" y="124">DATOS DEL CATÁLOGO</text>
+    <text x="20" y="234">FOTOGRAFÍAS</text>
+  </g>
+  <g fill="none" stroke="#123c69" stroke-width="1.8" marker-end="url(#ah)">
+    <path d="M210 165H266"/><path d="M460 165H516"/><path d="M710 165H766"/>
+    <path d="M710 186L766 252"/>
+    <path d="M365 130V94" marker-start="url(#ah)"/><path d="M460 55H516"/><path d="M615 130V94"/><path d="M710 55H766"/>
+    <path d="M210 275H266"/><path d="M460 275H516"/><path d="M710 275H766"/>
+  </g>
+  <g font-family="Montserrat, Arial, sans-serif" font-size="9.5" fill="#33445a" text-anchor="middle">
+    <text x="238" y="158">JSON</text><text x="488" y="158">upsert</text>
+    <text x="378" y="115" text-anchor="start">colas</text><text x="628" y="115" text-anchor="start">cambios</text>
+    <text x="738" y="48">feed/API</text>
+    <text x="238" y="268">firmada</text><text x="488" y="268">origen</text><text x="738" y="268">?v=N</text>
+  </g>
+  <g font-family="Montserrat, Arial, sans-serif" text-anchor="middle">
+    <g><rect x="270" y="20" width="190" height="70" rx="12" fill="#e6f1ff" stroke="#8cc2ff"/><text x="365" y="49" font-size="14" font-weight="800" fill="#061d36">Redis</text><text x="365" y="67" font-size="10.5" fill="#33445a">caché y colas de trabajos</text></g>
+    <g><rect x="520" y="20" width="190" height="70" rx="12" fill="#e6f1ff" stroke="#8cc2ff"/><text x="615" y="45" font-size="14" font-weight="800" fill="#061d36">Worker Merchant</text><text x="615" y="62" font-size="10.5" fill="#33445a">proceso independiente</text><text x="615" y="76" font-size="10.5" fill="#33445a">y supervisado</text></g>
+    <g><rect x="770" y="20" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="865" y="49" font-size="14" font-weight="800" fill="#061d36">Google Merchant</text><text x="865" y="67" font-size="10.5" fill="#33445a">Center</text></g>
+    <g><rect x="20" y="130" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="115" y="155" font-size="14" font-weight="800" fill="#061d36">Excel / Macros</text><text x="115" y="172" font-size="10.5" fill="#33445a">precios y disponibilidad</text><text x="115" y="186" font-size="10.5" fill="#33445a">(fuente operativa)</text></g>
+    <g><rect x="270" y="130" width="190" height="70" rx="12" fill="#061d36"/><text x="365" y="159" font-size="14" font-weight="800" fill="#fff">API REST</text><text x="365" y="177" font-size="10.5" fill="#a9bad0">NestJS · validación</text></g>
+    <g><rect x="520" y="130" width="190" height="70" rx="12" fill="#061d36"/><text x="615" y="159" font-size="14" font-weight="800" fill="#fff">PostgreSQL</text><text x="615" y="177" font-size="10.5" fill="#a9bad0">Prisma ORM</text></g>
+    <g><rect x="770" y="130" width="190" height="70" rx="12" fill="#2f8cff"/><text x="865" y="159" font-size="14" font-weight="800" fill="#fff">Panel administrativo</text><text x="865" y="177" font-size="10.5" fill="#e6f1ff">Next.js + TypeScript</text></g>
+    <g><rect x="20" y="240" width="190" height="70" rx="12" fill="#fff" stroke="#cfd8e3" stroke-dasharray="5 4"/><text x="115" y="269" font-size="14" font-weight="800" fill="#061d36">Carga de fotos</text><text x="115" y="287" font-size="10.5" fill="#33445a">desde el panel</text></g>
+    <g><rect x="270" y="240" width="190" height="70" rx="12" fill="#fff6e5" stroke="#f3c77a"/><text x="365" y="265" font-size="14" font-weight="800" fill="#061d36">Amazon S3</text><text x="365" y="283" font-size="10.5" fill="#33445a">productos/SKU/</text><text x="365" y="297" font-size="10.5" fill="#33445a">S1…Sn.webp · SZ.webp</text></g>
+    <g><rect x="520" y="240" width="190" height="70" rx="12" fill="#fff6e5" stroke="#f3c77a"/><text x="615" y="269" font-size="14" font-weight="800" fill="#061d36">CloudFront</text><text x="615" y="287" font-size="10.5" fill="#33445a">CDN de imágenes</text></g>
+    <g><rect x="770" y="240" width="190" height="70" rx="12" fill="#2f8cff"/><text x="865" y="269" font-size="14" font-weight="800" fill="#fff">Catálogo público</text><text x="865" y="287" font-size="10.5" fill="#e6f1ff">Next.js · SEO · checkout</text></g>
+  </g>
+</svg></div>
+        <div class="grid2" style="margin-top:10px">
+          <div class="box"><b>Next.js + TypeScript</b><span>Tienda y panel administrativo, con renderizado en servidor compatible con buscadores.</span></div>
+          <div class="box"><b>NestJS</b><span>Backend y API REST: importaciones, reglas de precios e inventario, autenticación y roles.</span></div>
+          <div class="box"><b>PostgreSQL + Prisma</b><span>Productos, SKU, variaciones, proveedores, precios, pedidos e historial de cambios.</span></div>
+          <div class="box"><b>Redis</b><span>Caché y procesamiento de trabajos en cola (importaciones, imágenes, sincronizaciones).</span></div>
+          <div class="box"><b>Amazon S3 + CloudFront</b><span>Almacenamiento de fotografías por SKU y distribución pública mediante CDN.</span></div>
+          <div class="box"><b>Docker Compose</b><span>Despliegue repetible en el servidor que TecnoDreams elija.</span></div>
+        </div>
+      </section>
+
+      <section class="block">
         <h2 class="sec"><span class="n">5</span>Alcance y desglose económico</h2>
-        <p>Cada partida describe lo que se entrega. Los montos están expresados en bolivianos (Bs).</p>
+        <p>Cada módulo describe lo que se entrega dentro de un alcance estándar y previamente definido. Montos en bolivianos (Bs).</p>
         <div class="budget-wrap">
-          <table class="budget">
-            <thead><tr><th>#</th><th>Concepto y entregable</th><th class="r">Precio (Bs)</th></tr></thead>
+          <table class="budget" id="budget">
+            <thead><tr><th>#</th><th>Módulo y entregable</th><th class="r">Precio (Bs)</th></tr></thead>
             <tbody>
-              <tr><td class="num">01</td><td><span class="c">Arquitectura y configuración</span><span class="d">Estructura del proyecto Next.js + TypeScript, base de datos PostgreSQL con Prisma, Redis, entornos y contenedores Docker.</span></td><td class="r">400</td></tr>
-              <tr><td class="num">02</td><td><span class="c">Diseño responsive, header y footer</span><span class="d">Sistema visual con la identidad de TecnoDreams, cabecera con buscador, menú de categorías, menú móvil, carrito y footer completo.</span></td><td class="r">500</td></tr>
-              <tr><td class="num">03</td><td><span class="c">Página principal y promociones</span><span class="d">Banner rotativo, categorías destacadas, productos recomendados, ofertas, novedades, marcas y bloques promocionales editables.</span></td><td class="r">500</td></tr>
-              <tr><td class="num">04</td><td><span class="c">Catálogo y categorías</span><span class="d">Listados por categoría y grupo, ordenamiento, paginación o carga progresiva y páginas de categoría con descripción.</span></td><td class="r">700</td></tr>
-              <tr><td class="num">05</td><td><span class="c">Filtros avanzados</span><span class="d">Filtros combinables por categoría, marca, rango de precios, disponibilidad y ofertas, con conteo de resultados.</span></td><td class="r">500</td></tr>
-              <tr><td class="num">06</td><td><span class="c">Buscador de productos</span><span class="d">Búsqueda instantánea con sugerencias de productos, categorías y marcas, tolerante a acentos.</span></td><td class="r">400</td></tr>
-              <tr><td class="num">07</td><td><span class="c">Ficha individual de producto</span><span class="d">Galería con zoom, precio y descuento, disponibilidad, variantes, cantidad, favoritos, consulta por WhatsApp, especificaciones y relacionados.</span></td><td class="r">600</td></tr>
-              <tr><td class="num">08</td><td><span class="c">Carrito y checkout</span><span class="d">Carrito con cupones, cálculo de envío por CEP, checkout por pasos con validación y confirmación de pedido. Incluye los medios de pago que TecnoDreams defina al inicio.</span></td><td class="r">700</td></tr>
-              <tr><td class="num">09</td><td><span class="c">Panel administrativo</span><span class="d">Resumen de ventas, pedidos y estados, productos, categorías, inventario, clientes, promociones y configuración de la tienda.</span></td><td class="r">900</td></tr>
-              <tr><td class="num">10</td><td><span class="c">Clientes, cuentas y favoritos</span><span class="d">Registro e inicio de sesión, perfil, direcciones, historial de pedidos y lista de favoritos.</span></td><td class="r">400</td></tr>
-              <tr><td class="num">11</td><td><span class="c">Migración de productos y categorías</span><span class="d">Importación desde WooCommerce de productos, precios, imágenes, atributos y categorías, con normalización de datos.</span></td><td class="r">400</td></tr>
-              <tr><td class="num">12</td><td><span class="c">Optimización, SEO y seguridad básica</span><span class="d">Imágenes WebP, metadatos, sitemap, datos estructurados, redirecciones 301 de URLs antiguas, HTTPS y buenas prácticas de seguridad.</span></td><td class="r">500</td></tr>
-              <tr><td class="num">13</td><td><span class="c">Pruebas y despliegue</span><span class="d">Pruebas funcionales en computadora y celular, corrección de errores y publicación en el servidor del cliente.</span></td><td class="r">500</td></tr>
+              <tr><td class="num">01</td><td><span class="c">Arquitectura y base de datos PostgreSQL</span><span class="d">Modelo de datos de productos, SKU, variaciones, proveedores, precios, inventario e imágenes; Prisma, migraciones, índices para miles de productos, Redis y entornos Docker.</span></td><td class="r" data-v="400">400</td></tr>
+              <tr><td class="num">02</td><td><span class="c">Panel administrativo de productos</span><span class="d">Dashboard del catálogo; tabla con búsqueda por SKU y nombre, filtros y paginación en servidor; selección múltiple; edición, publicación y cambio a borrador masivos; detección de duplicados; editor individual; roles y registro de cambios.</span></td><td class="r" data-v="1200">1.200</td></tr>
+              <tr><td class="num">03</td><td><span class="c">API REST e integración con Excel</span><span class="d">API en NestJS con token para las macros, endpoints de importación y consulta, validación y documentación (OpenAPI); adaptación de las macros existentes para enviar los datos.</span></td><td class="r" data-v="900">900</td></tr>
+              <tr><td class="num">04</td><td><span class="c">Importaciones y actualizaciones masivas</span><span class="d">Carga de Excel/CSV o recepción por API, vista previa, validación de SKU, duplicados, productos nuevos y existentes, procesamiento en cola con progreso, resumen, historial y detalle de errores.</span></td><td class="r" data-v="500">500</td></tr>
+              <tr><td class="num">05</td><td><span class="c">Gestión de imágenes con Amazon S3</span><span class="d">Estructura productos/SKU/ con S1…Sn y SZ.webp, subidas mediante URLs firmadas, conversión a WebP, URLs versionadas, distribución por CloudFront y permisos restringidos.</span></td><td class="r" data-v="500">500</td></tr>
+              <tr><td class="num">06</td><td><span class="c">Proveedores, precios e inventario</span><span class="d">Proveedores, costo, precio de venta, moneda y disponibilidad; reglas automáticas (sin disponibilidad → borrador), actualizaciones masivas e historial de cambios.</span></td><td class="r" data-v="500">500</td></tr>
+              <tr><td class="num">07</td><td><span class="c">Migración desde WooCommerce</span><span class="d">Productos, SKU, categorías, marcas, atributos, variaciones, precios, descripciones, fotografías, datos SEO y URLs actuales, con redirecciones 301; por etapas (ver sección 7).</span></td><td class="r" data-v="500">500</td></tr>
+              <tr><td class="num">08</td><td><span class="c">Catálogo público, filtros y buscador</span><span class="d">Portada, categorías y ficha de producto con el diseño del prototipo; filtros combinables, buscador tolerante a acentos y rendimiento con miles de productos.</span></td><td class="r" data-v="900">900</td></tr>
+              <tr><td class="num">09</td><td><span class="c">Carrito, checkout y pedidos</span><span class="d">Carrito, cálculo de envío por CEP, checkout por pasos, cuentas de clientes y gestión de pedidos y estados en el panel. Incluye el medio de pago que TecnoDreams defina al inicio.</span></td><td class="r" data-v="500">500</td></tr>
+              <tr><td class="num">10</td><td><span class="c">SEO técnico automatizado</span><span class="d">SEO por producto, metadescripciones, URLs amigables, canonical, sitemap XML, robots.txt y datos estructurados (ver sección 6).</span></td><td class="r" data-v="400">400</td></tr>
+              <tr><td class="num">11</td><td><span class="c">Google Merchant Center</span><span class="d">Sincronización mediante Merchant API o feed automático, según la evaluación técnica; proceso independiente y supervisado, validaciones previas, estados enviado, procesado, aprobado y rechazado, reintentos e historial.</span></td><td class="r" data-v="500">500</td></tr>
+              <tr><td class="num">12</td><td><span class="c">Seguridad, pruebas y optimización</span><span class="d">Autenticación y roles, protección de la API, respaldos, pruebas funcionales y de carga, medición de rendimiento (Core Web Vitals) y correcciones.</span></td><td class="r" data-v="400">400</td></tr>
+              <tr><td class="num">13</td><td><span class="c">Despliegue y capacitación</span><span class="d">Despliegue con Docker Compose en el servidor del cliente, documentación técnica y de uso, y capacitación del equipo en el panel, las importaciones y las fotografías.</span></td><td class="r" data-v="300">300</td></tr>
             </tbody>
-            <tfoot><tr><td></td><td>TOTAL</td><td class="r">Bs 7.000</td></tr></tfoot>
+            <tfoot>
+              <tr class="sub"><td></td><td>Subtotal</td><td class="r">Bs 7.500</td></tr>
+              <tr class="sub"><td></td><td>Reserva para ajustes y contingencias</td><td class="r" data-v="500">Bs 500</td></tr>
+              <tr><td></td><td>TOTAL</td><td class="r" id="total">Bs 8.000</td></tr>
+            </tfoot>
           </table>
         </div>
         <div class="summary">
           <div class="box" style="background:#fff">
-            <div class="sumrow"><span>Precio regular de referencia</span><span>Bs 10.000</span></div>
-            <div class="sumrow off"><span>Descuento cliente antiguo (30%)</span><span>− Bs 3.000</span></div>
-            <div class="sumrow tot"><span>Total a pagar</span><span>Bs 7.000</span></div>
+            <div class="sumrow"><span>Subtotal de los 13 módulos</span><span>Bs 7.500</span></div>
+            <div class="sumrow"><span>Reserva para ajustes y contingencias</span><span>Bs 500</span></div>
+            <div class="sumrow tot"><span>Total a pagar</span><span>Bs 8.000</span></div>
           </div>
-          <div class="total-card"><small>Precio especial</small><b>Bs 7.000</b><span>Ahorro de Bs 3.000 sobre la referencia</span></div>
+          <div class="total-card"><small>Precio especial cliente antiguo</small><b>Bs 8.000</b><span>Plazo máximo estimado de 2 meses</span></div>
         </div>
-        <div class="note blue"><svg class="icon"><use href="#i-info"/></svg><span>El precio regular de Bs 10.000 es una referencia comercial de esta propuesta para mostrar el descuento por cliente antiguo; no es una tarifa histórica demostrada. Los precios de productos que se muestran en la tienda están en reales brasileños (R$); esta cotización se expresa en bolivianos (Bs).</span></div>
-      </section>
-
-      <section class="block keep">
-        <h2 class="sec"><span class="n">6</span>Condiciones de pago</h2>
-        <div class="pays">
-          <div class="payc"><span class="pct">50%</span><b>Bs 3.500</b><span>Al iniciar el proyecto.</span></div>
-          <div class="payc"><span class="pct">30%</span><b>Bs 2.100</b><span>Al presentar el avance funcional (tienda y panel navegables).</span></div>
-          <div class="payc"><span class="pct">20%</span><b>Bs 1.400</b><span>Al finalizar y entregar la plataforma publicada.</span></div>
-        </div>
-      </section>
-
-      <section class="block keep">
-        <h2 class="sec"><span class="n">7</span>Plazo y cronograma estimado</h2>
-        <table class="plan">
-          <thead><tr><th>Periodo</th><th>Actividades</th><th>Partidas</th></tr></thead>
-          <tbody>
-            <tr><td>Semana 1</td><td>Medición inicial, arquitectura, configuración y diseño responsive.</td><td>01, 02</td></tr>
-            <tr><td>Semanas 2–3</td><td>Página principal, catálogo, filtros, buscador, ficha, carrito, checkout, cuentas y favoritos.</td><td>03–08, 10</td></tr>
-            <tr><td>Semanas 4–5</td><td>Panel administrativo y migración desde WooCommerce. <strong>Entrega del avance funcional.</strong></td><td>09, 11</td></tr>
-            <tr><td>Semanas 5–6</td><td>Optimización, SEO, redirecciones, seguridad, pruebas y despliegue.</td><td>12, 13</td></tr>
-          </tbody>
-        </table>
-        <p style="margin-top:8px;font-size:12.5px">El plazo de 30 a 45 días calendario corre desde el primer pago y la entrega de accesos, y depende de la revisión oportuna de los avances por parte del cliente.</p>
+        <div class="note blue"><svg class="icon"><use href="#i-info"/></svg><span>La reserva cubre ajustes que surjan al validar las macros de Excel y las integraciones actuales dentro del alcance descrito; no amplía el alcance a funcionalidades nuevas. Los precios de productos de la tienda están en reales brasileños (R$); esta cotización se expresa en bolivianos (Bs).</span></div>
       </section>
 
       <section class="block">
-        <h2 class="sec"><span class="n">8</span>Entregables y requisitos</h2>
+        <h2 class="sec"><span class="n">6</span>Módulos clave en detalle</h2>
+        <div class="grid2">
+          <div class="box"><b>Excel y API REST</b><span>Excel sigue siendo la fuente operativa de los precios y la disponibilidad calculados por sus macros. Las macros envían las filas a la API con un token propio; el backend valida, actualiza por SKU y registra cada cambio. La compatibilidad con las macros existentes debe validarse antes de comprometer una migración sin modificaciones.</span></div>
+          <div class="box"><b>Fotografías en Amazon S3</b><span>Cada producto tiene su carpeta productos/SKU/. S1.webp es la imagen principal; S2.webp, S3.webp… forman la galería; SZ.webp es la imagen para Google Merchant Center (sin ella, el producto queda pendiente). Al reemplazar una imagen se genera una URL versionada. Cargas seguras con URLs firmadas, permisos restringidos y distribución por CloudFront; sin credenciales de AWS en el navegador.</span></div>
+          <div class="box"><b>SEO técnico automatizado</b><span>SEO automático por producto, metadescripciones, URLs amigables, canonical, sitemap XML, robots.txt, datos estructurados Product, Offer y BreadcrumbList, renderizado compatible con motores de búsqueda y conservación de URLs existentes con redirecciones 301.</span></div>
+          <div class="box"><b>Google Merchant Center</b><span>Integración mediante Merchant API o feed automático, según la evaluación técnica. Un proceso independiente valida (SKU, precio, SZ.webp, marca) y envía los cambios; los estados enviado, procesado, aprobado y rechazado se muestran por separado, y los dos últimos dependen siempre de la respuesta de Google.</span></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">7</span>Migración desde WooCommerce</h2>
+        <p>Se migran productos, SKU, categorías, marcas, atributos, variaciones, precios, descripciones, fotografías, datos SEO existentes y URLs actuales, generando las redirecciones 301 correspondientes. WordPress se mantiene operativo hasta validar la nueva plataforma.</p>
+        <table class="plan">
+          <thead><tr><th>Etapa</th><th>Actividades</th></tr></thead>
+          <tbody>
+            <tr><td>1. Inventario</td><td>Exportación de catálogo, medios, URLs y datos SEO desde WooCommerce.</td></tr>
+            <tr><td>2. Normalización</td><td>Nombres, SKU, marcas y variaciones; registro de productos con datos faltantes.</td></tr>
+            <tr><td>3. Importación de prueba</td><td>Carga a PostgreSQL con el mismo validador de las importaciones de Excel; informe de importados, omitidos y errores.</td></tr>
+            <tr><td>4. Fotografías</td><td>Conversión a WebP y organización por SKU en S3.</td></tr>
+            <tr><td>5. Validación en paralelo</td><td>Revisión por muestreo con TecnoDreams mientras WordPress sigue publicado.</td></tr>
+            <tr><td>6. Puesta en producción</td><td>Migración final, redirecciones 301 y cambio de DNS, con posibilidad de volver atrás.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">8</span>Condiciones de pago</h2>
+        <div class="pays">
+          <div class="payc"><span class="pct">50%</span><b>Bs 4.000</b><span>Anticipo al iniciar el proyecto.</span></div>
+          <div class="payc"><span class="pct">30%</span><b>Bs 2.400</b><span>Al presentar el avance funcional: panel, importación desde Excel y migración de prueba operativos.</span></div>
+          <div class="payc"><span class="pct">20%</span><b>Bs 1.600</b><span>A la entrega de la plataforma publicada.</span></div>
+        </div>
+      </section>
+
+      <section class="block keep">
+        <h2 class="sec"><span class="n">9</span>Plazo y cronograma estimado</h2>
+        <table class="plan">
+          <thead><tr><th>Periodo</th><th>Actividades</th><th>Módulos</th></tr></thead>
+          <tbody>
+            <tr><td>Semanas 1–2</td><td>Relevamiento de macros e integraciones, arquitectura, base de datos y API REST.</td><td>01, 03</td></tr>
+            <tr><td>Semanas 3–4</td><td>Panel administrativo, importaciones masivas, fotografías en S3, proveedores y precios, migración de prueba. <strong>Avance funcional.</strong></td><td>02, 04–07</td></tr>
+            <tr><td>Semanas 5–6</td><td>Catálogo público, carrito, checkout y pedidos, SEO técnico y Google Merchant Center.</td><td>08–11</td></tr>
+            <tr><td>Semanas 7–8</td><td>Seguridad, pruebas, migración final en paralelo, despliegue y capacitación.</td><td>12–13</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:8px;font-size:12.5px">El plazo máximo de 2 meses (8 semanas) corre desde el anticipo y la entrega de accesos. Para cumplirlo, TecnoDreams debe entregar las macros, accesos y cuentas (WooCommerce, AWS, Google Merchant Center) durante la primera semana y revisar cada avance en un máximo de 2 días hábiles; está sujeto a la validación de las macros de Excel y de las integraciones actuales.</p>
+      </section>
+
+      <section class="block">
+        <h2 class="sec"><span class="n">10</span>Entregables y requisitos</h2>
         <div class="grid2">
           <div class="box" style="background:#fff"><b>Se entrega</b>
             <ul class="list" style="font-size:13px">
-              <li>Tienda en línea y panel administrativo publicados.</li>
-              <li>Base de datos con productos y categorías migrados.</li>
-              <li>Redirecciones de las URLs antiguas que correspondan.</li>
-              <li>Código fuente en un repositorio a nombre del cliente.</li>
-              <li>Documentación técnica básica de instalación y despliegue.</li>
+              <li>Catálogo público y panel administrativo publicados.</li>
+              <li>API REST documentada y macros adaptadas para enviar datos.</li>
+              <li>Base de datos con el catálogo migrado y redirecciones 301.</li>
+              <li>Fotografías organizadas por SKU en S3 y servidas por CloudFront.</li>
+              <li>Sincronización con Google Merchant Center configurada.</li>
+              <li>Código fuente en un repositorio a nombre del cliente, documentación y capacitación.</li>
             </ul>
           </div>
           <div class="box" style="background:#fff"><b>Requiere del cliente</b>
             <ul class="list" style="font-size:13px">
-              <li>Acceso de administrador a WordPress/WooCommerce o exportación de datos.</li>
-              <li>Hosting y dominio contratados (ver exclusiones).</li>
-              <li>Definición de medios de pago y envío al inicio del proyecto.</li>
+              <li>Copia de los archivos Excel y macros actuales, y una persona que explique su funcionamiento.</li>
+              <li>Acceso de administrador a WordPress/WooCommerce.</li>
+              <li>Cuentas de AWS y Google Merchant Center a su nombre, con los accesos necesarios.</li>
+              <li>Hosting, dominio y medio de pago definidos al inicio.</li>
               <li>Revisión y aprobación de los avances.</li>
             </ul>
           </div>
@@ -311,32 +387,35 @@
       </section>
 
       <section class="block keep">
-        <h2 class="sec"><span class="n">9</span>Exclusiones</h2>
-        <p>No se incluye, salvo cotización adicional:</p>
+        <h2 class="sec"><span class="n">11</span>Condiciones y exclusiones</h2>
+        <p>El precio incluye el desarrollo de los módulos indicados dentro de un alcance estándar y previamente definido. No incluye:</p>
         <ul class="list excl">
-          <li>Hosting y dominio.</li>
+          <li>Hosting y servidores.</li>
+          <li>Consumo de Amazon S3.</li>
+          <li>Consumo de CDN.</li>
+          <li>Dominio.</li>
           <li>Suscripciones de terceros.</li>
-          <li>Integraciones ERP.</li>
+          <li>Comisiones de pasarelas de pago.</li>
+          <li>Integraciones extraordinarias con ERP.</li>
           <li>Facturación fiscal especializada.</li>
-          <li>Aplicaciones móviles nativas.</li>
-          <li>Pasarelas de pago o servicios logísticos no definidos.</li>
-          <li>Nuevas funcionalidades fuera del alcance acordado.</li>
+          <li>Funcionalidades adicionales no contempladas.</li>
         </ul>
+        <div class="note"><svg class="icon"><use href="#i-info"/></svg><span>La compatibilidad con las macros existentes debe validarse antes de comprometer una migración sin modificaciones. Si la validación muestra cambios mayores a los previstos, se informarán antes de ejecutarlos.</span></div>
       </section>
 
       <section class="block keep">
-        <h2 class="sec"><span class="n">10</span>Garantía</h2>
+        <h2 class="sec"><span class="n">12</span>Garantía</h2>
         <p>Amicornios Soft corregirá sin costo los <strong>errores de implementación</strong> que se reporten durante los <strong>30 días calendario</strong> posteriores a la entrega final. La garantía cubre el funcionamiento de lo descrito en esta cotización y no incluye funcionalidades nuevas, cambios de alcance ni fallas causadas por servicios de terceros o modificaciones hechas por otras personas.</p>
       </section>
 
       <section class="block keep">
-        <h2 class="sec"><span class="n">11</span>Prototipo de referencia</h2>
-        <p>Se adjunta un prototipo navegable en HTML, CSS y JavaScript con los productos, precios e imágenes reales publicados en tecnodreams.com. Sirve para validar diseño y flujos; las compras, pagos, pedidos y datos de ventas del prototipo son simulados. El sistema final se construirá con las tecnologías indicadas en la sección 1.</p>
+        <h2 class="sec"><span class="n">13</span>Prototipo de referencia</h2>
+        <p>Se adjunta un prototipo navegable en HTML, CSS y JavaScript. La tienda usa los productos, precios e imágenes reales publicados en tecnodreams.com; el panel demuestra la importación de 300 productos de prueba, la detección de duplicados, la actualización masiva de precios, la gestión de fotografías, el SEO y Google Merchant Center. <strong>Las conexiones con Excel, Amazon S3 y Google están simuladas en el navegador</strong>, igual que ventas, costos, proveedores y estados de sincronización. El sistema final se construirá con las tecnologías de la sección 4.</p>
       </section>
 
       <section class="block keep">
-        <h2 class="sec"><span class="n">12</span>Aceptación</h2>
-        <p>Con la firma de este documento y el primer pago (Bs 3.500), el cliente acepta el alcance, las condiciones y el precio aquí descritos. Validez de la oferta: 30 días desde la fecha de emisión.</p>
+        <h2 class="sec"><span class="n">14</span>Aceptación</h2>
+        <p>Con la firma de este documento y el anticipo (Bs 4.000), el cliente acepta el alcance, las condiciones y el precio aquí descritos. Validez de la oferta: 30 días desde la fecha de emisión.</p>
         <div class="sign">
           <div><b>TecnoDreams</b>Nombre, firma y fecha</div>
           <div><b>Amicornios Soft</b>Nombre, firma y fecha</div>
@@ -344,13 +423,13 @@
       </section>
     </div>
 
-    <footer class="doc-foot"><span>Amicornios Soft · soft.amicornios.com · vargascarlos12123@gmail.com · +591 71450557</span><span>COT-TDR-001 · 21/10/2026</span></footer>
+    <footer class="doc-foot"><span>Amicornios Soft · soft.amicornios.com · vargascarlos12123@gmail.com · +591 71450557</span><span>COT-TDR-002 · 27/10/2026</span></footer>
   </article>
 
   <script>
     document.getElementById('pdf').addEventListener('click', function () {
       var t = document.title;
-      document.title = 'Cotizacion-TecnoDreams-COT-TDR-001';
+      document.title = 'Cotizacion-TecnoDreams-COT-TDR-002';
       window.print();
       setTimeout(function () { document.title = t; }, 500);
     });

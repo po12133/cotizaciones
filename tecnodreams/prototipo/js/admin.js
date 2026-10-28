@@ -4,11 +4,15 @@
  * estoque, pedidos, promoções/cupons e configurações.
  * Tudo o que é salvo aqui aparece na loja (mesmo navegador).
  * Vendas, clientes e pedidos-semente são DEMONSTRATIVOS.
- * Depende de products.js, cart.js e app.js (ícones, toast, modal).
+ * Os módulos de catálogo da versão 2.0 (resumo, produtos em massa,
+ * importações, fotos S3, preços, SEO, Merchant, migração) ficam em
+ * admin-ops.js e são registrados aqui.
+ * Depende de products.js, cart.js, app.js, ops-data.js e admin-ops.js.
  * ========================================================= */
 (function () {
   'use strict';
   const TD = window.TD;
+  const EXT = TD.adminOps;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = TD.esc;
@@ -18,11 +22,19 @@
   const SESSION = 'td_admin_session';
 
   const SECTIONS = [
-    ['dashboard', 'Resumo', 'chart', 'Visão geral'],
+    ['dashboard', 'Resumo do catálogo', 'chart', 'Visão geral'],
+    ['demos', 'Demonstrações', 'zap', 'Visão geral'],
+    ['vendas', 'Vendas', 'tag', 'Visão geral'],
     ['pedidos', 'Pedidos', 'receipt', 'Visão geral'],
     ['produtos', 'Produtos', 'package', 'Catálogo'],
+    ['importacoes', 'Importações e sincronização', 'upload', 'Catálogo'],
+    ['fotos', 'Fotografias (S3)', 'image', 'Catálogo'],
+    ['precos', 'Preços e estoque', 'dollar', 'Catálogo'],
     ['categorias', 'Categorias', 'layers', 'Catálogo'],
     ['inventario', 'Inventário', 'grid', 'Catálogo'],
+    ['seo', 'SEO', 'search', 'Canais'],
+    ['merchant', 'Google Merchant Center', 'globe', 'Canais'],
+    ['migracao', 'Migração WooCommerce', 'database', 'Canais'],
     ['clientes', 'Clientes', 'users', 'Vendas'],
     ['promocoes', 'Promoções', 'percent', 'Vendas'],
     ['configuracao', 'Configuração', 'gear', 'Loja']
@@ -99,12 +111,20 @@
       '<div class="overlay" data-overlay></div>' +
       '<div class="a-main"><header class="a-top"><div class="a-top-in"><button class="icon-btn a-menu-btn" type="button" data-menu aria-label="Abrir menu">' + icon('menu') + '</button><h1 id="a-title">Resumo</h1><span class="grow"></span>' +
       '<label class="a-search">' + icon('search') + '<span class="sr-only">Buscar produto</span><input type="search" id="a-search" placeholder="Buscar produto, SKU ou pedido…"></label>' +
+      '<button class="icon-btn a-bell" type="button" data-notif aria-label="Notificações">' + icon('bell') + '<span class="pill" data-notif-n hidden></span></button>' +
       '<a class="btn btn-outline btn-sm" href="index.html" target="_blank" rel="noopener">' + icon('store') + '<span class="hide-xs">Ver loja</span></a><span class="avatar" style="width:38px;height:38px;font-size:13px" title="Administrador (demo)">AD</span></div></header>' +
-      '<div class="a-content"><div class="demo-banner">' + icon('info') + '<span class="grow">Painel demonstrativo: produtos, preços e imagens são reais da TecnoDreams; <strong>vendas, pedidos de exemplo, clientes e estoque são simulados</strong>. As alterações aparecem na loja deste navegador.</span><button class="btn btn-sm btn-outline" type="button" data-reset>' + icon('refresh') + 'Restaurar demo</button></div><div id="a-view"></div></div></div></div>');
+      '<div class="a-content"><div class="demo-banner">' + icon('info') + '<span class="grow">Painel demonstrativo: os 86 produtos, preços e imagens são reais da TecnoDreams; <strong>vendas, estoque, custos, fornecedores, produtos importados “Teste” e as integrações com Excel, Amazon S3 e Google são simulados</strong> neste navegador.</span><button class="btn btn-sm btn-outline" type="button" data-reset>' + icon('refresh') + 'Restaurar demo</button></div><div id="a-view"></div></div></div></div>');
+  }
+  function paintNotif() {
+    const b = $('[data-notif-n]');
+    if (!b) return;
+    const n = EXT.notifCount();
+    b.textContent = n > 99 ? '99+' : n;
+    b.hidden = !n;
   }
 
   function login() {
-    document.body.insertAdjacentHTML('beforeend', '<div class="auth" style="margin:6vh auto;max-width:880px" id="a-login"><div class="auth-side"><h2>Painel TecnoDreams</h2><ul><li>Pedidos e status</li><li>Produtos, categorias e estoque</li><li>Promoções e cupons</li><li>Configurações da loja</li></ul></div>' +
+    document.body.insertAdjacentHTML('beforeend', '<div class="auth" style="margin:6vh auto;max-width:880px" id="a-login"><div class="auth-side"><h2>Painel TecnoDreams</h2><ul><li>Produtos em massa, preços e estoque</li><li>Importações do Excel</li><li>Fotografias S3 e Google Merchant</li><li>SEO, migração e pedidos</li></ul></div>' +
       '<div class="auth-form"><a class="logo" href="index.html" style="color:var(--navy-900);margin-bottom:18px"><img src="assets/brand/icone-td.png" alt="" width="40" height="40" style="filter:none"><span class="logo-text"><strong style="color:var(--navy-900);background:none;-webkit-text-fill-color:var(--navy-900)">TecnoDreams</strong><small style="color:var(--muted)">Acesso administrativo</small></span></a>' +
       '<form class="form-grid" id="a-login-form" novalidate>' + TD.ui.field({ id: 'al-email', label: 'E-mail', type: 'email', value: 'admin@tecnodreams.demo', validate: 'email', err: 'E-mail inválido.' }) +
       TD.ui.field({ id: 'al-pass', label: 'Senha', type: 'password', value: 'demo1234', validate: 'password', err: 'Mínimo 6 caracteres.' }) +
@@ -138,15 +158,16 @@
     const pill = $('[data-new-orders]');
     const n = allOrders().filter((o) => o.status === 'novo').length;
     if (pill) { pill.textContent = n; pill.hidden = !n; }
+    paintNotif();
   }
   function refresh() { go(current); }
 
   const panel = (title, body, actions) => '<div class="panel" style="margin-bottom:18px"><div class="panel-head"><h3>' + title + '</h3>' + (actions || '') + '</div>' + body + '</div>';
 
   /* =========================================================
-     RESUMO
+     VENDAS (resumo de pedidos — demonstrativo)
      ========================================================= */
-  function viewDashboard(v) {
+  function viewSales(v) {
     const orders = allOrders();
     const since = Date.now() - 30 * 86400000;
     const recent = orders.filter((o) => new Date(o.date) >= since && o.status !== 'cancelado');
@@ -253,37 +274,12 @@
   }
 
   /* =========================================================
-     PRODUTOS
+     PRODUTOS — ficha da loja (destaques, imagem, oferta)
      ========================================================= */
-  const pState = { q: '', cat: '', status: '', page: 1 };
-  const PER = 12;
-  function viewProducts(v) {
-    const all = TD.allProducts();
-    let list = pState.q ? TD.search(pState.q, all) : all.slice().sort((a, b) => b.id - a.id);
-    if (pState.cat) list = list.filter((p) => p.category === pState.cat);
-    if (pState.status === 'ativo') list = list.filter((p) => p.active);
-    if (pState.status === 'inativo') list = list.filter((p) => !p.active);
-    if (pState.status === 'oferta') list = list.filter((p) => TD.discountPct(p));
-    if (pState.status === 'consulta') list = list.filter((p) => !p.price);
-    const pages = Math.max(1, Math.ceil(list.length / PER));
-    pState.page = Math.min(pState.page, pages);
-    const slice = list.slice((pState.page - 1) * PER, pState.page * PER);
-    v.innerHTML = '<div class="panel"><div class="a-toolbar"><input type="search" placeholder="Nome, marca ou SKU" value="' + esc(pState.q) + '" data-pq style="min-width:220px">' +
-      '<select data-pcat><option value="">Todas as categorias</option>' + TD.categories().map((c) => '<option value="' + c.slug + '"' + (pState.cat === c.slug ? ' selected' : '') + '>' + esc(c.name) + '</option>').join('') + '</select>' +
-      '<select data-pstatus>' + [['', 'Todos os status'], ['ativo', 'Ativos'], ['inativo', 'Inativos'], ['oferta', 'Em oferta'], ['consulta', 'Preço sob consulta']].map((o) => '<option value="' + o[0] + '"' + (pState.status === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>' +
-      '<span class="grow"></span><button class="btn btn-primary btn-sm" type="button" data-new-product>' + icon('plus') + 'Novo produto</button></div>' +
-      '<div class="table-wrap"><table class="table"><thead><tr><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Ativo</th><th></th></tr></thead><tbody>' +
-      (slice.length ? slice.map((p) => '<tr' + (p.active ? '' : ' style="opacity:.6"') + '><td><div class="t-prod"><img src="' + esc(TD.img(p)) + '" alt=""><div><strong>' + esc(p.name) + '</strong><small style="color:var(--muted)">' + esc(p.brand || '—') + (p.sku ? ' · ' + esc(p.sku) : '') + (p.featured ? ' · ★ destaque' : '') + '</small></div></div></td>' +
-        '<td>' + esc(TD.categoryName(p.category)) + '</td><td>' + (p.price ? '<strong>' + fmt(p.price) + '</strong>' + (p.regularPrice ? '<br><small style="color:var(--muted)"><s>' + fmt(p.regularPrice) + '</s> −' + TD.discountPct(p) + '%</small>' : '') : '<span class="tag tag-info">Sob consulta</span>') + '</td>' +
-        '<td>' + stockTag(p) + '</td><td><label class="switch"><input type="checkbox" data-active="' + p.id + '"' + (p.active ? ' checked' : '') + ' aria-label="Produto ativo"><span></span></label></td>' +
-        '<td class="t-actions"><a class="icon-btn" href="producto.html?id=' + p.id + '" target="_blank" rel="noopener" aria-label="Ver na loja">' + icon('eye') + '</a><button class="icon-btn" type="button" data-edit="' + p.id + '" aria-label="Editar">' + icon('edit') + '</button><button class="icon-btn danger" type="button" data-delete="' + p.id + '" aria-label="Excluir">' + icon('trash') + '</button></td></tr>').join('')
-        : '<tr><td colspan="6">' + TD.emptyState('package', 'Nenhum produto encontrado', 'Ajuste a busca ou os filtros.') + '</td></tr>') +
-      '</tbody></table></div><div class="pager"><span>' + list.length + ' produto(s) · página ' + pState.page + ' de ' + pages + '</span><span class="pg-btns"><button class="btn btn-outline btn-sm" type="button" data-pg="-1"' + (pState.page <= 1 ? ' disabled' : '') + '>' + icon('left') + '</button><button class="btn btn-outline btn-sm" type="button" data-pg="1"' + (pState.page >= pages ? ' disabled' : '') + '>' + icon('right') + '</button></span></div></div>';
-  }
   function productModal(id) {
     const p = id ? TD.product(id) : null;
     const isNew = !p;
-    const d = p || { name: '', brand: '', category: pState.cat || 'mouse', sku: '', price: '', regularPrice: '', stock: 10, active: true, featured: false, images: [], bullets: [] };
+    const d = p || { name: '', brand: '', category: 'mouse', sku: '', price: '', regularPrice: '', stock: 10, active: true, featured: false, images: [], bullets: [] };
     const brands = Array.from(new Set(TD.allProducts().map((x) => x.brand).filter(Boolean))).sort();
     const pool = Array.from(new Set(TD.allProducts().map((x) => x.images[0]).filter(Boolean)));
     let chosen = (d.images && d.images[0]) || '';
@@ -520,7 +516,7 @@
     });
   }
 
-  const VIEWS = { dashboard: viewDashboard, pedidos: viewOrders, produtos: viewProducts, categorias: viewCategories, inventario: viewInventory, clientes: viewCustomers, promocoes: viewPromos, configuracao: viewSettings };
+  const VIEWS = Object.assign({ vendas: viewSales, pedidos: viewOrders, categorias: viewCategories, inventario: viewInventory, clientes: viewCustomers, promocoes: viewPromos, configuracao: viewSettings }, EXT.views);
 
   function csv(rows, name) {
     const text = rows.map((r) => r.map((c) => '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(';')).join('\n');
@@ -542,10 +538,12 @@
       if (sec) { location.hash = '#' + (sec.dataset.sec || sec.dataset.goto); return; }
       if (t.closest('[data-menu]')) { $('#a-side').classList.add('open'); $('[data-overlay]').classList.add('open'); return; }
       if (t.closest('[data-overlay]')) { $('#a-side').classList.remove('open'); t.closest('[data-overlay]').classList.remove('open'); return; }
+      if (t.closest('[data-notif]')) { EXT.activity(); return; }
       if (t.closest('[data-logout]')) { try { sessionStorage.removeItem(SESSION); } catch (er) { /* ignore */ } location.reload(); return; }
       if (t.closest('[data-reset]')) {
         TD.confirm('Restaurar dados de demonstração?', 'As alterações do painel, pedidos de teste, carrinho, favoritos e conta deste navegador serão apagados.', 'Restaurar', () => {
           TD.resetAdmin();
+          EXT.reset();
           Object.values(TD.storageKeys).forEach((k) => { try { localStorage.removeItem(k); } catch (er) { /* ignore */ } });
           ['td_checkout_draft', 'td_searches_v1', 'td_view'].forEach((k) => { try { localStorage.removeItem(k); } catch (er) { /* ignore */ } });
           toast('Dados restaurados');
@@ -556,6 +554,7 @@
       const od = t.closest('[data-order]');
       if (od) { orderModal(od.dataset.order); return; }
       if (!view.contains(t)) return;
+      if (EXT.onClick(t)) { paintNotif(); return; }
       // pedidos
       const ost = t.closest('[data-ost]');
       if (ost) { oState.status = ost.dataset.ost; refresh(); return; }
@@ -565,16 +564,6 @@
       }
       // produtos
       if (t.closest('[data-new-product]')) { productModal(); return; }
-      const ed = t.closest('[data-edit]');
-      if (ed) { productModal(+ed.dataset.edit); return; }
-      const del = t.closest('[data-delete]');
-      if (del) {
-        const p = TD.product(+del.dataset.delete);
-        TD.confirm('Excluir produto?', '“' + p.name + '” deixará de aparecer na loja. (Use “Restaurar demo” para desfazer.)', 'Excluir', () => { TD.deleteProduct(p.id); toast('Produto excluído', { type: 'info', sub: p.name }); refresh(); }, true);
-        return;
-      }
-      const pg = t.closest('[data-pg]');
-      if (pg) { pState.page += +pg.dataset.pg; refresh(); return; }
       // categorias
       if (t.closest('[data-new-cat]')) { categoryModal(); return; }
       const ec = t.closest('[data-edit-cat]');
@@ -618,6 +607,7 @@
     });
     document.addEventListener('change', (e) => {
       const t = e.target;
+      if (view.contains(t) && EXT.onChange(t)) return;
       if (t.dataset.status) {
         const o = allOrders().find((x) => x.id === t.dataset.status);
         setOrderStatus(o, t.value);
@@ -626,25 +616,22 @@
         if (pill) { const n = allOrders().filter((x) => x.status === 'novo').length; pill.textContent = n; pill.hidden = !n; }
         return;
       }
-      if (t.dataset.active) { const id = +t.dataset.active; TD.saveProduct({ id, active: t.checked }); toast(t.checked ? 'Produto ativado' : 'Produto ocultado da loja', { type: t.checked ? 'ok' : 'info', sub: TD.product(id).name }); refresh(); return; }
       if (t.dataset.stock) { setStock(+t.dataset.stock, t.value); refresh(); return; }
-      if (t.matches('[data-pcat]')) { pState.cat = t.value; pState.page = 1; refresh(); return; }
-      if (t.matches('[data-pstatus]')) { pState.status = t.value; pState.page = 1; refresh(); return; }
       if (t.dataset.couponActive != null) { const s = TD.adminState(); s.coupons[+t.dataset.couponActive].active = t.checked; TD.saveAdminState(s); toast(t.checked ? 'Cupom ativado' : 'Cupom desativado', { type: 'info' }); }
     });
     let qt;
     document.addEventListener('input', (e) => {
       const t = e.target;
-      const apply = (fn) => { clearTimeout(qt); qt = setTimeout(() => { fn(); refresh(); const el = $(t.matches('[data-pq]') ? '[data-pq]' : t.matches('[data-oq]') ? '[data-oq]' : '[data-iq]'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }, 220); };
-      if (t.matches('[data-pq]')) apply(() => { pState.q = t.value; pState.page = 1; });
-      else if (t.matches('[data-oq]')) apply(() => { oState.q = t.value; });
+      if (view.contains(t) && EXT.onInput(t)) return;
+      const apply = (fn) => { clearTimeout(qt); qt = setTimeout(() => { fn(); refresh(); const el = $(t.matches('[data-oq]') ? '[data-oq]' : '[data-iq]'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }, 220); };
+      if (t.matches('[data-oq]')) apply(() => { oState.q = t.value; });
       else if (t.matches('[data-iq]')) apply(() => { iState.q = t.value; });
       else if (t.id === 'a-search') {
         clearTimeout(qt);
         qt = setTimeout(() => {
           const q = t.value.trim();
           if (/^(td|demo)-\d+/i.test(q)) { oState.q = q; oState.status = ''; location.hash === '#pedidos' ? refresh() : (location.hash = '#pedidos'); }
-          else { pState.q = q; pState.page = 1; location.hash === '#produtos' ? refresh() : (location.hash = '#produtos'); }
+          else { EXT.search(q); location.hash === '#produtos' ? refresh() : (location.hash = '#produtos'); }
           setTimeout(() => t.focus(), 30);
         }, 300);
       }
@@ -653,17 +640,22 @@
     window.addEventListener('td:catalog-external', refresh);
     window.addEventListener('storage', (e) => { if (e.key === TD.storageKeys.orders) refresh(); });
     let rz;
-    window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (current === 'dashboard') refresh(); }, 250); });
+    window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (current === 'vendas') refresh(); }, 250); });
   }
 
   function start() {
+    EXT.init({ refresh, current: () => current, panel, kpi, productModal });
     shell();
     bind();
     go((location.hash || '#dashboard').slice(1));
   }
   function init() {
     let ok = false;
-    try { ok = sessionStorage.getItem(SESSION) === '1'; } catch (e) { ok = true; }
+    try {
+      // ?demo=1: acesso direto a partir dos botões da proposta
+      if (/[?&]demo=1(&|$)/.test(location.search)) sessionStorage.setItem(SESSION, '1');
+      ok = sessionStorage.getItem(SESSION) === '1';
+    } catch (e) { ok = true; }
     if (ok) start(); else login();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
