@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Propuesta · Sistema de Gestión Integral para Tornería Multisucursal</title>
+  <meta name="description" content="Propuesta comercial y prototipo del Sistema de Gestión Integral para Tornería Multisucursal.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/cotizacion.css">
+</head>
+<body>
+  <header class="nav" id="top">
+    <div class="wrap nav-in">
+      <a class="brand" href="#top" aria-label="Inicio">
+        <span class="brand-mark"><i data-icon="gear"></i></span>
+        <span><strong data-bind="proyecto.nombreCorto"></strong><small>Propuesta <span data-bind="cotizacion.numero"></span></small></span>
+      </a>
+      <nav class="nav-links" id="navLinks" aria-label="Secciones">
+        <a href="#presentacion">Presentación</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#inversion">Inversión</a>
+        <a href="#cronograma">Cronograma</a>
+        <a href="#soporte">Soporte</a>
+        <a href="#exclusiones">Exclusiones</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-outline btn-sm nav-proto" href="prototipo/index.html"><i data-icon="play" class="sm"></i>Prototipo</a>
+        <button class="btn btn-primary btn-sm" data-action="pdf"><i data-icon="download" class="sm"></i><span class="hide-sm">PDF</span></button>
+        <button class="btn btn-ghost btn-icon btn-sm nav-toggle" id="navToggle" aria-label="Menú" aria-expanded="false" aria-controls="navLinks"><i data-icon="menu"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Encabezado -->
+    <section class="hero">
+      <div class="hero-grid-bg" aria-hidden="true"></div>
+      <div class="wrap hero-in">
+        <div class="hero-copy">
+          <span class="eyebrow light"><i data-icon="wrench" class="sm"></i><span data-bind="proyecto.tipo"></span></span>
+          <h1 data-bind="proyecto.nombre"></h1>
+          <p class="lead" data-bind="proyecto.descripcion"></p>
+          <div class="hero-facts">
+            <div><small>Inversión total</small><strong id="heroTotal"></strong><span>Pago 50% / 50%</span></div>
+            <div><small>Tiempo estimado</small><strong id="heroPlazo"></strong><span>Según aprobación del alcance</span></div>
+            <div><small>Módulos</small><strong id="heroModulos"></strong><span>Web, multisucursal</span></div>
+          </div>
+          <div class="row wrap hero-actions">
+            <a class="btn btn-primary btn-lg" href="prototipo/index.html"><i data-icon="play"></i>Ver prototipo</a>
+            <button class="btn btn-lg btn-glass" data-action="pdf"><i data-icon="download"></i>Descargar cotización PDF</button>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="mock">
+            <div class="mock-top"><span></span><span></span><span></span><b>Vista ilustrativa · datos de demostración</b></div>
+            <div class="mock-body">
+              <div class="mock-side"><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="mock-main">
+                <div class="mock-kpis">
+                  <div><small>Ventas del mes</small><b>Bs 184.320</b><em class="up">▲ 12,4%</em></div>
+                  <div><small>Órdenes activas</small><b>27</b><em>9 para hoy</em></div>
+                  <div><small>Stock bajo</small><b>6</b><em class="warn">revisar</em></div>
+                </div>
+                <svg class="mock-chart" viewBox="0 0 300 110" preserveAspectRatio="none">
+                  <g fill="#2a78d6"><rect x="10" y="52" width="16" height="58" rx="3"/><rect x="52" y="40" width="16" height="70" rx="3"/><rect x="94" y="58" width="16" height="52" rx="3"/><rect x="136" y="30" width="16" height="80" rx="3"/><rect x="178" y="44" width="16" height="66" rx="3"/><rect x="220" y="22" width="16" height="88" rx="3"/><rect x="262" y="12" width="16" height="98" rx="3"/></g>
+                  <g fill="#eb6834"><rect x="28" y="72" width="16" height="38" rx="3"/><rect x="70" y="66" width="16" height="44" rx="3"/><rect x="112" y="76" width="16" height="34" rx="3"/><rect x="154" y="60" width="16" height="50" rx="3"/><rect x="196" y="70" width="16" height="40" rx="3"/><rect x="238" y="56" width="16" height="54" rx="3"/><rect x="280" y="50" width="16" height="60" rx="3"/></g>
+                </svg>
+                <div class="mock-rows"><i></i><i></i><i></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="mock-float"><span class="badge good">Terminada</span><b>OT-1042 · Eje de bomba</b><small>Rectificado · Ø 45 mm</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Presentación -->
+    <section class="section" id="presentacion">
+      <div class="wrap split">
+        <div>
+          <span class="eyebrow">Presentación</span>
+          <h2>Una sola plataforma para administrar todas las sucursales</h2>
+          <p class="section-lead">Hoy cada sucursal lleva su propio control. El sistema propuesto reúne la información de todas en una base de datos central: la gerencia ve el negocio completo y cada sucursal trabaja con sus propios almacenes, cajas y usuarios.</p>
+          <ul class="checks">
+            <li><i data-icon="check" class="sm"></i><span><b>Catálogo único</b> de productos y materiales, con existencias separadas por sucursal y almacén.</span></li>
+            <li><i data-icon="check" class="sm"></i><span><b>Transferencias trazables</b> de material entre sucursales, con su registro en el kardex.</span></li>
+            <li><i data-icon="check" class="sm"></i><span><b>Taller integrado:</b> las órdenes de trabajo descuentan materiales y suman a la caja al entregarse.</span></li>
+            <li><i data-icon="check" class="sm"></i><span><b>Indicadores consolidados</b> o por sucursal, con permisos que limitan lo que ve cada usuario.</span></li>
+          </ul>
+        </div>
+        <div class="hub" aria-label="Diagrama de centralización">
+          <div class="hub-core"><i data-icon="database" class="xl"></i><b>Sistema central</b><small>Base de datos única</small></div>
+          <div class="hub-node n1"><i data-icon="branches"></i><b>Casa matriz</b><small>Gerencia · Almacén principal</small></div>
+          <div class="hub-node n2"><i data-icon="branches"></i><b>Sucursal 2</b><small>Ventas · Taller · Caja</small></div>
+          <div class="hub-node n3"><i data-icon="branches"></i><b>Sucursal N</b><small>Ventas · Taller · Caja</small></div>
+          <div class="hub-node n4"><i data-icon="devices"></i><b>Cualquier dispositivo</b><small>PC, tableta o teléfono</small></div>
+          <svg class="hub-lines" viewBox="0 0 400 400" preserveAspectRatio="none" aria-hidden="true"><path d="M200 200 L70 70 M200 200 L330 70 M200 200 L70 330 M200 200 L330 330"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problemas -->
+    <section class="section alt" id="problemas">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Problemas que soluciona</span>
+          <h2>Lo que hoy consume tiempo y genera pérdidas</h2>
+        </div>
+        <div class="grid-3" id="problemasGrid"></div>
+      </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section class="section dark" id="beneficios">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow light">Beneficios</span>
+          <h2>Control real del negocio, sucursal por sucursal</h2>
+        </div>
+        <div class="grid-benefits" id="beneficiosGrid"></div>
+      </div>
+    </section>
+
+    <!-- Módulos -->
+    <section class="section" id="modulos">
+      <div class="wrap">
+        <div class="section-head row wrap">
+          <div>
+            <span class="eyebrow">Módulos incluidos</span>
+            <h2>Doce módulos integrados</h2>
+            <p class="section-lead">Toque un módulo para ver su alcance completo, su costo y la pantalla del prototipo que lo demuestra.</p>
+          </div>
+        </div>
+        <div class="grid-modules" id="modulosGrid"></div>
+      </div>
+    </section>
+
+    <!-- Inversión -->
+    <section class="section alt" id="inversion">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Inversión</span>
+          <h2>Distribución económica</h2>
+          <p class="section-lead">Precio de desarrollo en <span data-bind="moneda.nombre"></span> (<span data-bind="moneda.codigo"></span>). El total se calcula a partir del detalle por módulo.</p>
+        </div>
+        <div class="invest">
+          <div class="card table-card">
+            <div class="table-wrap">
+              <table class="table cost-table" id="costTable"></table>
+            </div>
+            <p class="table-note" id="costNote"></p>
+          </div>
+          <aside class="invest-side">
+            <div class="price-card">
+              <small>Inversión total del desarrollo</small>
+              <strong id="investTotal"></strong>
+              <span id="investPlazo"></span>
+              <div class="pay" id="payList"></div>
+              <button class="btn btn-primary" data-action="pdf" style="width:100%"><i data-icon="download"></i>Descargar cotización PDF</button>
+              <button class="btn btn-glass btn-sm" data-action="cliente" style="width:100%"><i data-icon="edit" class="sm"></i>Datos del cliente para el PDF</button>
+            </div>
+            <div class="card mini-card">
+              <div class="row"><i data-icon="receipt"></i><b>Facturación electrónica</b></div>
+              <p class="muted" data-bind="facturacionElectronica.texto"></p>
+            </div>
+            <div class="card mini-card">
+              <div class="row"><i data-icon="database"></i><b>Hosting mensual</b></div>
+              <p class="muted"><b class="ink" id="hostMonto"></b> por mes durante los primeros <span id="hostMeses"></span> meses (<span id="hostTotal"></span> en total), a cargo del cliente y aparte del desarrollo.</p>
+            </div>
+            <div class="card mini-card">
+              <div class="row"><i data-icon="refresh"></i><b>Mantenimiento opcional</b></div>
+              <p class="muted"><b class="ink" id="mantMonto"></b> mensuales, contratación independiente del desarrollo.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cronograma -->
+    <section class="section" id="cronograma">
+      <div class="wrap">
+        <div class="section-head row wrap">
+          <div>
+            <span class="eyebrow">Cronograma</span>
+            <h2>Seis etapas en <span id="cronoPlazo"></span></h2>
+          </div>
+          <div class="spacer"></div>
+          <div class="seg" role="tablist" aria-label="Escenario del cronograma" id="cronoSeg"></div>
+        </div>
+        <div class="card gantt-card">
+          <div class="gantt" id="gantt"></div>
+        </div>
+        <p class="note"><i data-icon="info" class="sm"></i><span data-bind="notaCronograma"></span></p>
+      </div>
+    </section>
+
+    <!-- Soporte -->
+    <section class="section alt" id="soporte">
+      <div class="wrap split">
+        <div>
+          <span class="eyebrow">Soporte</span>
+          <h2>Mantenimiento opcional de <span id="soporteMonto"></span> al mes</h2>
+          <p class="section-lead">Una vez entregado el sistema, el mantenimiento mensual mantiene la plataforma segura, respaldada y con soporte a sus usuarios. Es opcional y puede contratarse o cancelarse de forma independiente del desarrollo.</p>
+          <div class="support-price"><b id="soporteMonto2"></b><span>por mes · opcional</span></div>
+        </div>
+        <div class="card support-card">
+          <h3>Incluye</h3>
+          <ul class="checks" id="soporteIncluye"></ul>
+          <h3 class="mt">No incluye</h3>
+          <ul class="checks neg" id="soporteNo"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exclusiones y condiciones -->
+    <section class="section" id="exclusiones">
+      <div class="wrap two-cols">
+        <div>
+          <span class="eyebrow">Exclusiones</span>
+          <h2>Lo que no incluye esta propuesta</h2>
+          <ul class="excl" id="exclList"></ul>
+        </div>
+        <div>
+          <span class="eyebrow">Condiciones</span>
+          <h2>Condiciones comerciales</h2>
+          <ul class="checks" id="condList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cierre -->
+    <section class="cta">
+      <div class="wrap cta-in">
+        <div>
+          <h2>Vea cómo funcionaría el sistema terminado</h2>
+          <p>El prototipo interactivo simula las catorce pantallas principales con datos de demostración: registre ventas, compras, órdenes de trabajo y vea cómo cambian el inventario, la caja y el dashboard.</p>
+        </div>
+        <div class="row wrap">
+          <a class="btn btn-primary btn-lg" href="prototipo/index.html"><i data-icon="play"></i>Abrir prototipo</a>
+          <button class="btn btn-glass btn-lg" data-action="pdf"><i data-icon="download"></i>Descargar PDF</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <div><b data-bind="proveedor.nombre"></b><span class="muted"> · <span data-bind="proveedor.sitio"></span> · <span data-bind="proveedor.correo"></span> · <span data-bind="proveedor.telefono"></span></span></div>
+      <div class="muted">Propuesta <span data-bind="cotizacion.numero"></span> · Emitida el <span id="footFecha"></span></div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/pricing.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/cotizacion.js"></script>
+</body>
+</html>

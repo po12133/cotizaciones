@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prototipo · Sistema de Gestión para Tornería (demostración)</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/prototipo.css">
+</head>
+<body class="app-body">
+  <div class="demo-strip" role="note">
+    <span><i data-icon="info" class="sm"></i><b>Prototipo de demostración.</b><span class="long"> Datos ficticios guardados solo en este navegador · sin conexión a servicios reales.</span><span class="short"> Datos ficticios.</span></span>
+    <a href="../index.html"><i data-icon="arrowLeft" class="sm"></i>Volver a la propuesta</a>
+  </div>
+
+  <div class="app">
+    <aside class="side" id="side" aria-label="Menú principal">
+      <div class="side-brand">
+        <span class="side-logo" id="sideLogo">TD</span>
+        <div><strong id="sideEmpresa">Tornería Demo</strong><small>Gestión integral · Demo</small></div>
+      </div>
+      <nav class="side-nav" id="sideNav"></nav>
+      <div class="side-foot">
+        <a class="side-link" href="../index.html"><i data-icon="file"></i><span>Ver la propuesta</span></a>
+        <button class="side-link" id="resetBtn" type="button"><i data-icon="refresh"></i><span>Restablecer datos</span></button>
+      </div>
+    </aside>
+    <div class="side-backdrop" id="sideBackdrop"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="btn btn-ghost btn-icon menu-btn" id="menuBtn" aria-label="Abrir menú"><i data-icon="menu"></i></button>
+        <div class="crumbs"><small id="crumbGroup">General</small><h1 id="pageTitle">Dashboard</h1></div>
+        <div class="search-global input-icon" role="search">
+          <i data-icon="search" class="sm"></i>
+          <input class="input" id="globalSearch" type="search" placeholder="Buscar productos, clientes, ventas, OT…" autocomplete="off" aria-label="Búsqueda global">
+          <kbd>Ctrl K</kbd>
+          <div class="search-results" id="searchResults" hidden></div>
+        </div>
+        <label class="branch-select">
+          <i data-icon="branches" class="sm"></i>
+          <select class="select" id="branchSelect" aria-label="Sucursal"></select>
+        </label>
+        <div class="pop-wrap">
+          <button class="btn btn-ghost btn-icon" id="bellBtn" aria-label="Notificaciones" aria-haspopup="true"><i data-icon="bell"></i><span class="dot-count" id="bellCount" hidden></span></button>
+          <div class="popover notif-pop" id="notifPop" hidden></div>
+        </div>
+        <div class="pop-wrap">
+          <button class="user-btn" id="userBtn" aria-haspopup="true"><span class="avatar" id="userAvatar">RS</span><span class="user-meta"><b id="userName"></b><small id="userRole"></small></span><i data-icon="chevronDown" class="sm"></i></button>
+          <div class="popover user-pop" id="userPop" hidden></div>
+        </div>
+      </header>
+      <main class="view" id="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/pricing.js"></script>
+  <script src="../js/icons.js"></script>
+  <script src="../js/ui.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/views/dashboard.js"></script>
+  <script src="js/views/sucursales.js"></script>
+  <script src="js/views/productos.js"></script>
+  <script src="js/views/inventario.js"></script>
+  <script src="js/views/compras.js"></script>
+  <script src="js/views/ventas.js"></script>
+  <script src="js/views/cotizaciones.js"></script>
+  <script src="js/views/ordenes.js"></script>
+  <script src="js/views/clientes.js"></script>
+  <script src="js/views/proveedores.js"></script>
+  <script src="js/views/caja.js"></script>
+  <script src="js/views/reportes.js"></script>
+  <script src="js/views/usuarios.js"></script>
+  <script src="js/views/configuracion.js"></script>
+  <script>TOR.app.start();</script>
+</body>
+</html>
