@@ -5,7 +5,7 @@
   const icon = TOR.icon;
   const st = C.state('caja', { tab: 'movimientos', periodo: 'mes', tipo: '', q: '' });
   const dias = (iso) => Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
-  const CATS = { ingreso: ['Ventas', 'Cobranzas', 'Anticipos OT', 'Otros ingresos'], egreso: ['Compras', 'Personal', 'Servicios básicos', 'Alquiler', 'Transporte', 'Mantenimiento', 'Varios'] };
+  const CATS = { ingreso: ['Ventas', 'Cobranzas', 'Otros ingresos'], egreso: ['Compras', 'Importación', 'Personal', 'Servicios básicos', 'Alquiler', 'Transporte', 'Mantenimiento', 'Varios'] };
 
   function render(el, route) {
     if (route.query.tab) { st.tab = route.query.tab; route.query.tab = null; }
@@ -112,7 +112,7 @@
       title: tipo === 'ingreso' ? 'Registrar ingreso' : 'Registrar egreso', size: 'narrow', submit: 'Registrar',
       body: `<div class="form-grid"><label class="field"><span>Sucursal *</span><select class="select" name="sucursal">${C.sucursalOptions(C.defaultSucursal())}</select></label>
         <label class="field"><span>Categoría *</span><select class="select" name="categoria">${CATS[tipo].map((c) => `<option>${c}</option>`).join('')}</select></label>
-        <label class="field full"><span>Concepto *</span><input class="input" name="concepto" placeholder="${tipo === 'ingreso' ? 'Ej.: Venta de chatarra de viruta' : 'Ej.: Compra de guantes y lentes de seguridad'}"></label>
+        <label class="field full"><span>Concepto *</span><input class="input" name="concepto" placeholder="${tipo === 'ingreso' ? 'Ej.: Reembolso de flete cobrado de más' : 'Ej.: Pago de despacho aduanero'}"></label>
         <label class="field"><span>Monto (Bs) *</span><input class="input" type="number" name="monto" min="0" step="0.01"></label>
         <label class="field"><span>Método *</span><select class="select" name="metodo">${['efectivo', 'transferencia', 'qr', 'tarjeta'].map((k) => `<option value="${k}">${L.metodo[k]}</option>`).join('')}</select></label></div>
         <input type="hidden" name="tipo" value="${tipo}">`,

@@ -7,14 +7,14 @@
 
   const stats = (c) => {
     const v = S.db.ventas.filter((x) => x.cliente === c.id && x.estado !== 'anulada' && S.inScope(x.sucursal));
-    return { compras: Q.sumBy(v, (x) => x.total), n: v.length, ultima: v.length ? v[0].fecha : null, ot: S.db.ordenes.filter((o) => o.cliente === c.id && S.inScope(o.sucursal)).length, deuda: Q.sumBy(v.filter((x) => x.estado === 'pendiente'), (x) => x.total) };
+    return { compras: Q.sumBy(v, (x) => x.total), n: v.length, ultima: v.length ? v[0].fecha : null, cot: S.db.cotizaciones.filter((q) => q.cliente === c.id && S.inScope(q.sucursal)).length, deuda: Q.sumBy(v.filter((x) => x.estado === 'pendiente'), (x) => x.total) };
   };
 
   function render(el) {
     const t = st.q.trim().toLowerCase();
     const rows = S.db.clientes.filter((c) => (!st.tipo || c.tipo === st.tipo) && (!t || [c.nombre, c.nit, c.contacto, c.telefono].some((x) => String(x).toLowerCase().includes(t)))).map((c) => Object.assign({ c }, stats(c)));
     el.innerHTML = `
-      <div class="page-head"><div><p class="lead">Ficha de cada cliente con datos de contacto, historial de compras, trabajos de tornería y cotizaciones.</p></div>
+      <div class="page-head"><div><p class="lead">Ficha de cada cliente con datos de contacto, historial de compras, cotizaciones y saldos por cobrar.</p></div>
         <div class="actions">${A.actionBtn('clientes', `<button class="btn btn-primary" id="clNew">${icon('plus', 'sm')}Nuevo cliente</button>`)}</div></div>
       <div class="card">
         <div class="filters">
@@ -32,7 +32,7 @@
         { key: 'tel', label: 'Teléfono', render: (r) => `<span class="nowrap">${esc(r.c.telefono)}</span>` },
         { key: 'suc', label: 'Sucursal habitual', render: (r) => esc(S.suc(r.c.sucursal).nombre) },
         { key: 'n', label: 'Compras', align: 'right', sort: (r) => r.n, render: (r) => r.n },
-        { key: 'ot', label: 'Trabajos', align: 'right', sort: (r) => r.ot, render: (r) => r.ot },
+        { key: 'cot', label: 'Cotizaciones', align: 'right', sort: (r) => r.cot, render: (r) => r.cot },
         { key: 'ultima', label: 'Última compra', sort: (r) => r.ultima || '', render: (r) => (r.ultima ? fmt.date(r.ultima) : '—') },
         { key: 'compras', label: 'Total comprado', align: 'right', sort: (r) => r.compras, render: (r) => `<b>${fmt.money(r.compras)}</b>${r.deuda ? `<span class="sub" style="color:var(--warning-ink)">Por cobrar ${fmt.money(r.deuda)}</span>` : ''}` }
       ],
@@ -50,9 +50,8 @@
     if (!c) return;
     const s = stats(c);
     const ventas = S.db.ventas.filter((v) => v.cliente === id);
-    const ots = S.db.ordenes.filter((o) => o.cliente === id);
     const cots = S.db.cotizaciones.filter((q) => q.cliente === id);
-    const tabs = [['compras', `Compras (${ventas.length})`], ['trabajos', `Trabajos (${ots.length})`], ['cotizaciones', `Cotizaciones (${cots.length})`]];
+    const tabs = [['compras', `Compras (${ventas.length})`], ['cotizaciones', `Cotizaciones (${cots.length})`]];
     const m = TOR.ui.modal({
       title: c.nombre, sub: `${c.tipo === 'empresa' ? 'Empresa' : 'Persona'} · NIT/CI ${esc(c.nit)} · cliente desde ${fmt.date(c.creado)}`, size: 'wide',
       body: `${C.detailGrid([['Contacto', esc(c.contacto)], ['Teléfono', esc(c.telefono)], ['Correo', esc(c.correo || '—')], ['Dirección', esc(c.direccion)], ['Total comprado', `<b>${fmt.money(s.compras)}</b>`], ['Saldo por cobrar', s.deuda ? `<span style="color:var(--warning-ink);font-weight:600">${fmt.money(s.deuda)}</span>` : fmt.money(0)]])}
@@ -64,7 +63,6 @@
     const show = (t) => {
       m.el.querySelectorAll('[data-t]').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
       if (t === 'compras') C.dataTable(box, { id: `cl-v-${id}`, rows: ventas, pageSize: 8, empty: { icon: 'cart', title: 'Sin compras registradas' }, columns: [{ key: 'c', label: 'Código', cls: 'code', render: (v) => esc(v.codigo) }, { key: 'f', label: 'Fecha', render: (v) => fmt.date(v.fecha) }, { key: 'd', label: 'Detalle', render: (v) => esc(v.items[0].descripcion || S.prod(v.items[0].producto).nombre) + (v.items.length > 1 ? ` y ${v.items.length - 1} más` : '') }, { key: 'e', label: 'Estado', render: (v) => A.badge(L.estadoVenta[v.estado], L.claseVenta[v.estado]) }, { key: 't', label: 'Total', align: 'right', render: (v) => fmt.money(v.total) }], onRow: (v) => { m.close(); TOR.views.ventas.open(v.id); } });
-      if (t === 'trabajos') C.dataTable(box, { id: `cl-o-${id}`, rows: ots, pageSize: 8, empty: { icon: 'wrench', title: 'Sin trabajos registrados' }, columns: [{ key: 'c', label: 'Código', cls: 'code', render: (o) => esc(o.codigo) }, { key: 'd', label: 'Trabajo', render: (o) => esc(o.descripcion) }, { key: 'f', label: 'Ingreso', render: (o) => fmt.date(o.ingreso) }, { key: 'e', label: 'Estado', render: (o) => A.badge(L.estadoOT[o.estado], L.claseOT[o.estado]) }, { key: 'p', label: 'Precio', align: 'right', render: (o) => fmt.money(o.precio) }], onRow: (o) => { m.close(); TOR.views.ordenes.open(o.id); } });
       if (t === 'cotizaciones') C.dataTable(box, { id: `cl-q-${id}`, rows: cots, pageSize: 8, empty: { icon: 'quote', title: 'Sin cotizaciones' }, columns: [{ key: 'c', label: 'Código', cls: 'code', render: (q) => esc(q.codigo) }, { key: 'f', label: 'Fecha', render: (q) => fmt.date(q.fecha) }, { key: 'e', label: 'Estado', render: (q) => A.badge(L.estadoCot[q.estado], L.claseCot[q.estado]) }, { key: 't', label: 'Total', align: 'right', render: (q) => fmt.money(q.total) }], onRow: (q) => { m.close(); TOR.views.cotizaciones.open(q.id); } });
     };
     m.el.querySelectorAll('[data-t]').forEach((b) => b.addEventListener('click', () => show(b.dataset.t)));

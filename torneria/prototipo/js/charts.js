@@ -155,7 +155,7 @@
     const arcs = opts.items.map((it, k) => {
       const a1 = a0 + (it.value / total) * Math.PI * 2;
       const gap = opts.items.length > 1 ? 0.02 : 0;
-      const s = a0 + gap, e = Math.max(s, a1 - gap);
+      const s = a0 + gap, e = Math.min(Math.max(s, a1 - gap), s + Math.PI * 2 - 0.001); // un solo segmento: círculo casi completo (un arco de 360° no se dibuja)
       const large = e - s > Math.PI ? 1 : 0;
       const p = (ang, rad) => `${C + rad * Math.cos(ang)},${C + rad * Math.sin(ang)}`;
       const d = `M${p(s, R)} A${R},${R} 0 ${large} 1 ${p(e, R)} L${p(e, r)} A${r},${r} 0 ${large} 0 ${p(s, r)} Z`;

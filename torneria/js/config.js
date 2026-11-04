@@ -4,7 +4,8 @@
  * Todo lo que muestra la página comercial y todo lo que contiene el PDF sale de este objeto.
  * Para cambiar un precio, un plazo o una condición, edítelo SOLO aquí.
  *
- * - Los importes están en bolivianos (BOB). El total NO se escribe: se calcula sumando `costos`.
+ * - Los importes están en bolivianos (BOB). El total NO se escribe: se calcula como
+ *   subtotal (suma de `costos`) menos los `descuentos`.
  * - Los campos con el valor PENDIENTE se muestran como "[Por completar]" y pueden llenarse
  *   aquí o desde el botón "Datos del cliente" de la página (se guardan solo en este navegador).
  */
@@ -15,20 +16,20 @@
     PENDIENTE,
 
     cotizacion: {
-      numero: 'COT-TOR-001',
+      numero: 'COT-TOR-002',
       // Fecha de emisión: null = fecha del día en que se abre o descarga la propuesta.
       fechaEmision: null,
       // Validez de la oferta: no se fija sin instrucción expresa. Ejemplo: '15 días calendario'.
       validez: PENDIENTE,
-      version: '1.0'
+      version: '2.0'
     },
 
     proyecto: {
-      nombre: 'Sistema de Gestión Integral para Tornería Multisucursal',
-      nombreCorto: 'Sistema de Gestión para Tornería',
+      nombre: 'Sistema de Gestión Comercial e Inventarios Multisucursal',
+      nombreCorto: 'Sistema de Gestión Comercial',
       tipo: 'Aplicación web administrativa a medida',
-      descripcion: 'Plataforma web que centraliza sucursales, inventarios, compras, ventas, órdenes de trabajo, caja y reportes de la tornería en un solo sistema, accesible desde computadoras, tabletas y teléfonos.',
-      tiempo: { min: 8, max: 12, unidad: 'semanas' }
+      descripcion: 'Plataforma web para una empresa importadora y comercializadora con varias sucursales: centraliza la administración de las sucursales, controla compras y ventas, gestiona inventarios y transferencias, y entrega estadísticas del negocio en un solo sistema, accesible desde computadoras, tabletas y teléfonos.',
+      tiempo: { min: 6, max: 10, unidad: 'semanas' }
     },
 
     moneda: { simbolo: 'Bs', codigo: 'BOB', nombre: 'Bolivianos' },
@@ -56,24 +57,28 @@
     },
 
     /*
-     * Distribución económica. El total de la propuesta es la suma de esta lista.
+     * Distribución económica. Subtotal = suma de esta lista; total = subtotal − descuentos.
      * `modulo` enlaza la línea con el módulo funcional (null = servicio).
+     * Los precios por módulo son los de lista: el descuento comercial se muestra aparte.
      */
     costos: [
-      { id: 'sucursales', concepto: 'Sucursales', monto: 1200, modulo: 'sucursales' },
+      { id: 'sucursales', concepto: 'Gestión de sucursales', monto: 1200, modulo: 'sucursales' },
       { id: 'usuarios', concepto: 'Usuarios y permisos', monto: 1000, modulo: 'usuarios' },
-      { id: 'productos', concepto: 'Productos y materiales', monto: 1200, modulo: 'productos' },
+      { id: 'productos', concepto: 'Productos y catálogo', monto: 1200, modulo: 'productos' },
       { id: 'compras', concepto: 'Compras y proveedores', monto: 1500, modulo: 'compras' },
       { id: 'ventas', concepto: 'Ventas y cotizaciones', monto: 1800, modulo: 'ventas' },
       { id: 'inventarios', concepto: 'Inventarios', monto: 2000, modulo: 'inventarios' },
-      { id: 'ordenes', concepto: 'Órdenes de trabajo', monto: 2500, modulo: 'ordenes' },
       { id: 'clientes', concepto: 'Clientes', monto: 800, modulo: 'clientes' },
       { id: 'caja', concepto: 'Caja y finanzas', monto: 1200, modulo: 'caja' },
       { id: 'dashboard', concepto: 'Dashboard y estadísticas', monto: 1500, modulo: 'dashboard' },
       { id: 'reportes', concepto: 'Reportes', monto: 800, modulo: 'reportes' },
       { id: 'implementacion', concepto: 'Implementación y capacitación', monto: 1000, modulo: null }
     ],
-    notaCostos: 'El módulo de Configuración (datos de empresa, sucursales, roles, unidades y parámetros) se incluye sin costo adicional como parte de la base del sistema.',
+    // Descuentos sobre el subtotal (montos positivos; se restan al calcular el total).
+    descuentos: [
+      { id: 'comercial', concepto: 'Descuento comercial', monto: 500 }
+    ],
+    notaCostos: 'El módulo de Configuración general (datos de empresa, sucursales, roles, unidades y parámetros) se incluye sin costo adicional como parte de la base del sistema. Los precios por módulo son de lista; el descuento comercial se aplica sobre el subtotal.',
 
     // Forma de pago: porcentajes sobre el total calculado.
     pagos: [
@@ -108,14 +113,14 @@
 
     facturacionElectronica: { incluida: false, texto: 'No incluida en esta propuesta.' },
 
-    // Cronograma: semanas de inicio y fin en el escenario de 8 y de 12 semanas.
+    // Cronograma: semanas de inicio y fin en el escenario de 6 y de 10 semanas.
     cronograma: [
-      { etapa: 'Análisis y diseño', descripcion: 'Relevamiento de procesos por sucursal, validación del alcance, modelo de datos y diseño de pantallas.', min: [1, 1], max: [1, 2], entregable: 'Documento de alcance aprobado y prototipo validado.' },
-      { etapa: 'Estructura y administración', descripcion: 'Base del sistema, sucursales y almacenes, usuarios, roles y permisos, productos, materiales y configuración.', min: [2, 3], max: [3, 4], entregable: 'Administración central y catálogo de productos operativos.' },
-      { etapa: 'Compras, ventas e inventario', descripcion: 'Proveedores, compras y recepción, ventas, cotizaciones, clientes, existencias, transferencias y kardex.', min: [3, 5], max: [5, 7], entregable: 'Circuito comercial y de inventario funcionando.' },
-      { etapa: 'Órdenes de trabajo y finanzas', descripcion: 'Órdenes de tornería con estados, responsables y materiales; caja, ingresos, egresos y cuentas por cobrar y pagar.', min: [5, 6], max: [7, 9], entregable: 'Taller y caja integrados con el inventario.' },
-      { etapa: 'Dashboard y reportes', descripcion: 'Indicadores, gráficos por período y sucursal, reportes con exportación a PDF y Excel.', min: [6, 7], max: [9, 10], entregable: 'Panel gerencial y reportes exportables.' },
-      { etapa: 'Pruebas, capacitación y entrega', descripcion: 'Pruebas con datos reales, corrección de observaciones, carga inicial, capacitación y puesta en marcha.', min: [8, 8], max: [11, 12], entregable: 'Sistema en producción y personal capacitado.' }
+      { etapa: 'Análisis y diseño', descripcion: 'Relevamiento de los procesos comerciales de cada sucursal, validación del alcance, modelo de datos y diseño de pantallas.', min: [1, 1], max: [1, 2], entregable: 'Documento de alcance aprobado y prototipo validado.' },
+      { etapa: 'Sucursales, usuarios y productos', descripcion: 'Base del sistema, sucursales y almacenes, usuarios, roles y permisos, catálogo de productos y configuración general.', min: [2, 2], max: [2, 3], entregable: 'Administración central y catálogo comercial operativos.' },
+      { etapa: 'Compras y ventas', descripcion: 'Proveedores, órdenes de compra y recepción de mercadería, clientes, ventas, cotizaciones y comprobantes internos.', min: [2, 3], max: [3, 5], entregable: 'Circuito de compras y ventas funcionando.' },
+      { etapa: 'Inventarios y transferencias', descripcion: 'Existencias por sucursal y almacén, entradas y salidas, transferencias, stock mínimo, alertas, kardex y ajustes.', min: [3, 4], max: [5, 6], entregable: 'Inventario multisucursal integrado con compras y ventas.' },
+      { etapa: 'Caja, estadísticas y reportes', descripcion: 'Apertura y cierre de caja, ingresos y egresos, dashboard con indicadores comerciales y reportes exportables a PDF y Excel.', min: [4, 5], max: [7, 8], entregable: 'Caja, panel gerencial y reportes administrativos.' },
+      { etapa: 'Pruebas, capacitación y entrega', descripcion: 'Pruebas con datos reales, corrección de observaciones, carga inicial, capacitación y puesta en marcha.', min: [6, 6], max: [9, 10], entregable: 'Sistema en funcionamiento y personal capacitado.' }
     ],
     notaCronograma: 'Cronograma referencial. Las fechas definitivas se fijan al aprobar el alcance y dependen de la entrega oportuna de información (productos, sucursales, usuarios) y de las validaciones del cliente.',
 
@@ -123,70 +128,67 @@
       { icono: 'box', titulo: 'Inventarios desactualizados', texto: 'Las existencias se controlan en planillas o cuadernos y no coinciden con lo que hay en el almacén.' },
       { icono: 'swap', titulo: 'Compras y ventas sin control', texto: 'Es difícil saber qué se compró, a qué costo, qué se vendió y cuánto margen dejó cada operación.' },
       { icono: 'branches', titulo: 'Sucursales desconectadas', texto: 'Cada sucursal maneja su propia información y la administración no tiene una vista consolidada.' },
-      { icono: 'clipboard', titulo: 'Órdenes de trabajo manuales', texto: 'Los trabajos de tornería se anotan en papel: se pierden fechas, materiales usados y responsables.' },
+      { icono: 'clipboard', titulo: 'Transferencias sin registro', texto: 'La mercadería que se envía entre sucursales no queda documentada y aparecen diferencias de stock.' },
       { icono: 'file', titulo: 'Reportes que toman días', texto: 'Armar un reporte de ventas o de inventario implica juntar datos a mano de varias fuentes.' },
-      { icono: 'gauge', titulo: 'Sin indicadores gerenciales', texto: 'Las decisiones se toman sin cifras claras de ventas, costos, utilidad y productividad.' }
+      { icono: 'gauge', titulo: 'Sin indicadores gerenciales', texto: 'Las decisiones se toman sin cifras claras de ventas, compras, utilidad y rotación de productos.' }
     ],
 
     beneficios: [
       { icono: 'database', titulo: 'Información centralizada', texto: 'Todas las sucursales trabajan sobre una misma base de datos, en tiempo real.' },
       { icono: 'box', titulo: 'Mayor control del inventario', texto: 'Stock por almacén, alertas de mínimo, kardex y transferencias trazables.' },
-      { icono: 'wrench', titulo: 'Seguimiento de trabajos', texto: 'Cada orden con estado, responsable, materiales, costo y fecha de entrega.' },
+      { icono: 'truck', titulo: 'Compras bajo control', texto: 'Cada orden de compra con su proveedor, recepción, costo de adquisición y pago.' },
       { icono: 'shield', titulo: 'Menos errores administrativos', texto: 'Los cálculos, saldos y movimientos se registran automáticamente.' },
       { icono: 'chart', titulo: 'Reportes automáticos', texto: 'Reportes por período y sucursal listos para exportar a PDF o Excel.' },
       { icono: 'devices', titulo: 'Acceso desde cualquier dispositivo', texto: 'Funciona en el navegador de computadoras, tabletas y teléfonos.' },
-      { icono: 'target', titulo: 'Mejores decisiones', texto: 'Indicadores claros para comparar sucursales, márgenes y productividad.' }
+      { icono: 'target', titulo: 'Mejores decisiones', texto: 'Indicadores claros para comparar sucursales, márgenes y productos más vendidos.' }
     ],
 
     objetivos: [
       'Centralizar la administración de todas las sucursales en una sola plataforma web.',
-      'Mantener inventarios confiables por sucursal y almacén, con trazabilidad de cada movimiento.',
+      'Mantener inventarios confiables por sucursal y almacén de los productos adquiridos para la venta.',
       'Controlar el circuito de compras, ventas y cotizaciones con sus costos y márgenes.',
-      'Registrar y seguir las órdenes de trabajo de tornería desde el ingreso hasta la entrega.',
+      'Registrar las transferencias de mercadería entre sucursales con trazabilidad completa en el kardex.',
       'Controlar la caja y los movimientos financieros operativos de cada sucursal.',
       'Contar con indicadores y reportes gerenciales para la toma de decisiones.'
     ],
 
     // Módulos funcionales. `vista` es la pantalla del prototipo que lo demuestra.
     modulos: [
-      { id: 'sucursales', numero: 1, nombre: 'Gestión de sucursales', icono: 'branches', vista: 'sucursales',
+      { id: 'sucursales', numero: 1, nombre: 'Gestión de sucursales y almacenes', icono: 'branches', vista: 'sucursales',
         resumen: 'Administración central de todas las sucursales y sus almacenes, cada una con su inventario y sus cifras.',
         funciones: ['Registro de múltiples sucursales', 'Configuración de almacenes', 'Inventario independiente', 'Transferencias entre sucursales', 'Administración centralizada', 'Estadísticas por sucursal'] },
-      { id: 'usuarios', numero: 2, nombre: 'Usuarios y permisos', icono: 'users', vista: 'usuarios',
+      { id: 'usuarios', numero: 2, nombre: 'Usuarios, roles y permisos', icono: 'users', vista: 'usuarios',
         resumen: 'Cada persona ve y hace solo lo que le corresponde, en la sucursal que le corresponde.',
         funciones: ['Administración de usuarios', 'Roles personalizados', 'Permisos por módulo', 'Asignación de usuarios a sucursales', 'Restricción de información', 'Registro básico de actividades'] },
-      { id: 'productos', numero: 3, nombre: 'Productos y materiales', icono: 'package', vista: 'productos',
-        resumen: 'Catálogo único de productos, materias primas, insumos y herramientas con costos y precios.',
-        funciones: ['Registro de productos', 'Categorías y unidades de medida', 'Materias primas', 'Insumos y herramientas', 'Códigos SKU', 'Costos y precios de venta', 'Importación y exportación mediante Excel'] },
+      { id: 'productos', numero: 3, nombre: 'Productos y catálogo comercial', icono: 'package', vista: 'productos',
+        resumen: 'Catálogo único de los productos que la empresa importa, compra y comercializa, con costos y precios de venta.',
+        funciones: ['Registro de productos', 'Códigos SKU', 'Categorías y marcas', 'Descripción y unidad de medida', 'Costo de compra y precio de venta', 'Stock por sucursal o almacén', 'Importación y exportación mediante Excel'] },
       { id: 'compras', numero: 4, nombre: 'Compras y proveedores', icono: 'truck', vista: 'compras',
-        resumen: 'Desde la orden de compra hasta la recepción en almacén, con el costo real de cada material.',
+        resumen: 'Desde la orden de compra hasta la recepción en almacén, con el costo real de cada producto adquirido.',
         funciones: ['Registro de proveedores', 'Órdenes de compra', 'Registro de compras', 'Recepción de mercadería', 'Historial de compras', 'Costos de adquisición', 'Reportes por proveedor'] },
       { id: 'ventas', numero: 5, nombre: 'Ventas y cotizaciones', icono: 'cart', vista: 'ventas',
         resumen: 'Cotice, convierta en venta y emita el comprobante interno en pocos pasos.',
-        funciones: ['Registro de ventas', 'Cotizaciones para clientes', 'Conversión de cotizaciones en ventas', 'Descuentos', 'Diferentes métodos de pago', 'Historial de ventas', 'Comprobantes internos', 'Reportes de ventas'],
+        funciones: ['Registro de ventas', 'Cotizaciones comerciales para clientes', 'Conversión de cotizaciones en ventas', 'Descuentos', 'Diferentes métodos de pago', 'Historial de ventas', 'Comprobantes internos', 'Reportes de ventas'],
         nota: 'No incluye facturación electrónica ni integración con Impuestos Nacionales.' },
-      { id: 'inventarios', numero: 6, nombre: 'Inventarios', icono: 'box', vista: 'inventario',
-        resumen: 'Existencias confiables por almacén, con alertas y el historial completo de cada material.',
-        funciones: ['Control de existencias', 'Entradas y salidas', 'Transferencias entre sucursales', 'Stock mínimo', 'Alertas de inventario', 'Kardex', 'Historial de movimientos', 'Ajustes de inventario'] },
-      { id: 'ordenes', numero: 7, nombre: 'Órdenes de trabajo', icono: 'wrench', vista: 'ordenes',
-        resumen: 'El corazón del taller: cada trabajo de tornería con responsable, materiales, costos y plazos.',
-        funciones: ['Registro de trabajos de tornería', 'Asignación de responsables', 'Estados del trabajo', 'Fechas de entrega', 'Materiales utilizados', 'Costos estimados', 'Seguimiento del trabajo', 'Historial de órdenes'] },
-      { id: 'clientes', numero: 8, nombre: 'Clientes', icono: 'contact', vista: 'clientes',
-        resumen: 'La ficha de cada cliente con todo lo que compró, cotizó y mandó a fabricar.',
-        funciones: ['Registro de clientes', 'Datos de contacto', 'Historial de compras', 'Historial de trabajos', 'Cotizaciones anteriores', 'Búsqueda y filtros'] },
-      { id: 'caja', numero: 9, nombre: 'Caja y movimientos financieros', icono: 'wallet', vista: 'caja',
+      { id: 'inventarios', numero: 6, nombre: 'Inventarios y transferencias', icono: 'box', vista: 'inventario',
+        resumen: 'Existencias confiables por sucursal de los productos adquiridos para la venta, con alertas y el historial de cada uno.',
+        funciones: ['Existencias por sucursal', 'Entradas y salidas', 'Transferencias entre sucursales', 'Stock mínimo', 'Alertas de inventario', 'Kardex', 'Historial de movimientos', 'Ajustes de inventario', 'Importación y exportación mediante Excel'] },
+      { id: 'clientes', numero: 7, nombre: 'Clientes', icono: 'contact', vista: 'clientes',
+        resumen: 'La ficha de cada cliente con todo lo que compró, cotizó y tiene pendiente de pago.',
+        funciones: ['Registro de clientes', 'Datos de contacto', 'Historial de compras', 'Cotizaciones anteriores', 'Saldos por cobrar', 'Búsqueda y filtros'] },
+      { id: 'caja', numero: 8, nombre: 'Caja y movimientos financieros', icono: 'wallet', vista: 'caja',
         resumen: 'Apertura, cierre y movimientos de caja por sucursal, con cuentas por cobrar y pagar básicas.',
         funciones: ['Ingresos', 'Egresos', 'Apertura y cierre de caja', 'Movimientos por sucursal', 'Resumen de caja', 'Cuentas por cobrar y pagar básicas', 'Reportes financieros operativos'],
         nota: 'No incluye contabilidad completa.' },
-      { id: 'dashboard', numero: 10, nombre: 'Dashboard y estadísticas', icono: 'chart', vista: 'dashboard',
-        resumen: 'Los indicadores del negocio en una sola pantalla, por período y por sucursal.',
-        funciones: ['Ventas totales', 'Compras totales', 'Ingresos y egresos', 'Productos más vendidos', 'Inventario disponible', 'Órdenes pendientes', 'Comparación entre sucursales', 'Gráficos por períodos', 'Indicadores KPI'] },
-      { id: 'reportes', numero: 11, nombre: 'Reportes', icono: 'file', vista: 'reportes',
-        resumen: 'Reportes operativos listos para revisar, filtrar y exportar.',
-        funciones: ['Reportes de ventas', 'Reportes de compras', 'Reportes de inventario', 'Reportes de movimientos', 'Reportes por sucursal', 'Reportes de órdenes de trabajo', 'Exportación a PDF y Excel'] },
-      { id: 'configuracion', numero: 12, nombre: 'Configuración', icono: 'settings', vista: 'configuracion',
+      { id: 'dashboard', numero: 9, nombre: 'Dashboard y estadísticas', icono: 'chart', vista: 'dashboard',
+        resumen: 'Los indicadores comerciales del negocio en una sola pantalla, por período y por sucursal.',
+        funciones: ['Ventas y compras del mes', 'Ingresos y egresos', 'Utilidad estimada', 'Productos más vendidos', 'Productos con stock bajo', 'Valor del inventario', 'Ventas por sucursal', 'Comparación de compras y ventas', 'Gráficos por períodos'] },
+      { id: 'reportes', numero: 10, nombre: 'Reportes PDF y Excel', icono: 'file', vista: 'reportes',
+        resumen: 'Reportes administrativos listos para revisar, filtrar y exportar.',
+        funciones: ['Reportes de ventas', 'Reportes de compras', 'Reportes de inventario', 'Reportes de movimientos', 'Reportes por sucursal', 'Reportes de caja', 'Exportación a PDF y Excel'] },
+      { id: 'configuracion', numero: 11, nombre: 'Configuración general', icono: 'settings', vista: 'configuracion',
         resumen: 'Los parámetros que adaptan el sistema a la forma de trabajar de la empresa.',
-        funciones: ['Datos generales de empresa', 'Sucursales', 'Usuarios', 'Roles', 'Unidades de medida', 'Parámetros del sistema'] }
+        funciones: ['Datos generales de empresa', 'Sucursales', 'Usuarios', 'Roles', 'Unidades de medida y categorías', 'Parámetros del sistema'] }
     ],
 
     entregables: [
@@ -205,7 +207,9 @@
       'Integraciones externas no especificadas en esta propuesta.',
       'Desarrollo de módulos adicionales a los descritos.',
       'Hardware, impresoras, lectores de código de barras u otros equipos.',
-      'Dominio, salvo contratación adicional.'
+      'Dominio, salvo contratación adicional.',
+      'Módulos de fabricación, producción u órdenes de trabajo.',
+      'Trámites aduaneros y liquidación de tributos de importación.'
     ],
 
     condicionesComerciales: [
@@ -217,8 +221,9 @@
       'El mantenimiento mensual es opcional y se contrata por separado del desarrollo.'
     ],
 
-    // Usado por las pruebas para detectar cambios accidentales del total.
-    totalEsperado: 16500
+    // Usados por las pruebas para detectar cambios accidentales del subtotal y del total.
+    subtotalEsperado: 14000,
+    totalEsperado: 13500
   };
 
   root.TOR = root.TOR || {};

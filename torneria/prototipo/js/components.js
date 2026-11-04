@@ -62,29 +62,29 @@
   const defaultSucursal = () => (S.ui.sucursal === '*' ? TOR.app.userBranches()[0] : S.ui.sucursal);
   function productOptions(value, filter = () => true) {
     const cats = {};
-    S.db.productos.filter((p) => p.activo && p.sku !== 'SER-OT' && filter(p)).forEach((p) => { (cats[p.categoria] = cats[p.categoria] || []).push(p); });
+    S.db.productos.filter((p) => p.activo && filter(p)).forEach((p) => { (cats[p.categoria] = cats[p.categoria] || []).push(p); });
     return '<option value="">Seleccione un producto…</option>' + Object.entries(cats).map(([c, ps]) => `<optgroup label="${esc(c)}">${ps.map((p) => `<option value="${p.id}" ${p.id === value ? 'selected' : ''}>${esc(p.nombre)} · ${esc(p.sku)}</option>`).join('')}</optgroup>`).join('');
   }
 
   /**
-   * Editor de líneas para ventas, cotizaciones, compras y materiales de OT.
-   * opts: { mode: 'venta'|'cotizacion'|'compra'|'materiales', sucursal: () => id, items, onChange }
+   * Editor de líneas para ventas, cotizaciones y compras.
+   * opts: { mode: 'venta'|'cotizacion'|'compra', sucursal: () => id, items, onChange }
    */
   function itemsEditor(el, opts) {
     const mode = opts.mode;
     const priceKey = mode === 'compra' ? 'costo' : 'precio';
     let items = (opts.items || []).map((it) => ({ ...it }));
     if (!items.length) items.push({ producto: '', cantidad: 1 });
-    const filter = mode === 'compra' || mode === 'materiales' ? (p) => p.tipo !== 'servicio' : () => true;
+    const filter = () => true;
     const draw = () => {
-      el.innerHTML = `<table class="lines"><thead><tr><th>Producto</th><th>Cantidad</th>${mode === 'materiales' ? '' : `<th>${mode === 'compra' ? 'Costo unit.' : 'Precio unit.'}</th><th class="right">Subtotal</th>`}<th></th></tr></thead>
+      el.innerHTML = `<table class="lines"><thead><tr><th>Producto</th><th>Cantidad</th><th>${mode === 'compra' ? 'Costo unit.' : 'Precio unit.'}</th><th class="right">Subtotal</th><th></th></tr></thead>
         <tbody>${items.map((it, i) => {
           const p = it.producto ? S.prod(it.producto) : null;
-          const disp = p && p.tipo !== 'servicio' ? S.stockOf(opts.sucursal(), p.id) : null;
+          const disp = p ? S.stockOf(opts.sucursal(), p.id) : null;
           const short = disp !== null && mode !== 'compra' && Number(it.cantidad) > disp;
           return `<tr data-i="${i}"><td><select class="select" data-f="producto" aria-label="Producto">${productOptions(it.producto, filter)}</select>${p ? `<span class="hint ${short ? 'bad' : ''}">${disp !== null ? `Stock en sucursal: ${fmt.qty(disp)} ${esc(p.unidad)}${short ? (mode === 'cotizacion' ? ' · insuficiente (se puede cotizar)' : ' · insuficiente') : ''}` : 'Servicio (no controla stock)'}</span>` : ''}</td>
             <td class="num"><input class="input" data-f="cantidad" type="number" min="0" step="any" value="${esc(it.cantidad)}" aria-label="Cantidad"></td>
-            ${mode === 'materiales' ? '' : `<td class="num"><input class="input" data-f="${priceKey}" type="number" min="0" step="any" value="${esc(it[priceKey] !== undefined ? it[priceKey] : '')}" aria-label="Precio"></td><td class="tot">${fmt.money((Number(it.cantidad) || 0) * (Number(it[priceKey]) || 0))}</td>`}
+            <td class="num"><input class="input" data-f="${priceKey}" type="number" min="0" step="any" value="${esc(it[priceKey] !== undefined ? it[priceKey] : '')}" aria-label="Precio"></td><td class="tot">${fmt.money((Number(it.cantidad) || 0) * (Number(it[priceKey]) || 0))}</td>
             <td class="rm"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-rm="${i}" aria-label="Quitar línea">${icon('trash', 'sm')}</button></td></tr>`;
         }).join('')}</tbody></table>
         <button type="button" class="btn btn-outline btn-sm" data-add style="margin-top:10px">${icon('plus', 'sm')}Agregar línea</button>`;
@@ -120,7 +120,7 @@
       validate: () => {
         const valid = api.items();
         if (!valid.length) return 'Agregue al menos un producto con cantidad mayor a cero.';
-        if (valid.some((it) => mode !== 'materiales' && !(Number(it[priceKey]) >= 0))) return 'Revise los precios de las líneas.';
+        if (valid.some((it) => !(Number(it[priceKey]) >= 0))) return 'Revise los precios de las líneas.';
         const dup = valid.map((it) => it.producto).find((p, i, a) => a.indexOf(p) !== i);
         if (dup) return `El producto "${S.prod(dup).nombre}" está repetido; combine las cantidades en una sola línea.`;
         return '';
@@ -200,7 +200,7 @@
       margin: { left: 14, right: 14, bottom: 16 }, rowPageBreak: 'avoid', showHead: 'everyPage'
     });
     const pages = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pages; i++) { doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(120, 130, 140); doc.text(`Página ${i} de ${pages}`, W - 14, H - 8, { align: 'right' }); doc.text('Prototipo de demostración · Sistema de Gestión para Tornería', 14, H - 8); }
+    for (let i = 1; i <= pages; i++) { doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(120, 130, 140); doc.text(`Página ${i} de ${pages}`, W - 14, H - 8, { align: 'right' }); doc.text('Prototipo de demostración · Sistema de Gestión Comercial e Inventarios', 14, H - 8); }
     doc.save(file);
     return file;
   }

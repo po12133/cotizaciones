@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Propuesta · Sistema de Gestión Integral para Tornería Multisucursal</title>
-  <meta name="description" content="Propuesta comercial y prototipo del Sistema de Gestión Integral para Tornería Multisucursal.">
+  <title>Propuesta · Sistema de Gestión Comercial e Inventarios Multisucursal</title>
+  <meta name="description" content="Propuesta comercial y prototipo del Sistema de Gestión Comercial e Inventarios Multisucursal para una empresa importadora y distribuidora.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,11 +41,11 @@
       <div class="hero-grid-bg" aria-hidden="true"></div>
       <div class="wrap hero-in">
         <div class="hero-copy">
-          <span class="eyebrow light"><i data-icon="wrench" class="sm"></i><span data-bind="proyecto.tipo"></span></span>
+          <span class="eyebrow light"><i data-icon="store" class="sm"></i><span data-bind="proyecto.tipo"></span></span>
           <h1 data-bind="proyecto.nombre"></h1>
           <p class="lead" data-bind="proyecto.descripcion"></p>
           <div class="hero-facts">
-            <div><small>Inversión total</small><strong id="heroTotal"></strong><span>Pago 50% / 50%</span></div>
+            <div><small>Inversión total</small><strong id="heroTotal"></strong><span id="heroPago">Pago 50% / 50%</span></div>
             <div><small>Tiempo estimado</small><strong id="heroPlazo"></strong><span>Según aprobación del alcance</span></div>
             <div><small>Módulos</small><strong id="heroModulos"></strong><span>Web, multisucursal</span></div>
           </div>
@@ -62,7 +62,7 @@
               <div class="mock-main">
                 <div class="mock-kpis">
                   <div><small>Ventas del mes</small><b>Bs 184.320</b><em class="up">▲ 12,4%</em></div>
-                  <div><small>Órdenes activas</small><b>27</b><em>9 para hoy</em></div>
+                  <div><small>Compras del mes</small><b>Bs 96.410</b><em>14 órdenes</em></div>
                   <div><small>Stock bajo</small><b>6</b><em class="warn">revisar</em></div>
                 </div>
                 <svg class="mock-chart" viewBox="0 0 300 110" preserveAspectRatio="none">
@@ -73,7 +73,7 @@
               </div>
             </div>
           </div>
-          <div class="mock-float"><span class="badge good">Terminada</span><b>OT-1042 · Eje de bomba</b><small>Rectificado · Ø 45 mm</small></div>
+          <div class="mock-float"><span class="badge good">Recibida</span><b>OC-0418 · Rodamientos importados</b><small>320 pzas · Almacén principal</small></div>
         </div>
       </div>
     </section>
@@ -86,17 +86,17 @@
           <h2>Una sola plataforma para administrar todas las sucursales</h2>
           <p class="section-lead">Hoy cada sucursal lleva su propio control. El sistema propuesto reúne la información de todas en una base de datos central: la gerencia ve el negocio completo y cada sucursal trabaja con sus propios almacenes, cajas y usuarios.</p>
           <ul class="checks">
-            <li><i data-icon="check" class="sm"></i><span><b>Catálogo único</b> de productos y materiales, con existencias separadas por sucursal y almacén.</span></li>
-            <li><i data-icon="check" class="sm"></i><span><b>Transferencias trazables</b> de material entre sucursales, con su registro en el kardex.</span></li>
-            <li><i data-icon="check" class="sm"></i><span><b>Taller integrado:</b> las órdenes de trabajo descuentan materiales y suman a la caja al entregarse.</span></li>
+            <li><i data-icon="check" class="sm"></i><span><b>Catálogo único</b> de los productos que importa y comercializa, con existencias separadas por sucursal y almacén.</span></li>
+            <li><i data-icon="check" class="sm"></i><span><b>Transferencias trazables</b> de mercadería entre sucursales, con su registro en el kardex.</span></li>
+            <li><i data-icon="check" class="sm"></i><span><b>Compras y ventas integradas:</b> cada recepción de mercadería suma stock y cada venta lo descuenta y registra el ingreso en caja.</span></li>
             <li><i data-icon="check" class="sm"></i><span><b>Indicadores consolidados</b> o por sucursal, con permisos que limitan lo que ve cada usuario.</span></li>
           </ul>
         </div>
         <div class="hub" aria-label="Diagrama de centralización">
           <div class="hub-core"><i data-icon="database" class="xl"></i><b>Sistema central</b><small>Base de datos única</small></div>
           <div class="hub-node n1"><i data-icon="branches"></i><b>Casa matriz</b><small>Gerencia · Almacén principal</small></div>
-          <div class="hub-node n2"><i data-icon="branches"></i><b>Sucursal 2</b><small>Ventas · Taller · Caja</small></div>
-          <div class="hub-node n3"><i data-icon="branches"></i><b>Sucursal N</b><small>Ventas · Taller · Caja</small></div>
+          <div class="hub-node n2"><i data-icon="branches"></i><b>Sucursal 2</b><small>Ventas · Almacén · Caja</small></div>
+          <div class="hub-node n3"><i data-icon="branches"></i><b>Sucursal N</b><small>Ventas · Almacén · Caja</small></div>
           <div class="hub-node n4"><i data-icon="devices"></i><b>Cualquier dispositivo</b><small>PC, tableta o teléfono</small></div>
           <svg class="hub-lines" viewBox="0 0 400 400" preserveAspectRatio="none" aria-hidden="true"><path d="M200 200 L70 70 M200 200 L330 70 M200 200 L70 330 M200 200 L330 330"/></svg>
         </div>
@@ -131,7 +131,7 @@
         <div class="section-head row wrap">
           <div>
             <span class="eyebrow">Módulos incluidos</span>
-            <h2>Doce módulos integrados</h2>
+            <h2>Once módulos integrados</h2>
             <p class="section-lead">Toque un módulo para ver su alcance completo, su costo y la pantalla del prototipo que lo demuestra.</p>
           </div>
         </div>
@@ -145,7 +145,7 @@
         <div class="section-head">
           <span class="eyebrow">Inversión</span>
           <h2>Distribución económica</h2>
-          <p class="section-lead">Precio de desarrollo en <span data-bind="moneda.nombre"></span> (<span data-bind="moneda.codigo"></span>). El total se calcula a partir del detalle por módulo.</p>
+          <p class="section-lead">Precio de desarrollo en <span data-bind="moneda.nombre"></span> (<span data-bind="moneda.codigo"></span>). El subtotal se calcula a partir del detalle por módulo y sobre él se aplica el descuento comercial.</p>
         </div>
         <div class="invest">
           <div class="card table-card">
@@ -158,6 +158,7 @@
             <div class="price-card">
               <small>Inversión total del desarrollo</small>
               <strong id="investTotal"></strong>
+              <span class="price-break" id="investBreak"></span>
               <span id="investPlazo"></span>
               <div class="pay" id="payList"></div>
               <button class="btn btn-primary" data-action="pdf" style="width:100%"><i data-icon="download"></i>Descargar cotización PDF</button>
@@ -237,7 +238,7 @@
       <div class="wrap cta-in">
         <div>
           <h2>Vea cómo funcionaría el sistema terminado</h2>
-          <p>El prototipo interactivo simula las catorce pantallas principales con datos de demostración: registre ventas, compras, órdenes de trabajo y vea cómo cambian el inventario, la caja y el dashboard.</p>
+          <p>El prototipo interactivo simula las trece pantallas principales con datos de demostración: registre compras, ventas, cotizaciones y transferencias, y vea cómo cambian el inventario, la caja y el dashboard.</p>
         </div>
         <div class="row wrap">
           <a class="btn btn-primary btn-lg" href="prototipo/index.html"><i data-icon="play"></i>Abrir prototipo</a>

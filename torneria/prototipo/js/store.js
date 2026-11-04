@@ -7,7 +7,7 @@
   const TOR = root.TOR;
   const KEY = 'torneria:demo-db';
   const UI_KEY = 'torneria:demo-ui';
-  const VERSION = 3;
+  const VERSION = 4;
   const r2 = (v) => Math.round(v * 100) / 100;
   const listeners = new Set();
 
@@ -88,7 +88,7 @@
   function checkStock(sucursal, items) {
     if (db.parametros.permitirStockNegativo) return;
     const need = {};
-    items.forEach((it) => { if (prod(it.producto).tipo !== 'servicio') need[it.producto] = (need[it.producto] || 0) + it.cantidad; });
+    items.forEach((it) => { need[it.producto] = (need[it.producto] || 0) + it.cantidad; });
     Object.entries(need).forEach(([p, q]) => { const d = stockOf(sucursal, p); if (q > d) fail(`Stock insuficiente de "${prod(p).nombre}" en ${suc(sucursal).nombre}: disponible ${d} ${prod(p).unidad}, solicitado ${q}.`); });
   }
 
@@ -98,9 +98,9 @@
       const sku = String(d.sku || '').trim().toUpperCase();
       if (db.productos.some((p) => p.sku === sku)) fail(`Ya existe un producto con el SKU ${sku}.`);
       if (Number(d.precio) < Number(d.costo)) fail('El precio de venta no puede ser menor al costo.');
-      const p = { id: `P${db.productos.length + 1}-${Date.now() % 10000}`, sku, nombre: d.nombre.trim(), categoria: d.categoria, tipo: d.tipo, unidad: d.unidad, costo: r2(+d.costo), precio: r2(+d.precio), stockMin: Number(d.stockMin) || 0, objetivo: (Number(d.stockMin) || 0) * 4, activo: true, almacen: 'principal', creado: today() };
+      const p = { id: `P${db.productos.length + 1}-${Date.now() % 10000}`, sku, nombre: d.nombre.trim(), categoria: d.categoria, marca: (d.marca || '').trim(), descripcion: (d.descripcion || '').trim(), unidad: d.unidad, costo: r2(+d.costo), precio: r2(+d.precio), stockMin: Number(d.stockMin) || 0, objetivo: (Number(d.stockMin) || 0) * 4, activo: true, almacen: 'principal', creado: today() };
       db.productos.push(p);
-      if (p.tipo !== 'servicio' && Number(d.stockInicial) > 0) move(d.sucursal || 'S1', p.id, Number(d.stockInicial), 'entrada', 'inicial', 'Inventario inicial', 'Stock inicial al crear el producto');
+      if (Number(d.stockInicial) > 0) move(d.sucursal || 'S1', p.id, Number(d.stockInicial), 'entrada', 'inicial', 'Inventario inicial', 'Stock inicial al crear el producto');
       log(`Creó el producto ${p.sku}`, 'productos');
       commit({ type: 'producto', id: p.id });
       return p;
@@ -108,7 +108,7 @@
     updateProduct(id, d) {
       const p = prod(id);
       if (Number(d.precio) < Number(d.costo)) fail('El precio de venta no puede ser menor al costo.');
-      Object.assign(p, { nombre: d.nombre.trim(), categoria: d.categoria, unidad: d.unidad, costo: r2(+d.costo), precio: r2(+d.precio), stockMin: Number(d.stockMin) || 0 });
+      Object.assign(p, { nombre: d.nombre.trim(), categoria: d.categoria, marca: (d.marca || '').trim(), descripcion: (d.descripcion || '').trim(), unidad: d.unidad, costo: r2(+d.costo), precio: r2(+d.precio), stockMin: Number(d.stockMin) || 0 });
       log(`Editó el producto ${p.sku}`, 'productos');
       commit({ type: 'producto', id });
     },
@@ -116,8 +116,8 @@
       let creados = 0, actualizados = 0;
       rows.forEach((r) => {
         const ex = db.productos.find((p) => p.sku === r.sku);
-        if (ex) { Object.assign(ex, { nombre: r.nombre || ex.nombre, costo: r.costo || ex.costo, precio: r.precio || ex.precio, stockMin: r.stockMin !== undefined ? r.stockMin : ex.stockMin }); actualizados++; }
-        else { db.productos.push({ id: `P${db.productos.length + 1}-${Date.now() % 10000}`, sku: r.sku, nombre: r.nombre, categoria: r.categoria || 'Insumos', tipo: r.tipo || 'insumo', unidad: r.unidad || 'pza', costo: r.costo || 0, precio: r.precio || 0, stockMin: r.stockMin || 0, objetivo: 0, activo: true, almacen: 'principal', creado: today() }); creados++; }
+        if (ex) { Object.assign(ex, { nombre: r.nombre || ex.nombre, marca: r.marca || ex.marca, descripcion: r.descripcion || ex.descripcion, costo: r.costo || ex.costo, precio: r.precio || ex.precio, stockMin: r.stockMin !== undefined ? r.stockMin : ex.stockMin }); actualizados++; }
+        else { db.productos.push({ id: `P${db.productos.length + 1}-${Date.now() % 10000}`, sku: r.sku, nombre: r.nombre, categoria: r.categoria || 'Repuestos', marca: r.marca || '', descripcion: r.descripcion || '', unidad: r.unidad || 'pza', costo: r.costo || 0, precio: r.precio || 0, stockMin: r.stockMin || 0, objetivo: 0, activo: true, almacen: 'principal', creado: today() }); creados++; }
       });
       log(`Importó productos desde Excel (${creados} nuevos, ${actualizados} actualizados)`, 'productos');
       commit({ type: 'producto' });
@@ -171,11 +171,9 @@
       const subtotal = r2(items.reduce((t, it) => t + it.cantidad * it.precio, 0));
       const descuento = r2(Number(d.descuento) || 0);
       if (descuento < 0 || descuento > subtotal) fail('El descuento no puede superar el subtotal.');
-      const v = { id: `VT${db.ventas.length + 1}-${Date.now() % 10000}`, codigo: nextCode('venta', 'V', 5), fecha: now(), cliente: d.cliente, sucursal: d.sucursal, items, subtotal, descuento, total: r2(subtotal - descuento), metodo: d.metodo, estado: d.metodo === 'credito' ? 'pendiente' : 'pagada', vendedor: uiState.usuario, cotizacion: d.cotizacion || null, orden: d.orden || null, pagos: [] };
-      items.forEach((it) => { if (prod(it.producto).tipo !== 'servicio') move(v.sucursal, it.producto, -it.cantidad, 'salida', 'venta', v.codigo); });
-      const anticipo = Number(d.anticipo) || 0;
-      if (anticipo) v.pagos.push({ fecha: d.fechaAnticipo, monto: anticipo, metodo: 'anticipo' });
-      if (v.metodo !== 'credito') { v.pagos.push({ fecha: v.fecha, monto: r2(v.total - anticipo), metodo: v.metodo }); cash(v.sucursal, 'ingreso', `Venta ${v.codigo}`, 'Ventas', v.total - anticipo, v.codigo, v.metodo); }
+      const v = { id: `VT${db.ventas.length + 1}-${Date.now() % 10000}`, codigo: nextCode('venta', 'V', 5), fecha: now(), cliente: d.cliente, sucursal: d.sucursal, items, subtotal, descuento, total: r2(subtotal - descuento), metodo: d.metodo, estado: d.metodo === 'credito' ? 'pendiente' : 'pagada', vendedor: uiState.usuario, cotizacion: d.cotizacion || null, pagos: [] };
+      items.forEach((it) => move(v.sucursal, it.producto, -it.cantidad, 'salida', 'venta', v.codigo));
+      if (v.metodo !== 'credito') { v.pagos.push({ fecha: v.fecha, monto: v.total, metodo: v.metodo }); cash(v.sucursal, 'ingreso', `Venta ${v.codigo}`, 'Ventas', v.total, v.codigo, v.metodo); }
       db.ventas.unshift(v);
       log(`Registró la venta ${v.codigo}`, 'ventas');
       commit({ type: 'venta', id: v.id });
@@ -195,9 +193,9 @@
     voidSale(id, motivo) {
       const v = find(db.ventas, id);
       if (v.estado === 'anulada') fail('La venta ya está anulada.');
-      const cobrado = v.pagos.filter((p) => p.metodo !== 'anticipo').reduce((t, p) => t + p.monto, 0);
+      const cobrado = v.pagos.reduce((t, p) => t + p.monto, 0);
       if (cobrado > 0) requireCash(v.sucursal, 'efectivo', cobrado);
-      v.items.forEach((it) => { if (prod(it.producto).tipo !== 'servicio') move(v.sucursal, it.producto, it.cantidad, 'entrada', 'anulacion', v.codigo, `Anulación de venta: ${motivo}`); });
+      v.items.forEach((it) => move(v.sucursal, it.producto, it.cantidad, 'entrada', 'anulacion', v.codigo, `Anulación de venta: ${motivo}`));
       if (cobrado > 0) cash(v.sucursal, 'egreso', `Anulación venta ${v.codigo}`, 'Devoluciones', cobrado, v.codigo, 'efectivo');
       v.estado = 'anulada';
       v.motivoAnulacion = motivo;
@@ -207,7 +205,7 @@
 
     createQuote(d) {
       const items = cleanItems(d.items).map((it) => Object.assign(it, { precio: it.precio !== undefined ? it.precio : prod(it.producto).precio }));
-      if (!items.length) fail('Agregue al menos un producto o servicio.');
+      if (!items.length) fail('Agregue al menos un producto.');
       const subtotal = r2(items.reduce((t, it) => t + it.cantidad * it.precio, 0));
       const descuento = r2(Number(d.descuento) || 0);
       if (descuento > subtotal) fail('El descuento no puede superar el subtotal.');
@@ -234,44 +232,6 @@
       log(`Convirtió la cotización ${q.codigo} en la venta ${v.codigo}`, 'cotizaciones');
       commit({ type: 'cotizacion', id });
       return v;
-    },
-
-    createOrder(d) {
-      const materiales = cleanItems(d.materiales || []).map((m) => ({ producto: m.producto, cantidad: m.cantidad }));
-      const costoMat = materiales.reduce((t, m) => t + prod(m.producto).costo * m.cantidad, 0);
-      const horas = Number(d.horas) || 0;
-      const costo = r2(costoMat + horas * db.parametros.costoHoraTaller);
-      const o = { id: `OT${db.ordenes.length + 1}-${Date.now() % 10000}`, codigo: nextCode('ot', 'OT', 4, 1001), cliente: d.cliente, descripcion: d.descripcion.trim(), material: d.material.trim(), responsable: d.responsable, sucursal: d.sucursal, ingreso: now(), entrega: d.entrega, estado: 'pendiente', prioridad: d.prioridad || 'normal', materiales, horas, costoEstimado: costo, precio: r2(Number(d.precio) || Math.round(costo * 1.6)), anticipo: r2(Number(d.anticipo) || 0), historial: [{ fecha: now(), estado: 'pendiente', nota: d.notas ? `Orden registrada. ${d.notas}` : 'Orden registrada.', usuario: uiState.usuario }], consumido: false, venta: null, notas: d.notas || '' };
-      if (o.anticipo > o.precio) fail('El anticipo no puede superar el precio acordado.');
-      if (o.anticipo) requireCash(o.sucursal, d.metodoAnticipo || 'efectivo');
-      if (o.anticipo) cash(o.sucursal, 'ingreso', `Anticipo ${o.codigo}`, 'Anticipos OT', o.anticipo, o.codigo, d.metodoAnticipo || 'efectivo');
-      db.ordenes.unshift(o);
-      log(`Creó la orden de trabajo ${o.codigo}`, 'ordenes');
-      notify('Nueva orden de trabajo', `${o.codigo} asignada a ${user(o.responsable).nombre}`, 'info', `#/ordenes/${o.id}`);
-      commit({ type: 'orden', id: o.id });
-      return o;
-    },
-    setOrderStatus(id, estado, nota, metodo) {
-      const o = find(db.ordenes, id);
-      if (['entregada', 'cancelada'].includes(o.estado)) fail('La orden ya está cerrada.');
-      if (estado === o.estado) fail('La orden ya está en ese estado.');
-      if (estado === 'entregada' && metodo !== 'credito') requireCash(o.sucursal, metodo || 'efectivo');
-      if (estado !== 'cancelada' && !o.consumido && ['en_proceso', 'control_calidad', 'terminada', 'entregada'].includes(estado)) {
-        checkStock(o.sucursal, o.materiales);
-        o.materiales.forEach((m) => move(o.sucursal, m.producto, -m.cantidad, 'salida', 'ot', o.codigo, 'Consumo de material en orden de trabajo'));
-        o.consumido = true;
-      }
-      if (estado === 'entregada') {
-        const servicio = db.productos.find((p) => p.sku === 'SER-OT');
-        const v = ops.createSale({ cliente: o.cliente, sucursal: o.sucursal, items: [{ producto: servicio.id, cantidad: 1, precio: o.precio, costo: o.costoEstimado }], descuento: 0, metodo: metodo || 'efectivo', orden: o.id, anticipo: o.anticipo, fechaAnticipo: o.ingreso });
-        v.items[0].descripcion = `${o.codigo} · ${o.descripcion}`;
-        o.venta = v.id;
-      }
-      o.estado = estado;
-      o.historial.push({ fecha: now(), estado, nota: nota || '', usuario: uiState.usuario });
-      log(`${o.codigo}: cambió a "${TOR.labels.estadoOT[estado]}"`, 'ordenes');
-      if (estado === 'terminada') notify('Trabajo terminado', `${o.codigo} listo para entregar a ${cli(o.cliente).nombre}`, 'good', `#/ordenes/${o.id}`);
-      commit({ type: 'orden', id });
     },
 
     transfer(d) {

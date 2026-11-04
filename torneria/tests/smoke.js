@@ -1,4 +1,4 @@
-// Recorre la propuesta y las 14 pantallas del prototipo (escritorio y móvil): errores de consola,
+// Recorre la propuesta y las 13 pantallas del prototipo (escritorio y móvil): errores de consola,
 // desborde horizontal y capturas. node --experimental-websocket tests/smoke.js [carpetaCapturas] [filtro]
 const path = require('path');
 const fs = require('fs');
@@ -6,7 +6,7 @@ const { serve, launch } = require('./lib-cdp');
 
 const OUT = path.resolve(process.argv[2] || path.join(__dirname, 'shots'));
 const FILTER = process.argv[3] || '';
-const ROUTES = ['dashboard', 'sucursales', 'productos', 'inventario', 'compras', 'ventas', 'cotizaciones', 'ordenes', 'clientes', 'proveedores', 'caja', 'reportes', 'usuarios', 'configuracion'];
+const ROUTES = ['dashboard', 'sucursales', 'productos', 'inventario', 'compras', 'ventas', 'cotizaciones', 'clientes', 'proveedores', 'caja', 'reportes', 'usuarios', 'configuracion'];
 const PAGES = ['index.html', ...ROUTES.map((r) => `prototipo/index.html#/${r}`)].filter((p) => p.includes(FILTER));
 
 (async () => {

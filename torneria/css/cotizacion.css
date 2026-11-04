@@ -162,6 +162,12 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.005em; }
 .cost-table tfoot td { background: var(--steel-900); color: #fff; font-weight: 700; font-size: 16px; padding: 16px 14px; border: 0; }
 .cost-table tfoot td.right { font-family: var(--font-display); font-size: 22px; color: #ffb48a; }
 .cost-table .pct { color: var(--muted); font-size: 12.5px; width: 70px; }
+.cost-table tfoot tr.sub-row td, .cost-table tfoot tr.disc-row td { background: var(--steel-50); color: var(--ink); font-size: 14.5px; padding: 12px 14px; border-top: 1px solid var(--line); }
+.cost-table tfoot tr.sub-row td.right, .cost-table tfoot tr.disc-row td.right { font-family: inherit; font-size: 15px; color: var(--ink); }
+.cost-table tfoot tr.disc-row td { color: var(--good-ink, #1f7a3d); }
+.cost-table tfoot tr.disc-row td.right { color: var(--good-ink, #1f7a3d); }
+.price-card .price-break { display: flex; flex-direction: column; gap: 2px; color: #ffb48a; font-size: 13px; font-weight: 500; }
+.price-card .price-break b { font-weight: 700; white-space: nowrap; }
 .table-note { padding: 12px 16px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); }
 .invest-side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 84px; }
 .price-card { background: linear-gradient(160deg, var(--steel-800), var(--ink)); color: #fff; border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-lg); }

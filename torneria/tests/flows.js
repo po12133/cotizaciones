@@ -8,6 +8,8 @@ const OUT = path.resolve(process.argv[2] || path.join(__dirname, 'shots'));
 const BASE = 'http://127.0.0.1:5183';
 let ok = 0, bad = 0;
 const check = (name, cond, extra = '') => { if (cond) { ok++; console.log(`✓ ${name}`); } else { bad++; console.log(`✗ ${name} ${extra}`); } };
+// Términos de fabricación que no deben aparecer fuera de la lista de exclusiones.
+const PROHIBIDOS = /torner|tornero|torneado|taller|fabricaci|producci[oó]n|operari|mecanizado|materia prima|[oó]rdenes de trabajo|orden de trabajo|\bOT-\d/i;
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
@@ -26,24 +28,31 @@ const check = (name, cond, extra = '') => { if (cond) { ok++; console.log(`✓ $
   await b.goto(`${BASE}/index.html`, 1200);
   await ev(`localStorage.clear()`);
   await b.goto(`${BASE}/index.html`, 1200);
-  const screen = await ev(`return { hero: document.getElementById('heroTotal').textContent, total: document.getElementById('costTotal').textContent, invest: document.getElementById('investTotal').textContent, pays: [...document.querySelectorAll('.pay-item strong')].map(x => x.textContent), rows: [...document.querySelectorAll('#costTable tbody tr')].map(tr => [tr.children[1].innerText.trim(), tr.children[3].innerText.trim()]), mods: document.querySelectorAll('.module').length, mant: document.getElementById('mantMonto').textContent }`);
-  check('total en pantalla = Bs 16.500 (encabezado, tabla e inversión)', screen.hero === 'Bs 16.500' && screen.total === 'Bs 16.500' && screen.invest === 'Bs 16.500', JSON.stringify(screen));
-  check('pagos 50% / 50% = Bs 8.250 cada uno', JSON.stringify(screen.pays) === '["Bs 8.250","Bs 8.250"]');
-  check('12 líneas en la tabla económica y 12 tarjetas de módulos', screen.rows.length === 12 && screen.mods === 12);
+  const screen = await ev(`return { hero: document.getElementById('heroTotal').textContent, heroPago: document.getElementById('heroPago').textContent, subtotal: document.getElementById('costSubtotal').textContent, descuento: [...document.querySelectorAll('[data-descuento]')].map(x => x.textContent), total: document.getElementById('costTotal').textContent, invest: document.getElementById('investTotal').textContent, investBreak: document.getElementById('investBreak').textContent, pays: [...document.querySelectorAll('.pay-item strong')].map(x => x.textContent), rows: [...document.querySelectorAll('#costTable tbody tr')].map(tr => [tr.children[1].innerText.trim(), tr.children[3].innerText.trim()]), mods: [...document.querySelectorAll('.module')].map(x => x.dataset.mod), mant: document.getElementById('mantMonto').textContent, plazo: document.getElementById('heroPlazo').textContent, title: document.querySelector('.hero h1').textContent }`);
+  check('nombre del proyecto actualizado', screen.title === 'Sistema de Gestión Comercial e Inventarios Multisucursal', screen.title);
+  check('total final en pantalla = Bs 13.500 (encabezado, tabla e inversión)', screen.hero === 'Bs 13.500' && screen.total === 'Bs 13.500' && screen.invest === 'Bs 13.500', JSON.stringify(screen));
+  check('subtotal Bs 14.000 y descuento comercial - Bs 500 visibles', screen.subtotal === 'Bs 14.000' && JSON.stringify(screen.descuento) === '["- Bs 500"]' && /Bs 14\.000/.test(screen.investBreak) && /Descuento comercial - Bs 500/.test(screen.investBreak) && /Bs 500/.test(screen.heroPago), JSON.stringify([screen.subtotal, screen.descuento, screen.investBreak, screen.heroPago]));
+  check('pagos 50% / 50% = Bs 6.750 cada uno', JSON.stringify(screen.pays) === '["Bs 6.750","Bs 6.750"]', JSON.stringify(screen.pays));
+  check('11 líneas en la tabla económica y 11 tarjetas de módulos, sin órdenes de trabajo', screen.rows.length === 11 && screen.mods.length === 11 && !screen.mods.includes('ordenes'));
   const suma = screen.rows.reduce((t, r) => t + Number(r[1].replace(/[^\d]/g, '')), 0);
-  check('la suma de las filas mostradas es 16.500', suma === 16500, String(suma));
-  check('mantenimiento Bs 350', screen.mant === 'Bs 350');
+  check('la suma de las filas mostradas es el subtotal 14.000', suma === 14000, String(suma));
+  check('mantenimiento Bs 350 y plazo 6 a 10 semanas', screen.mant === 'Bs 350' && screen.plazo === '6 a 10 semanas');
+  const pageTxt = await ev(`const c = document.body.cloneNode(true); c.querySelector('#exclList').remove(); return c.innerText`);
+  check('la página no menciona fabricación ni órdenes de trabajo (salvo exclusiones)', !PROHIBIDOS.test(pageTxt), (pageTxt.match(PROHIBIDOS) || [])[0]);
+  check('la página mantiene las órdenes de compra', /[oó]rdenes? de compra/i.test(pageTxt));
+  check('exclusiones aclaran que no hay módulo de fabricación', /fabricación, producción u órdenes de trabajo/.test(await ev(`return document.getElementById('exclList').innerText`)));
 
-  await ev(`document.querySelector('[data-mod="ordenes"]').click()`);
+  await ev(`document.querySelector('[data-mod="inventarios"]').click()`);
   await sleep(300);
   const modal = await ev(`const m = document.querySelector('.modal'); return m ? m.innerText : ''`);
-  check('detalle de módulo abre con funcionalidades y costo', /Órdenes de trabajo/.test(modal) && /Bs 2\.500/.test(modal) && /Ver en el prototipo/.test(modal));
+  check('detalle de módulo abre con funcionalidades y costo', /Inventarios y transferencias/.test(modal) && /Bs 2\.000/.test(modal) && /Kardex/.test(modal) && /Ver en el prototipo/.test(modal));
   await ev(`document.querySelector('.modal [data-close]').click()`);
 
-  const g12 = await ev(`return document.querySelectorAll('#gantt .g-head .g-cols span').length`);
+  const g10 = await ev(`return document.querySelectorAll('#gantt .g-head .g-cols span').length`);
+  const etapas = await ev(`return [...document.querySelectorAll('#gantt .g-label b')].map(x => x.textContent)`);
   await ev(`document.querySelector('[data-esc="min"]').click()`);
-  const g8 = await ev(`return document.querySelectorAll('#gantt .g-head .g-cols span').length`);
-  check('cronograma alterna entre 12 y 8 semanas', g12 === 12 && g8 === 8, `${g12}/${g8}`);
+  const g6 = await ev(`return document.querySelectorAll('#gantt .g-head .g-cols span').length`);
+  check('cronograma alterna entre 10 y 6 semanas con las 6 etapas', g10 === 10 && g6 === 6 && etapas.length === 6 && etapas[2] === 'Compras y ventas', `${g10}/${g6} ${etapas.join(',')}`);
 
   // Datos del cliente → PDF
   await ev(`document.querySelector('[data-action="cliente"]').click()`);
@@ -57,27 +66,50 @@ const check = (name, cond, extra = '') => { if (cond) { ok++; console.log(`✓ $
   const pdf = await ev(`const doc = await TOR.pdf.create(TOR.getModel()); const n = doc.internal.getNumberOfPages(); const pages = []; for (let i = 1; i <= n; i++) pages.push(doc.internal.pages[i].join('\\n')); return { n, pages };`);
   const txt = pdf.pages.join('\n');
   const tx = (s) => txt.includes(`(${s})`) || txt.includes(s);
+  // Texto plano del PDF (solo los literales de los operadores Tj), para buscar palabras.
+  const plain = (txt.match(/\((?:\\.|[^\\)])*\) Tj/g) || []).map((x) => x.slice(1, -4)).join(' ');
   check(`PDF generado con ${pdf.n} páginas A4`, pdf.n >= 5 && pdf.n <= 12);
-  check('PDF contiene la inversión total Bs 16.500', tx('Bs 16.500'));
-  check('PDF contiene anticipo y saldo Bs 8.250', (txt.match(/Bs 8\.250/g) || []).length >= 2);
+  check('PDF con el nuevo nombre del proyecto', tx('Sistema de Gestión Comercial e Inventarios Multisucursal'));
+  check('PDF contiene subtotal Bs 14.000, descuento - Bs 500 y total final Bs 13.500', tx('Bs 14.000') && tx('- Bs 500') && tx('Descuento comercial') && tx('TOTAL FINAL') && tx('Bs 13.500'));
+  check('PDF contiene anticipo y saldo Bs 6.750', (txt.match(/Bs 6\.750/g) || []).length >= 2);
+  check('PDF con plazo de 6 a 10 semanas', tx('6 a 10 semanas') && tx('Escenario 10') && tx('Escenario 6') && tx('Diagrama del escenario de 10 semanas') && tx('Semanas 9 a 10'));
   const faltan = screen.rows.filter(([concepto, monto]) => !tx(monto) || !txt.includes(concepto.replace(/[^\x00-\xff]/g, '')));
   check('cada concepto y monto de la tabla en pantalla figura en el PDF', faltan.length === 0, JSON.stringify(faltan));
+  const modsPdf = await ev(`return TOR.getModel().modulos.map(m => m.nombre)`);
+  check('el PDF lista los mismos 11 módulos que la página', modsPdf.length === 11 && modsPdf.every((n) => txt.includes(n)), modsPdf.filter((n) => !txt.includes(n)).join(', '));
+  const sinExcl = plain.replace(/Módulos de fabricación, producción u órdenes de trabajo\./, '');
+  check('PDF sin fabricación ni órdenes de trabajo (salvo exclusiones)', !PROHIBIDOS.test(sinExcl) && tx('fabricación, producción u órdenes de trabajo'), (sinExcl.match(PROHIBIDOS) || [])[0]);
+  check('PDF mantiene órdenes de compra y beneficios comerciales', tx('Órdenes de compra') && tx('Compras bajo control'));
   check('PDF numera páginas "Página X de N"', pdf.pages.every((p, i) => p.includes(`Página ${i + 1} de ${pdf.n}`)));
   check('PDF sin datos pendientes ni del cliente', !tx('[Por completar]') && !tx('Cliente de Prueba S.R.L.'));
   check('PDF incluye exclusiones, mantenimiento y condiciones comerciales', tx('Integración con el SIAT') && tx('Mantenimiento opcional') && tx('Condiciones comerciales'));
-  check('PDF incluye el hosting de Bs 100 por 12 meses', tx('Bs 100/mes (12 meses)') && txt.includes('Bs 100 por mes durante los primeros 12 meses'));
+  check('PDF incluye el hosting de Bs 100 por 12 meses', tx('HOSTING') && tx('Bs 100/mes') && txt.includes('primeros 12 meses'));
   check('PDF sin páginas casi vacías', pdf.pages.slice(1, -1).every((p) => (p.match(/ Tj/g) || []).length > 25) && (pdf.pages[pdf.n - 1].match(/ Tj/g) || []).length > 10, pdf.pages.map((p) => (p.match(/ Tj/g) || []).length).join(','));
 
   await ev(`document.querySelector('.hero [data-action="pdf"]').click()`);
-  const pdfFile = await waitFile(/^Cotizacion-COT-TOR-001.*\.pdf$/);
+  const pdfFile = await waitFile(/^Cotizacion-COT-TOR-002-Sistema-Gestion-Comercial\.pdf$/);
   check('el botón descarga el PDF real', !!pdfFile && fs.statSync(path.join(DL, pdfFile)).size > 20000, pdfFile || 'sin archivo');
   if (pdfFile) fs.copyFileSync(path.join(DL, pdfFile), path.join(OUT, 'cotizacion.pdf'));
 
   // ================= PROTOTIPO =================
   await b.goto(`${BASE}/prototipo/index.html#/dashboard`, 1500);
   await ev(`localStorage.removeItem('torneria:demo-db'); localStorage.removeItem('torneria:demo-ui');`);
-  await b.goto(`${BASE}/prototipo/index.html#/ventas`, 1500);
+  await b.goto(`${BASE}/prototipo/index.html#/dashboard`, 1500);
   const S = 'TOR.store';
+
+  // Menú lateral y dashboard comercial
+  const menu = await ev(`return [...document.querySelectorAll('#sideNav a')].map(a => a.querySelector('span').textContent)`);
+  check('menú lateral con los 13 módulos comerciales en orden', JSON.stringify(menu) === JSON.stringify(['Dashboard', 'Sucursales', 'Productos', 'Inventarios', 'Compras', 'Ventas', 'Cotizaciones', 'Clientes', 'Proveedores', 'Caja', 'Reportes', 'Usuarios', 'Configuración']), JSON.stringify(menu));
+  const kpis = await ev(`return [...document.querySelectorAll('.kpi .k-label, .kpi small')].map(x => x.textContent).join(' | ')`);
+  check('dashboard con indicadores comerciales', ['Ventas', 'Compras', 'Ingresos', 'Egresos', 'Utilidad estimada', 'Productos registrados', 'Productos con stock bajo', 'Valor del inventario'].every((k) => kpis.includes(k)), kpis);
+  const dashTxt = await ev(`return document.getElementById('view').innerText`);
+  check('dashboard con ventas por sucursal, más vendidos y compras vs. ventas', /Ventas por sucursal/.test(dashTxt) && /Productos más vendidos/.test(dashTxt) && /Compras vs\. ventas/.test(dashTxt) && (await ev(`return ['#chVC', '#chSuc', '#chIE', '#chTop', '#chCat'].every(id => document.querySelector(id + ' svg, ' + id + ' .hbar, ' + id + ' *'))`)));
+  check('valor del inventario del dashboard cuadra con el stock', await ev(`const v = TOR.q.inventoryValue(); const k = [...document.querySelectorAll('.kpi')].find(x => /Valor del inventario/.test(x.innerText)); return k && k.querySelector('.k-value').textContent === TOR.ui.fmt.money(v)`));
+  check('sin datos de fabricación en la demo', await ev(`const db = ${S}.db; return !('ordenes' in db) && !db.productos.some(p => 'tipo' in p) && db.productos.every(p => p.marca && p.descripcion) && !db.roles.some(r => 'ordenes' in r.permisos) && !JSON.stringify(db).match(/Tornería|tornero|torneado|taller|Orden de trabajo|SER-OT/i)`));
+  await b.goto(`${BASE}/prototipo/index.html#/ordenes`, 800);
+  check('la ruta #/ordenes ya no existe (vuelve al dashboard)', (await ev(`return document.getElementById('pageTitle').textContent`)) === 'Dashboard');
+
+  await b.goto(`${BASE}/prototipo/index.html#/ventas`, 1200);
   const stock = (suc, sku) => ev(`const p = ${S}.db.productos.find(x => x.sku === '${sku}'); return ${S}.stockOf('${suc}', p.id)`);
   const pid = (sku) => ev(`return ${S}.db.productos.find(x => x.sku === '${sku}').id`);
   const setLine = (i, prod, qty, price) => ev(`const tr = document.querySelectorAll('.modal .lines tbody tr')[${i}]; const s = tr.querySelector('[data-f="producto"]'); s.value = '${prod}'; s.dispatchEvent(new Event('change', { bubbles: true })); const t2 = document.querySelectorAll('.modal .lines tbody tr')[${i}]; const q = t2.querySelector('[data-f="cantidad"]'); q.value = '${qty}'; q.dispatchEvent(new Event('input', { bubbles: true })); ${price !== undefined ? `const pr = t2.querySelector('[data-f="precio"],[data-f="costo"]'); pr.value='${price}'; pr.dispatchEvent(new Event('input', { bubbles: true }));` : ''}`);
@@ -118,7 +150,7 @@ const check = (name, cond, extra = '') => { if (cond) { ok++; console.log(`✓ $
   check('valida campos obligatorios', await ev(`return document.querySelectorAll('.modal .field-error').length >= 1`));
   await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove())`);
 
-  // Compra recibida
+  // Compra recibida en el acto
   await b.goto(`${BASE}/prototipo/index.html#/compras`, 900);
   const b0 = await stock('S2', 'BRO-S65-200');
   await ev(`document.getElementById('cNew').click()`);
@@ -133,49 +165,42 @@ const check = (name, cond, extra = '') => { if (cond) { ok++; console.log(`✓ $
   check('el costo del producto se actualiza al de la compra', (await ev(`return ${S}.db.productos.find(x => x.sku === 'BRO-S65-200').costo`)) === 150);
   await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove())`);
 
+  // Orden de compra pendiente → recepción posterior
+  const r0 = await stock('S1', 'ROD-32210');
+  await ev(`document.getElementById('cNew').click()`);
+  await sleep(200);
+  await ev(`const f = document.querySelector('.modal [data-form]'); f.proveedor.value = 'PR3'; f.sucursal.value = 'S1'; f.sucursal.dispatchEvent(new Event('change')); f.recibir.checked = false;`);
+  await setLine(0, await pid('ROD-32210'), 12, 118);
+  await ev(`document.querySelector('.modal [data-submit]').click()`);
+  await sleep(300);
+  const oc = await ev(`return ${S}.db.compras[0]`);
+  check('orden de compra queda "Por recibir" sin mover stock', oc.estado === 'pendiente' && /^OC-/.test(oc.codigo) && (await stock('S1', 'ROD-32210')) === r0, JSON.stringify([oc.estado, oc.codigo]));
+  await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove())`);
+  await b.goto(`${BASE}/prototipo/index.html#/compras/${oc.id}`, 900);
+  await ev(`document.querySelector('.modal [data-receive]').click()`);
+  await sleep(300);
+  check('al recibir la orden de compra ingresa la mercadería', (await ev(`return ${S}.db.compras.find(x => x.id === '${oc.id}').estado`)) === 'recibida' && (await stock('S1', 'ROD-32210')) === r0 + 12);
+  await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove())`);
+
   // Cotización → venta
   await b.goto(`${BASE}/prototipo/index.html#/cotizaciones`, 900);
   await ev(`document.getElementById('qNew').click()`);
   await sleep(200);
   await ev(`const f = document.querySelector('.modal [data-form]'); f.cliente.value = 'C3'; f.sucursal.value = 'S1'; f.sucursal.dispatchEvent(new Event('change'));`);
-  await setLine(0, await pid('SER-TOR-H'), 4);
+  await setLine(0, await pid('ROD-6305'), 2);
   await ev(`document.querySelector('.modal [data-submit]').click()`);
   await sleep(300);
   const q = await ev(`return ${S}.db.cotizaciones[0]`);
-  check('cotización creada (4 h de torneado = Bs 480)', q.total === 480 && q.estado === 'borrador');
+  check('cotización comercial creada (2 rodamientos 6305 = Bs 136)', q.total === 136 && q.estado === 'borrador', JSON.stringify([q.total, q.estado]));
+  const q0 = await stock('S1', 'ROD-6305');
   await ev(`document.querySelector('.modal [data-convert]').click()`);
   await sleep(300);
-  check('cotización convertida en venta', await ev(`const q = ${S}.db.cotizaciones[0]; const v = ${S}.db.ventas[0]; return q.estado === 'convertida' && q.venta === v.id && v.cotizacion === q.id && v.total === 480`));
-  await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove())`);
-
-  // Orden de trabajo: crear, iniciar (consume material) y entregar (genera venta)
-  await b.goto(`${BASE}/prototipo/index.html#/ordenes`, 900);
-  const a0 = await stock('S1', 'ACE-4140-150');
-  await ev(`document.getElementById('newOT').click()`);
-  await sleep(250);
-  await ev(`const f = document.querySelector('.modal [data-form]'); f.cliente.value = 'C1'; f.sucursal.value = 'S1'; f.sucursal.dispatchEvent(new Event('change')); f.descripcion.value = 'Fabricación de eje de prueba Ø 40 mm'; f.material.value = 'Acero SAE 4140'; f.responsable.value = 'U6'; const d = new Date(); d.setDate(d.getDate() + 5); f.entrega.value = d.toISOString().slice(0,10); f.horas.value = '5'; f.horas.dispatchEvent(new Event('input')); f.precio.value = '900'; f.anticipo.value = '300';`);
-  await setLine(0, await pid('ACE-4140-150'), 1.5);
-  await ev(`document.querySelector('.modal [data-submit]').click()`);
-  await sleep(300);
-  const o = await ev(`return ${S}.db.ordenes[0]`);
-  check('orden de trabajo creada con costo estimado', o.descripcion.includes('eje de prueba') && o.costoEstimado === Math.round((1.5 * 120 + 5 * 60) * 100) / 100 && o.estado === 'pendiente', JSON.stringify([o.costoEstimado]));
-  check('el anticipo entra a caja', await ev(`return ${S}.db.caja.movimientos[0].ref === '${o.codigo}' && ${S}.db.caja.movimientos[0].monto === 300`));
-  check('se abre el detalle de la orden', /Seguimiento/.test(await ev(`return document.querySelector('.modal').innerText`)));
-  await ev(`const f = document.getElementById('otState'); f.estado.value = 'en_proceso'; f.nota.value = 'Inicio'; document.querySelector('.modal [data-save]').click();`);
-  await sleep(300);
-  check('al iniciar se descuenta el material (−1,5 m)', (await stock('S1', 'ACE-4140-150')) === Math.round((a0 - 1.5) * 100) / 100);
-  for (const e of ['control_calidad', 'terminada', 'entregada']) {
-    await ev(`const f = document.getElementById('otState'); f.estado.value = '${e}'; f.estado.dispatchEvent(new Event('change')); document.querySelector('.modal [data-save]').click();`);
-    await sleep(300);
-  }
-  const o2 = await ev(`return ${S}.db.ordenes.find(x => x.id === '${o.id}')`);
-  const vOT = await ev(`return ${S}.db.ventas[0]`);
-  check('la orden pasa por todos los estados con historial', o2.estado === 'entregada' && o2.historial.length === 5);
-  check('al entregar se registra la venta por Bs 900 y se cobra el saldo de Bs 600', vOT.orden === o.id && vOT.total === 900 && (await ev(`return ${S}.db.caja.movimientos[0].monto`)) === 600);
+  check('cotización convertida en venta y descuenta stock', (await ev(`const q = ${S}.db.cotizaciones[0]; const v = ${S}.db.ventas[0]; return q.estado === 'convertida' && q.venta === v.id && v.cotizacion === q.id && v.total === 136`)) && (await stock('S1', 'ROD-6305')) === q0 - 2);
   await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove())`);
 
   // Transferencia y ajuste
   await b.goto(`${BASE}/prototipo/index.html#/inventario`, 900);
+  check('inventarios permite importar y exportar Excel', await ev(`return !!document.getElementById('iImp') && !!document.getElementById('iExp')`));
   const t1 = await stock('S1', 'PER-M12-50'), t2 = await stock('S3', 'PER-M12-50');
   await ev(`document.getElementById('iTr').click()`);
   await sleep(200);
@@ -191,6 +216,12 @@ const check = (name, cond, extra = '') => { if (cond) { ok++; console.log(`✓ $
   await sleep(300);
   check('kardex del producto con saldos', /Kardex/.test(await ev(`return document.querySelector('.modal').innerText`)) && (await ev(`return document.querySelectorAll('.modal #kTable tbody tr').length`)) > 0);
   await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove())`);
+  await ev(`document.getElementById('iImp').click()`);
+  await sleep(200);
+  await ev(`document.querySelector('.modal [data-tpl]').click()`);
+  const tplF = await waitFile(/^conteo-CM-.*\.csv$/);
+  check('descarga la plantilla de conteo para importar existencias', !!tplF && fs.readFileSync(path.join(DL, tplF), 'utf8').includes('SKU;Cantidad contada'));
+  await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove())`);
 
   // Caja: cierre, bloqueo de efectivo con caja cerrada, apertura
   await b.goto(`${BASE}/prototipo/index.html#/caja`, 900);
@@ -198,10 +229,10 @@ const check = (name, cond, extra = '') => { if (cond) { ok++; console.log(`✓ $
   await sleep(200);
   await ev(`const f = document.querySelector('.modal [data-form]'); f.contado.value = String(Number(f.contado.value) - 10); document.querySelector('.modal [data-submit]').click();`);
   await sleep(300);
-  check('cierre de caja con faltante registrado', await ev(`const s = TOR.store.db.caja.sesiones.filter(x => x.sucursal === 'S2').pop(); return s.estado === 'cerrada' && Math.round((s.montoCierre - s.montoEsperado) * 100) === -1000`), await ev(`return JSON.stringify(TOR.store.db.caja.sesiones.filter(x => x.sucursal === 'S2').pop()) + ' | ' + (document.querySelector('.modal') ? document.querySelector('.modal').innerText.slice(0, 300) : '') + ' | ' + ([...document.querySelectorAll('.toast')].pop() || {}).innerText`));
+  check('cierre de caja con faltante registrado', await ev(`const s = TOR.store.db.caja.sesiones.filter(x => x.sucursal === 'S2').pop(); return s.estado === 'cerrada' && Math.round((s.montoCierre - s.montoEsperado) * 100) === -1000`));
   await ev(`TOR.store.setUI({ sucursal: 'S2' }); document.querySelector('[data-mov="egreso"]').click()`);
   await sleep(250);
-  await ev(`const f = document.querySelector('.modal [data-form]'); f.concepto.value = 'Compra de guantes'; f.monto.value = '50'; f.metodo.value = 'efectivo'; document.querySelector('.modal [data-submit]').click();`);
+  await ev(`const f = document.querySelector('.modal [data-form]'); f.concepto.value = 'Pago de flete'; f.monto.value = '50'; f.metodo.value = 'efectivo'; document.querySelector('.modal [data-submit]').click();`);
   await sleep(250);
   check('no permite egreso en efectivo con la caja cerrada', /caja está cerrada/i.test(await lastToast()));
   await ev(`document.querySelectorAll('.modal-backdrop').forEach(m => m.remove()); document.querySelector('[data-open-cash="S2"]').click()`);
@@ -223,42 +254,54 @@ const check = (name, cond, extra = '') => { if (cond) { ok++; console.log(`✓ $
   await sleep(200);
   check('búsqueda global encuentra productos', (await ev(`return document.querySelectorAll('#searchResults a').length`)) >= 3);
 
-  // Permisos: cambiar a tornero
+  // Permisos: cambiar a un vendedor
   await ev(`document.getElementById('userBtn').click()`);
   await sleep(100);
   await ev(`document.querySelector('#userPop [data-user="U6"]').click()`);
   await sleep(400);
-  check('tornero: módulos sin permiso bloqueados y redirige', (await ev(`return document.querySelectorAll('#sideNav a[aria-disabled]').length`)) >= 10 && (await ev(`return location.hash`)) !== '#/dashboard');
-  await b.goto(`${BASE}/prototipo/index.html#/ventas`, 800);
-  check('tornero: Ventas muestra "Sin acceso"', /Sin acceso/.test(await ev(`return document.getElementById('view').innerText`)));
-  check('tornero: solo ve su sucursal', (await ev(`return [...document.querySelectorAll('#branchSelect option')].map(o => o.value).join()`)) === 'S1');
+  check('vendedor: módulos sin permiso bloqueados y redirige', (await ev(`return document.querySelectorAll('#sideNav a[aria-disabled]').length`)) >= 7 && (await ev(`return location.hash`)) !== '#/dashboard' && (await ev(`return document.getElementById('userRole').textContent`)) === 'Vendedor');
+  await b.goto(`${BASE}/prototipo/index.html#/caja`, 800);
+  check('vendedor: Caja muestra "Sin acceso"', /Sin acceso/.test(await ev(`return document.getElementById('view').innerText`)));
+  check('vendedor: solo ve su sucursal', (await ev(`return [...document.querySelectorAll('#branchSelect option')].map(o => o.value).join()`)) === 'S1');
   await ev(`TOR.store.setUI({ usuario: 'U1', sucursal: '*' })`);
 
   // Reportes: exportaciones reales
   await b.goto(`${BASE}/prototipo/index.html#/reportes`, 1000);
-  for (const t of ['ventas', 'compras', 'inventario', 'movimientos', 'sucursales', 'ordenes']) { await ev(`document.querySelector('[data-rt="${t}"]').click()`); await sleep(150); }
-  check('los 6 reportes se renderizan', (await ev(`return document.querySelectorAll('#rTable tbody tr').length`)) > 0);
+  const tipos = await ev(`return [...document.querySelectorAll('[data-rt]')].map(x => x.dataset.rt)`);
+  check('6 reportes comerciales (sin órdenes de trabajo)', JSON.stringify(tipos) === JSON.stringify(['ventas', 'compras', 'inventario', 'movimientos', 'sucursales', 'caja']), JSON.stringify(tipos));
+  let filas = true;
+  for (const t of tipos) { await ev(`document.querySelector('[data-rt="${t}"]').click()`); await sleep(150); filas = filas && (await ev(`return document.querySelectorAll('#rTable tbody tr').length`)) > 0; }
+  check('los 6 reportes se renderizan con datos', filas);
   await ev(`document.getElementById('rCsv').click()`);
-  const csvF = await waitFile(/^reporte-ordenes.*\.csv$/);
-  check('exporta el reporte a Excel (CSV)', !!csvF && fs.readFileSync(path.join(DL, csvF), 'utf8').includes('Código;Cliente;Trabajo'));
+  const csvF = await waitFile(/^reporte-caja.*\.csv$/);
+  check('exporta el reporte a Excel (CSV)', !!csvF && fs.readFileSync(path.join(DL, csvF), 'utf8').includes('Fecha;Sucursal;Concepto'));
   await ev(`document.getElementById('rPdf').click()`);
-  const repF = await waitFile(/^reporte-ordenes.*\.pdf$/);
+  const repF = await waitFile(/^reporte-caja.*\.pdf$/);
   check('exporta el reporte a PDF', !!repF && fs.statSync(path.join(DL, repF)).size > 5000);
 
   // Productos: crear con validación de SKU duplicado
   await b.goto(`${BASE}/prototipo/index.html#/productos`, 900);
   await ev(`document.getElementById('pNew').click()`);
   await sleep(200);
+  check('formulario de producto con campos comerciales', await ev(`const f = document.querySelector('.modal [data-form]'); return ['sku', 'nombre', 'categoria', 'marca', 'descripcion', 'unidad', 'costo', 'precio', 'stockInicial', 'sucursal'].every(n => f[n]) && !f.tipo`));
   await ev(`const f = document.querySelector('.modal [data-form]'); f.sku.value = 'ROD-6204'; f.nombre.value = 'Duplicado'; f.costo.value = '1'; f.precio.value = '2'; document.querySelector('.modal [data-submit]').click();`);
   await sleep(250);
   check('rechaza SKU duplicado', /Ya existe un producto/.test(await lastToast()));
-  await ev(`const f = document.querySelector('.modal [data-form]'); f.sku.value = 'ROD-6206'; f.nombre.value = 'Rodamiento 6206 2RS'; f.categoria.value = 'Rodamientos'; f.unidad.value = 'pza'; f.costo.value = '38'; f.precio.value = '56'; f.stockInicial.value = '30'; f.sucursal.value = 'S1'; document.querySelector('.modal [data-submit]').click();`);
+  await ev(`const f = document.querySelector('.modal [data-form]'); f.sku.value = 'ROD-6206'; f.nombre.value = 'Rodamiento 6206 2RS'; f.marca.value = 'Rodatec'; f.descripcion.value = 'Rodamiento rígido de bolas sellado'; f.categoria.value = 'Rodamientos'; f.unidad.value = 'pza'; f.costo.value = '38'; f.precio.value = '56'; f.stockInicial.value = '30'; f.sucursal.value = 'S1'; document.querySelector('.modal [data-submit]').click();`);
   await sleep(300);
-  check('crea producto con stock inicial', (await stock('S1', 'ROD-6206')) === 30);
+  check('crea producto con marca y stock inicial', (await stock('S1', 'ROD-6206')) === 30 && (await ev(`return ${S}.db.productos.find(x => x.sku === 'ROD-6206').marca`)) === 'Rodatec');
 
   // Persistencia: recargar mantiene los cambios
   await b.goto(`${BASE}/prototipo/index.html#/productos`, 900);
   check('los datos persisten al recargar', (await stock('S1', 'ROD-6206')) === 30);
+
+  // Ninguna pantalla del prototipo muestra textos de fabricación
+  const rutas = await ev(`return Object.keys(TOR.app.ROUTES)`);
+  const conTexto = [];
+  for (const r of rutas) { await b.goto(`${BASE}/prototipo/index.html#/${r}`, 500); const t = await ev(`return document.body.innerText`); if (PROHIBIDOS.test(t)) conTexto.push(`${r}: ${t.match(PROHIBIDOS)[0]}`); }
+  check(`las ${rutas.length} pantallas del prototipo sin referencias a fabricación`, rutas.length === 13 && !conTexto.length, conTexto.join(' | '));
+  const enlaces = await ev(`return [...document.querySelectorAll('a[href^="#/"]')].map(a => a.getAttribute('href').replace(/^#\\//, '').split(/[/?]/)[0]).filter(r => !TOR.app.ROUTES[r])`);
+  check('sin enlaces rotos a rutas inexistentes', !enlaces.length, enlaces.join(','));
 
   check('sin errores de consola en todo el recorrido', b.errors.length === 0, b.errors.join(' | '));
   await b.close();

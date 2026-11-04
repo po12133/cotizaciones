@@ -1,6 +1,6 @@
 /*
- * Modelo de la propuesta: toma CONFIG (y los datos editados del cliente) y calcula totales,
- * pagos y cronograma. Lo usan la página comercial y el PDF, así ambos muestran las mismas cifras.
+ * Modelo de la propuesta: toma CONFIG (y los datos editados del cliente) y calcula subtotal,
+ * descuento, total, pagos y cronograma. Lo usan la página comercial y el PDF, así ambos muestran las mismas cifras.
  * Funciones puras: se pueden probar con node (tests/pricing.test.js).
  */
 (function (root) {
@@ -25,7 +25,10 @@
     const emision = cotizacion.fechaEmision ? new Date(cotizacion.fechaEmision + 'T12:00:00') : hoy;
 
     const costos = CONFIG.costos.map((c) => Object.assign({}, c, { modulo: c.modulo ? CONFIG.modulos.find((m) => m.id === c.modulo) || null : null }));
-    const total = sum(CONFIG.costos);
+    const subtotal = sum(CONFIG.costos);
+    const descuentos = (CONFIG.descuentos || []).map((d) => Object.assign({}, d));
+    const descuento = sum(descuentos);
+    const total = subtotal - descuento;
     const pagos = CONFIG.pagos.map((p) => Object.assign({}, p, { monto: Math.round(total * p.porcentaje) / 100 }));
     const porcentajes = CONFIG.pagos.reduce((t, p) => t + p.porcentaje, 0);
     const semanasMin = Math.max(...CONFIG.cronograma.map((e) => e.min[1]));
@@ -47,6 +50,9 @@
       moneda: CONFIG.moneda,
       costos,
       modulos,
+      subtotal,
+      descuentos,
+      descuento,
       total,
       pagos,
       pagosCuadran: porcentajes === 100 && Math.abs(sum(pagos) - total) < 0.01,
@@ -70,8 +76,11 @@
   /** Revisa que la configuración sea coherente. Devuelve una lista de problemas (vacía = OK). */
   function validate(CONFIG) {
     const errs = [];
-    const total = sum(CONFIG.costos);
-    if (CONFIG.totalEsperado && total !== CONFIG.totalEsperado) errs.push(`La suma de costos (${total}) no coincide con totalEsperado (${CONFIG.totalEsperado}).`);
+    const subtotal = sum(CONFIG.costos);
+    const total = subtotal - sum(CONFIG.descuentos || []);
+    if (CONFIG.subtotalEsperado && subtotal !== CONFIG.subtotalEsperado) errs.push(`La suma de costos (${subtotal}) no coincide con subtotalEsperado (${CONFIG.subtotalEsperado}).`);
+    if (CONFIG.totalEsperado && total !== CONFIG.totalEsperado) errs.push(`El total con descuentos (${total}) no coincide con totalEsperado (${CONFIG.totalEsperado}).`);
+    (CONFIG.descuentos || []).forEach((d) => { if (!(d.monto > 0) || d.monto >= subtotal) errs.push(`El descuento "${d.concepto}" debe ser positivo y menor al subtotal.`); });
     const pct = CONFIG.pagos.reduce((t, p) => t + p.porcentaje, 0);
     if (pct !== 100) errs.push(`Los porcentajes de pago suman ${pct}%, deben sumar 100%.`);
     CONFIG.costos.forEach((c) => { if (c.modulo && !CONFIG.modulos.some((m) => m.id === c.modulo)) errs.push(`El costo "${c.concepto}" apunta a un módulo inexistente (${c.modulo}).`); });

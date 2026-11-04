@@ -5,12 +5,12 @@
   const icon = TOR.icon;
   const st = C.state('inventario', { tab: 'existencias', q: '', cat: '', bajo: false, origen: '', periodo: 'mes' });
 
-  const almacenDe = (p, s) => { const sc = S.suc(s); return (p.almacen === 'taller' && sc.almacenes[1] ? sc.almacenes[1] : sc.almacenes[0]).nombre; };
+  const almacenDe = (p, s) => { const sc = S.suc(s); return (p.almacen === 'deposito' && sc.almacenes[1] ? sc.almacenes[1] : sc.almacenes[0]).nombre; };
   const sucs = () => S.db.sucursales.filter((s) => S.inScope(s.id));
 
   function rowsExistencias() {
     const t = st.q.trim().toLowerCase();
-    return S.db.productos.filter((p) => p.tipo !== 'servicio' && p.activo && (!st.cat || p.categoria === st.cat) && (!t || [p.nombre, p.sku].some((x) => x.toLowerCase().includes(t)))).map((p) => {
+    return S.db.productos.filter((p) => p.activo && (!st.cat || p.categoria === st.cat) && (!t || [p.nombre, p.sku, p.marca || ''].some((x) => x.toLowerCase().includes(t)))).map((p) => {
       const per = sucs().map((s) => ({ s, q: S.stockOf(s.id, p.id), min: S.minOf(p.id, s.id) }));
       const q = per.reduce((a, x) => a + x.q, 0);
       const min = per.reduce((a, x) => a + x.min, 0);
@@ -23,15 +23,14 @@
   function render(el, route) {
     if (route.query.f === 'bajo') { st.bajo = true; st.tab = 'existencias'; route.query.f = null; }
     const write = A.can('inventario');
-    const all = S.db.productos.filter((p) => p.tipo !== 'servicio');
-    const valor = sucs().reduce((t, s) => t + all.reduce((a, p) => a + S.stockOf(s.id, p.id) * p.costo, 0), 0);
+    const valor = Q.inventoryValue();
     const low = Q.lowStock();
     const movMes = S.db.movimientos.filter((m) => S.inScope(m.sucursal) && Q.inRange(m.fecha, 'mes')).length;
     el.innerHTML = `
-      <div class="page-head"><div><p class="lead">Existencias por sucursal y almacén, alertas de stock mínimo, kardex por producto, transferencias y ajustes. Toque un producto para ver su kardex.</p></div>
-        <div class="actions"><button class="btn btn-outline" id="iExp">${icon('excel', 'sm')}Exportar</button>${write ? `<button class="btn btn-outline" id="iAdj">${icon('edit', 'sm')}Ajuste</button><button class="btn btn-primary" id="iTr">${icon('swap', 'sm')}Transferir</button>` : A.actionBtn('inventario', '')}</div></div>
+      <div class="page-head"><div><p class="lead">Existencias por sucursal y almacén de los productos adquiridos para la venta: entradas por compra, salidas por venta, transferencias entre sucursales, stock mínimo, alertas, kardex y ajustes. Toque un producto para ver su kardex.</p></div>
+        <div class="actions"><button class="btn btn-outline" id="iExp">${icon('excel', 'sm')}Exportar Excel</button>${write ? `<button class="btn btn-outline" id="iImp">${icon('upload', 'sm')}Importar Excel</button><button class="btn btn-outline" id="iAdj">${icon('edit', 'sm')}Ajuste</button><button class="btn btn-primary" id="iTr">${icon('swap', 'sm')}Transferir</button>` : A.actionBtn('inventario', '')}</div></div>
       <div class="kpis">
-        ${C.kpi({ label: 'Inventario valorizado', value: fmt.money(valor), sub: 'A costo de adquisición', icon: 'box', tone: 'accent' })}
+        ${C.kpi({ label: 'Valor del inventario', value: fmt.money(valor), sub: 'A costo de compra', icon: 'box', tone: 'accent' })}
         ${C.kpi({ label: 'Ítems con stock bajo', value: low.length, sub: 'En o bajo el mínimo', icon: 'alert', tone: low.length ? 'alert' : '', link: '#/inventario?f=bajo' })}
         ${C.kpi({ label: 'Sin existencias', value: low.filter((l) => l.cantidad <= 0).length, sub: 'Requieren compra urgente', icon: 'x' })}
         ${C.kpi({ label: 'Movimientos del mes', value: movMes, sub: 'Entradas, salidas, transferencias y ajustes', icon: 'swap' })}
@@ -46,6 +45,7 @@
     const on = (id, fn) => { const b = el.querySelector(id); if (b) b.addEventListener('click', fn); };
     on('#iTr', () => transfer());
     on('#iAdj', () => adjust());
+    on('#iImp', () => importar());
     on('#iExp', () => {
       const rows = rowsExistencias();
       C.csv(`inventario-${S.today()}.csv`, ['SKU', 'Producto', 'Categoría', 'Unidad', ...sucs().map((s) => s.nombre), 'Total', 'Costo unit.', 'Valor'], rows.map((r) => [r.p.sku, r.p.nombre, r.p.categoria, r.p.unidad, ...r.per.map((x) => C.n2(x.q)), C.n2(r.q), C.n2(r.p.costo), C.n2(r.valor)]));
@@ -57,8 +57,8 @@
     const rows = rowsExistencias();
     const multi = sucs().length > 1;
     body.innerHTML = `<div class="filters">
-        <div class="input-icon">${icon('search', 'sm')}<input class="input" id="iQ" type="search" placeholder="Producto o SKU" value="${esc(st.q)}"></div>
-        <select class="select" id="iCat" aria-label="Categoría"><option value="">Todas las categorías</option>${S.db.categorias.filter((c) => c !== 'Servicios').map((c) => `<option ${st.cat === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>
+        <div class="input-icon">${icon('search', 'sm')}<input class="input" id="iQ" type="search" placeholder="Producto, SKU o marca" value="${esc(st.q)}"></div>
+        <select class="select" id="iCat" aria-label="Categoría"><option value="">Todas las categorías</option>${S.db.categorias.map((c) => `<option ${st.cat === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>
         <button class="chip ${st.bajo ? 'on' : ''}" id="iLow">${icon('alert', 'sm')}Solo stock bajo</button>
         <span class="count">${rows.length} productos</span></div><div id="iTable"></div>`;
     C.dataTable(body.querySelector('#iTable'), {
@@ -66,7 +66,7 @@
       rowClass: (r) => (r.sin ? 'danger' : r.bajo ? 'low' : ''),
       columns: [
         { key: 'sku', label: 'SKU', cls: 'code', sort: (r) => r.p.sku, render: (r) => esc(r.p.sku) },
-        { key: 'nombre', label: 'Producto', sort: (r) => r.p.nombre, render: (r) => `<b>${esc(r.p.nombre)}</b><span class="sub">${esc(r.p.categoria)} · ${esc(L.tipoProd[r.p.tipo])}</span>` },
+        { key: 'nombre', label: 'Producto', sort: (r) => r.p.nombre, render: (r) => `<b>${esc(r.p.nombre)}</b><span class="sub">${esc(r.p.categoria)}${r.p.marca ? ` · ${esc(r.p.marca)}` : ''}</span>` },
         { key: 'almacen', label: multi ? 'Por sucursal' : 'Almacén', render: (r) => (multi ? r.per.map((x) => `<span class="sub" style="${x.q <= x.min ? 'color:var(--warning-ink);font-weight:600' : ''}">${esc(x.s.nombre)}: ${fmt.qty(x.q)}</span>`).join('') : esc(almacenDe(r.p, r.per[0].s.id))) },
         { key: 'stock', label: 'Stock', sort: (r) => r.q, render: (r) => `<div class="stock-cell"><b class="num">${fmt.qty(r.q)} ${esc(r.p.unidad)}</b><div class="stock-bar ${r.sin ? 'out' : r.bajo ? 'low' : ''}"><span style="width:${Math.min(100, (r.q / Math.max(1, r.min * 3)) * 100)}%"></span></div></div>` },
         { key: 'min', label: 'Mínimo', align: 'right', sort: (r) => r.min, render: (r) => `${fmt.qty(r.min)}` },
@@ -132,12 +132,12 @@
     const br = S.db.sucursales.filter((s) => A.userBranches().includes(s.id));
     const o0 = origen || C.defaultSucursal();
     C.formModal({
-      title: 'Transferencia entre sucursales', sub: 'El material sale del almacén de origen e ingresa al de destino; ambos movimientos quedan en el kardex.', submit: 'Transferir',
+      title: 'Transferencia entre sucursales', sub: 'La mercadería sale del almacén de origen e ingresa al de destino; ambos movimientos quedan en el kardex.', submit: 'Transferir',
       body: `<div class="form-grid"><label class="field"><span>Origen *</span><select class="select" name="origen">${C.options(br, o0)}</select></label>
         <label class="field"><span>Destino *</span><select class="select" name="destino">${C.options(S.db.sucursales.filter((s) => s.id !== o0), '')}</select></label>
-        <label class="field full"><span>Producto *</span><select class="select" name="producto">${C.productOptions(pid, (p) => p.tipo !== 'servicio')}</select><small id="trDisp"></small></label>
+        <label class="field full"><span>Producto *</span><select class="select" name="producto">${C.productOptions(pid)}</select><small id="trDisp"></small></label>
         <label class="field"><span>Cantidad *</span><input class="input" type="number" name="cantidad" min="0" step="any"></label>
-        <label class="field"><span>Nota</span><input class="input" name="nota" placeholder="Ej.: Pedido para OT de la sucursal"></label></div>`,
+        <label class="field"><span>Nota</span><input class="input" name="nota" placeholder="Ej.: Reposición para venta de la semana"></label></div>`,
       rules: { origen: { required: true }, destino: { required: true }, producto: { required: true }, cantidad: { required: true, number: true, positive: true } },
       onOpen: (el, close, f) => {
         const upd = () => { const pr = f.producto.value ? S.prod(f.producto.value) : null; el.querySelector('#trDisp').textContent = pr ? `Disponible en origen: ${fmt.qty(S.stockOf(f.origen.value, pr.id))} ${pr.unidad}` : ''; };
@@ -153,15 +153,47 @@
     C.formModal({
       title: 'Ajuste de inventario', sub: 'Registre el conteo físico: el sistema calcula la diferencia y la deja en el kardex.', submit: 'Registrar ajuste',
       body: `<div class="form-grid"><label class="field"><span>Sucursal *</span><select class="select" name="sucursal">${C.sucursalOptions(sucId || C.defaultSucursal())}</select></label>
-        <label class="field"><span>Producto *</span><select class="select" name="producto">${C.productOptions(pid, (p) => p.tipo !== 'servicio')}</select></label>
+        <label class="field"><span>Producto *</span><select class="select" name="producto">${C.productOptions(pid)}</select></label>
         <label class="field"><span>Stock en sistema</span><input class="input" id="adjSys" readonly></label>
         <label class="field"><span>Cantidad contada *</span><input class="input" type="number" name="nuevo" min="0" step="any"></label>
-        <label class="field full"><span>Motivo *</span><select class="select" name="motivo"><option value="">Seleccione…</option><option>Conteo físico</option><option>Merma por corte o mecanizado</option><option>Material dañado</option><option>Error de registro</option><option>Devolución de cliente</option></select></label></div>`,
+        <label class="field full"><span>Motivo *</span><select class="select" name="motivo"><option value="">Seleccione…</option><option>Conteo físico</option><option>Mercadería dañada en transporte</option><option>Faltante en recepción de importación</option><option>Error de registro</option><option>Devolución de cliente</option></select></label></div>`,
       rules: { sucursal: { required: true }, producto: { required: true }, nuevo: { required: true, number: true, nonNegative: true }, motivo: { required: true } },
       onOpen: (el, close, f) => { const upd = () => { el.querySelector('#adjSys').value = f.producto.value ? `${fmt.qty(S.stockOf(f.sucursal.value, f.producto.value))} ${S.prod(f.producto.value).unidad}` : ''; }; f.producto.addEventListener('change', upd); f.sucursal.addEventListener('change', upd); upd(); },
       onSubmit: (d, close) => { if (A.run(() => S.ops.adjust(d), 'Ajuste registrado', (dif) => `Diferencia: ${dif > 0 ? '+' : ''}${fmt.qty(dif)} ${S.prod(d.producto).unidad}`)) close(); }
     });
   }
 
-  TOR.views.inventario = { render, kardex, transfer, adjust };
+  function importar() {
+    const HEAD = ['SKU', 'Cantidad contada'];
+    const s0 = C.defaultSucursal();
+    const m = TOR.ui.modal({
+      title: 'Importar existencias desde Excel',
+      sub: 'Planilla de conteo físico guardada como CSV. Cada diferencia con el sistema se registra como ajuste en el kardex.',
+      body: `<div class="stack"><label class="field"><span>Sucursal</span><select class="select" id="invSuc">${C.sucursalOptions(s0)}</select></label>
+        <div class="info-box">${icon('info', 'sm')}<span>Columnas esperadas: ${HEAD.join(' · ')}. Descargue la plantilla con el stock actual para completarla.</span></div>
+        <input type="file" class="input" accept=".csv,text/csv" id="invFile" style="padding:7px"><div id="invPrev"></div></div>`,
+      foot: `<button class="btn btn-ghost" data-tpl>${icon('download', 'sm')}Descargar plantilla</button><span class="spacer"></span><button class="btn btn-outline" data-close>Cancelar</button><button class="btn btn-primary" data-imp disabled>${icon('upload', 'sm')}Registrar ajustes</button>`
+    });
+    const suc = () => m.el.querySelector('#invSuc').value;
+    let cambios = [];
+    m.el.querySelector('[data-tpl]').addEventListener('click', () => C.csv(`conteo-${S.suc(suc()).codigo}-${S.today()}.csv`, [...HEAD, 'Producto', 'Stock en sistema'], S.db.productos.filter((p) => p.activo).map((p) => [p.sku, C.n2(S.stockOf(suc(), p.id)), p.nombre, C.n2(S.stockOf(suc(), p.id))])));
+    m.el.querySelector('#invFile').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const text = (await file.text()).replace(/^\uFEFF/, '');
+      const sep = (text.split('\n')[0].match(/;/g) || []).length >= (text.split('\n')[0].match(/,/g) || []).length ? ';' : ',';
+      const rows = text.split(/\r?\n/).filter((l) => l.trim()).map((l) => l.split(sep).map((x) => x.replace(/^"|"$/g, '').trim()));
+      const num = (v) => Number(String(v || '').replace(/\./g, '').replace(',', '.'));
+      cambios = rows.slice(/sku/i.test(rows[0][0]) ? 1 : 0).map((r) => ({ p: S.db.productos.find((x) => x.sku === String(r[0]).toUpperCase()), q: num(r[1]) })).filter((x) => x.p && Number.isFinite(x.q) && x.q >= 0 && x.q !== S.stockOf(suc(), x.p.id));
+      m.el.querySelector('#invPrev').innerHTML = cambios.length ? `<p><b>${cambios.length}</b> productos con diferencia</p><div class="table-wrap" style="max-height:220px"><table class="table"><thead><tr><th>SKU</th><th>Producto</th><th class="right">Sistema</th><th class="right">Contado</th></tr></thead><tbody>${cambios.slice(0, 10).map((x) => `<tr><td class="mono">${esc(x.p.sku)}</td><td>${esc(x.p.nombre)}</td><td class="right">${fmt.qty(S.stockOf(suc(), x.p.id))}</td><td class="right"><b>${fmt.qty(x.q)}</b></td></tr>`).join('')}</tbody></table></div>` : `<div class="info-box warning">${icon('alert', 'sm')}<span>No hay diferencias con el stock del sistema o el archivo no tiene filas válidas.</span></div>`;
+      m.el.querySelector('[data-imp]').disabled = !cambios.length;
+    });
+    m.el.querySelector('[data-imp]').addEventListener('click', () => {
+      const s = suc();
+      const ok = A.run(() => cambios.forEach((x) => S.ops.adjust({ sucursal: s, producto: x.p.id, nuevo: x.q, motivo: 'Importación de conteo físico (Excel)' })), 'Existencias importadas', `${cambios.length} ajustes registrados en el kardex`);
+      if (ok) m.close();
+    });
+  }
+
+  TOR.views.inventario = { render, kardex, transfer, adjust, importar };
 })();

@@ -24,6 +24,7 @@
 
   function renderHero() {
     $('heroTotal').textContent = model.money(model.total);
+    $('heroPago').textContent = `${model.descuento ? `Con descuento de ${model.money(model.descuento)} · ` : ''}pago ${model.pagos.map((p) => `${p.porcentaje}%`).join(' / ')}`;
     $('heroPlazo').textContent = model.plazoTexto;
     $('heroModulos').textContent = String(model.modulos.length);
   }
@@ -53,7 +54,7 @@
 
   function openModulo(id) {
     const m = model.modulos.find((x) => x.id === id);
-    const pct = m.monto ? Math.round((m.monto / model.total) * 1000) / 10 : 0;
+    const pct = m.monto ? Math.round((m.monto / model.subtotal) * 1000) / 10 : 0;
     ui.modal({
       title: `Módulo ${m.numero}. ${m.nombre}`,
       sub: esc(m.resumen),
@@ -62,7 +63,7 @@
           <div><h4 style="margin-bottom:12px">Funcionalidades incluidas</h4><ul>${m.funciones.map((f) => `<li>${icon('checkCircle', 'sm')}<span>${esc(f)}</span></li>`).join('')}</ul>
           ${m.nota ? `<div class="mod-note">${icon('info', 'sm')}<span>${esc(m.nota)}</span></div>` : ''}</div>
           <div class="mod-side"><small class="muted">Costo del módulo</small><div class="big">${m.incluido ? 'Incluido' : esc(model.money(m.monto))}</div>
-          <small class="muted">${m.incluido ? esc(CONFIG.notaCostos) : `${String(pct).replace('.', ',')} % de la inversión total de ${esc(model.money(model.total))}.`}</small>
+          <small class="muted">${m.incluido ? esc(CONFIG.notaCostos) : `${String(pct).replace('.', ',')} % del subtotal de ${esc(model.money(model.subtotal))} (precio de lista, antes del descuento comercial).`}</small>
           <a class="btn btn-dark" href="prototipo/index.html#/${m.vista}">${icon('play', 'sm')}Ver en el prototipo</a></div>
         </div>`,
       foot: `<button class="btn btn-outline" data-close>Cerrar</button>`
@@ -75,11 +76,15 @@
       <tbody>${model.costos.map((c, i) => `<tr>
         <td>${String(i + 1).padStart(2, '0')}</td>
         <td><div class="concept">${icon(c.modulo ? c.modulo.icono : 'users', 'sm')}<span>${esc(c.concepto)}</span><span class="spacer"></span><span class="bar" aria-hidden="true"><span style="width:${(c.monto / max) * 100}%"></span></span></div></td>
-        <td class="pct right num">${(c.monto / model.total * 100).toFixed(1).replace('.', ',')}</td>
+        <td class="pct right num">${(c.monto / model.subtotal * 100).toFixed(1).replace('.', ',')}</td>
         <td class="right num nowrap"><b>${esc(model.money(c.monto))}</b></td></tr>`).join('')}</tbody>
-      <tfoot><tr><td></td><td>TOTAL</td><td class="pct"></td><td class="right num nowrap" id="costTotal">${esc(model.money(model.total))}</td></tr></tfoot>`;
+      <tfoot>
+        <tr class="sub-row"><td></td><td>Subtotal</td><td class="pct right num">100</td><td class="right num nowrap" id="costSubtotal">${esc(model.money(model.subtotal))}</td></tr>
+        ${model.descuentos.map((d) => `<tr class="disc-row"><td></td><td>${esc(d.concepto)}</td><td class="pct"></td><td class="right num nowrap" data-descuento>${esc(model.money(-d.monto))}</td></tr>`).join('')}
+        <tr><td></td><td>TOTAL FINAL</td><td class="pct"></td><td class="right num nowrap" id="costTotal">${esc(model.money(model.total))}</td></tr></tfoot>`;
     $('costNote').textContent = CONFIG.notaCostos;
     $('investTotal').textContent = model.money(model.total);
+    $('investBreak').innerHTML = [`Subtotal <b>${esc(model.money(model.subtotal))}</b>`, ...model.descuentos.map((d) => `${esc(d.concepto)} <b class="nowrap">${esc(model.money(-d.monto))}</b>`)].map((x) => `<span>${x}</span>`).join('');
     $('investPlazo').textContent = `${model.plazoTexto} · ${CONFIG.proyecto.tipo}`;
     $('payList').innerHTML = model.pagos.map((p) => `<div class="pay-item"><div><b>${p.porcentaje}% · ${esc(p.concepto)}</b><small>${esc(p.momento)}</small></div><strong>${esc(model.money(p.monto))}</strong></div>`).join('');
     $('mantMonto').textContent = model.money(model.mantenimiento.montoMensual);

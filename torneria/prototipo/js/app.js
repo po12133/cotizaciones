@@ -9,30 +9,24 @@
   const icon = TOR.icon;
 
   TOR.labels = {
-    estadoOT: { pendiente: 'Pendiente', en_proceso: 'En proceso', control_calidad: 'Control de calidad', terminada: 'Terminada', entregada: 'Entregada', cancelada: 'Cancelada' },
-    claseOT: { pendiente: '', en_proceso: 'info', control_calidad: 'accent', terminada: 'good', entregada: 'dark', cancelada: 'critical' },
-    colorOT: { pendiente: 'var(--steel-400)', en_proceso: 'var(--series-1)', control_calidad: 'var(--series-2)', terminada: 'var(--good)', entregada: 'var(--steel-800)', cancelada: 'var(--critical)' },
-    prioridad: { baja: 'Baja', normal: 'Normal', alta: 'Alta', urgente: 'Urgente' },
-    clasePrioridad: { baja: 'plain', normal: 'plain', alta: 'warning', urgente: 'critical' },
-    metodo: { efectivo: 'Efectivo', transferencia: 'Transferencia', qr: 'QR', tarjeta: 'Tarjeta', credito: 'Crédito', anticipo: 'Anticipo' },
+    metodo: { efectivo: 'Efectivo', transferencia: 'Transferencia', qr: 'QR', tarjeta: 'Tarjeta', credito: 'Crédito' },
     estadoVenta: { pagada: 'Pagada', pendiente: 'Por cobrar', anulada: 'Anulada' },
     claseVenta: { pagada: 'good', pendiente: 'warning', anulada: 'critical' },
     estadoCompra: { pendiente: 'Por recibir', recibida: 'Recibida', anulada: 'Anulada' },
     claseCompra: { pendiente: 'warning', recibida: 'good', anulada: 'critical' },
     estadoCot: { borrador: 'Borrador', enviada: 'Enviada', aprobada: 'Aprobada', convertida: 'Convertida en venta', rechazada: 'Rechazada', vencida: 'Vencida' },
     claseCot: { borrador: '', enviada: 'info', aprobada: 'good', convertida: 'dark', rechazada: 'critical', vencida: 'warning' },
-    tipoProd: { materia: 'Materia prima', insumo: 'Insumo', herramienta: 'Herramienta', repuesto: 'Repuesto', servicio: 'Servicio' },
-    origenMov: { inicial: 'Inventario inicial', compra: 'Compra', venta: 'Venta', ot: 'Orden de trabajo', transferencia: 'Transferencia', ajuste: 'Ajuste', anulacion: 'Anulación de venta' },
+    origenMov: { inicial: 'Inventario inicial', compra: 'Compra', venta: 'Venta', transferencia: 'Transferencia', ajuste: 'Ajuste', anulacion: 'Anulación de venta' },
     permiso: { write: 'Edición', read: 'Lectura', none: 'Sin acceso' }
   };
   const L = TOR.labels;
   const badge = (text, cls) => `<span class="badge ${cls || ''}">${esc(text)}</span>`;
 
   const NAV = [
-    { group: 'General', items: [['dashboard', 'Dashboard', 'dashboard']] },
-    { group: 'Operación', items: [['ventas', 'Ventas', 'cart'], ['cotizaciones', 'Cotizaciones', 'quote'], ['ordenes', 'Órdenes de trabajo', 'wrench'], ['compras', 'Compras', 'truck'], ['inventario', 'Inventario', 'box'], ['caja', 'Caja', 'wallet']] },
-    { group: 'Catálogos', items: [['productos', 'Productos', 'package'], ['clientes', 'Clientes', 'contact'], ['proveedores', 'Proveedores', 'briefcase'], ['sucursales', 'Sucursales', 'branches']] },
-    { group: 'Análisis', items: [['reportes', 'Reportes', 'file']] },
+    { group: 'General', items: [['dashboard', 'Dashboard', 'dashboard'], ['sucursales', 'Sucursales', 'branches']] },
+    { group: 'Catálogo e inventario', items: [['productos', 'Productos', 'package'], ['inventario', 'Inventarios', 'box']] },
+    { group: 'Comercial', items: [['compras', 'Compras', 'truck'], ['ventas', 'Ventas', 'cart'], ['cotizaciones', 'Cotizaciones', 'quote'], ['clientes', 'Clientes', 'contact'], ['proveedores', 'Proveedores', 'briefcase']] },
+    { group: 'Finanzas y análisis', items: [['caja', 'Caja', 'wallet'], ['reportes', 'Reportes', 'file']] },
     { group: 'Administración', items: [['usuarios', 'Usuarios', 'users'], ['configuracion', 'Configuración', 'settings']] }
   ];
   const ROUTES = Object.fromEntries(NAV.flatMap((g) => g.items.map(([id, label, ic]) => [id, { id, label, icon: ic, group: g.group }])));
@@ -73,15 +67,17 @@
   const PERIODOS = [['mes', 'Este mes'], ['mes_ant', 'Mes anterior'], ['7d', 'Últimos 7 días'], ['hoy', 'Hoy'], ['3m', 'Últimos 3 meses'], ['6m', 'Últimos 6 meses'], ['todo', 'Todo el historial']];
   const lowStock = () => {
     const out = [];
-    S.db.sucursales.filter((s) => S.inScope(s.id)).forEach((s) => S.db.productos.filter((p) => p.tipo !== 'servicio' && p.activo).forEach((p) => {
+    S.db.sucursales.filter((s) => S.inScope(s.id)).forEach((s) => S.db.productos.filter((p) => p.activo).forEach((p) => {
       const q = S.stockOf(s.id, p.id); const min = S.minOf(p.id, s.id);
       if (q <= min) out.push({ producto: p, sucursal: s, cantidad: q, minimo: min });
     }));
     return out.sort((a, b) => a.cantidad / a.minimo - b.cantidad / b.minimo);
   };
-  const otActivas = () => S.scoped(S.db.ordenes).filter((o) => !['entregada', 'cancelada'].includes(o.estado));
-  const otAtrasada = (o) => !['terminada', 'entregada', 'cancelada'].includes(o.estado) && o.entrega < S.today();
-  TOR.q = { monthKeys, monthKey, ventas, compras, margenVenta, sumBy, inRange, rangeOf, PERIODOS, lowStock, otActivas, otAtrasada };
+  /** Valor del inventario a costo de compra en las sucursales visibles. */
+  const inventoryValue = () => S.db.sucursales.filter((s) => S.inScope(s.id)).reduce((t, s) => t + S.db.productos.reduce((a, p) => a + S.stockOf(s.id, p.id) * p.costo, 0), 0);
+  /** Órdenes de compra emitidas y aún no recibidas. */
+  const comprasPorRecibir = () => S.scoped(S.db.compras).filter((c) => c.estado === 'pendiente');
+  TOR.q = { monthKeys, monthKey, ventas, compras, margenVenta, sumBy, inRange, rangeOf, PERIODOS, lowStock, inventoryValue, comprasPorRecibir };
 
   // ---------- Estado vacío ----------
   TOR.ui.emptyState = ({ icon: ic = 'search', title = 'Sin resultados', text = '' } = {}) => `<div class="empty">${icon(ic)}<b>${esc(title)}</b>${text ? `<span>${esc(text)}</span>` : ''}</div>`;
@@ -92,8 +88,8 @@
 
   function renderSide() {
     const low = lowStock().length;
-    const ots = otActivas().length;
-    const counts = { inventario: low ? [low, 'warn'] : null, ordenes: ots ? [ots, ''] : null, cotizaciones: (() => { const n = S.scoped(S.db.cotizaciones).filter((c) => ['enviada', 'aprobada'].includes(c.estado)).length; return n ? [n, ''] : null; })() };
+    const porRecibir = comprasPorRecibir().length;
+    const counts = { inventario: low ? [low, 'warn'] : null, compras: porRecibir ? [porRecibir, ''] : null, cotizaciones: (() => { const n = S.scoped(S.db.cotizaciones).filter((c) => ['enviada', 'aprobada'].includes(c.estado)).length; return n ? [n, ''] : null; })() };
     $('sideNav').innerHTML = NAV.map((g) => `<div class="side-group"><small>${g.group}</small>${g.items.map(([id, label, ic]) => {
       const allowed = can(id, 'read');
       const c = counts[id];
@@ -126,10 +122,8 @@
     const out = [];
     const low = lowStock();
     if (low.length) out.push({ titulo: `${low.length} productos con stock bajo`, texto: low.slice(0, 2).map((l) => `${l.producto.nombre} (${l.sucursal.nombre})`).join(' · '), tipo: 'warning', link: '#/inventario?f=bajo' });
-    const atr = otActivas().filter(otAtrasada);
-    if (atr.length) out.push({ titulo: `${atr.length} órdenes de trabajo atrasadas`, texto: atr.slice(0, 3).map((o) => o.codigo).join(', '), tipo: 'critical', link: '#/ordenes?f=atrasadas' });
-    const hoy = otActivas().filter((o) => o.entrega === S.today());
-    if (hoy.length) out.push({ titulo: `${hoy.length} entregas programadas para hoy`, texto: hoy.map((o) => o.codigo).join(', '), tipo: 'info', link: '#/ordenes' });
+    const rec = comprasPorRecibir();
+    if (rec.length) out.push({ titulo: `${rec.length} órdenes de compra por recibir`, texto: rec.slice(0, 3).map((c) => `${c.codigo} · ${S.prov(c.proveedor).nombre}`).join(' · '), tipo: 'info', link: '#/compras' });
     const cxc = S.scoped(S.db.ventas).filter((v) => v.estado === 'pendiente');
     if (cxc.length) out.push({ titulo: `${cxc.length} ventas a crédito por cobrar`, texto: fmt.money(sumBy(cxc, (v) => v.total)), tipo: 'info', link: '#/caja?tab=cuentas' });
     return out;
@@ -154,9 +148,8 @@
     if (t.length < 2) { box.hidden = true; return; }
     const has = (...f) => f.some((x) => String(x || '').toLowerCase().includes(t));
     const groups = [
-      ['Productos', S.db.productos.filter((p) => has(p.nombre, p.sku)).slice(0, 5).map((p) => [`#/productos/${p.id}`, p.nombre, `${p.sku} · ${p.categoria}`, 'package'])],
+      ['Productos', S.db.productos.filter((p) => has(p.nombre, p.sku, p.marca)).slice(0, 5).map((p) => [`#/productos/${p.id}`, p.nombre, `${p.sku} · ${p.categoria}${p.marca ? ` · ${p.marca}` : ''}`, 'package'])],
       ['Clientes', S.db.clientes.filter((c) => has(c.nombre, c.nit, c.contacto)).slice(0, 4).map((c) => [`#/clientes/${c.id}`, c.nombre, `NIT/CI ${c.nit}`, 'contact'])],
-      ['Órdenes de trabajo', S.db.ordenes.filter((o) => has(o.codigo, o.descripcion)).slice(0, 4).map((o) => [`#/ordenes/${o.id}`, `${o.codigo} · ${o.descripcion}`, L.estadoOT[o.estado], 'wrench'])],
       ['Ventas', S.db.ventas.filter((v) => has(v.codigo)).slice(0, 3).map((v) => [`#/ventas/${v.id}`, v.codigo, `${S.cli(v.cliente).nombre} · ${fmt.money(v.total)}`, 'cart'])],
       ['Compras', S.db.compras.filter((c) => has(c.codigo)).slice(0, 3).map((c) => [`#/compras/${c.id}`, c.codigo, `${S.prov(c.proveedor).nombre} · ${fmt.money(c.total)}`, 'truck'])],
       ['Cotizaciones', S.db.cotizaciones.filter((c) => has(c.codigo)).slice(0, 3).map((c) => [`#/cotizaciones/${c.id}`, c.codigo, `${S.cli(c.cliente).nombre} · ${fmt.money(c.total)}`, 'quote'])],
@@ -177,7 +170,7 @@
     const r = ROUTES[current.route];
     $('pageTitle').textContent = r.label;
     $('crumbGroup').textContent = `${r.group} · ${S.ui.sucursal === '*' ? 'Todas las sucursales' : S.suc(S.ui.sucursal).nombre}`;
-    document.title = `${r.label} · Prototipo Tornería (demo)`;
+    document.title = `${r.label} · Prototipo Gestión Comercial (demo)`;
     renderSide();
     renderBell();
     const el = $('view');

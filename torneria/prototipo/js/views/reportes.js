@@ -10,7 +10,7 @@
     ['inventario', 'Inventario', 'box', 'Existencias valorizadas y alertas'],
     ['movimientos', 'Movimientos', 'swap', 'Entradas, salidas y ajustes'],
     ['sucursales', 'Por sucursal', 'branches', 'Comparativo entre sucursales'],
-    ['ordenes', 'Órdenes de trabajo', 'wrench', 'Trabajos por estado y responsable']
+    ['caja', 'Caja', 'wallet', 'Ingresos y egresos por categoría']
   ];
   const money = (v) => fmt.money(v);
 
@@ -43,7 +43,7 @@
     if (tipo === 'inventario') {
       const sucs = S.db.sucursales.filter((s) => S.inScope(s.id));
       const list = [];
-      sucs.forEach((s) => S.db.productos.filter((x) => x.tipo !== 'servicio').forEach((pr) => { const q = S.stockOf(s.id, pr.id); list.push({ s, pr, q, min: S.minOf(pr.id, s.id), val: q * pr.costo }); }));
+      sucs.forEach((s) => S.db.productos.filter((x) => x.activo).forEach((pr) => { const q = S.stockOf(s.id, pr.id); list.push({ s, pr, q, min: S.minOf(pr.id, s.id), val: q * pr.costo }); }));
       const cat = {};
       list.forEach((x) => { cat[x.pr.categoria] = (cat[x.pr.categoria] || 0) + x.val; });
       return {
@@ -71,26 +71,29 @@
         const v = S.db.ventas.filter((x) => x.sucursal === s.id && x.estado !== 'anulada' && Q.inRange(x.fecha, p));
         const c = S.db.compras.filter((x) => x.sucursal === s.id && x.estado !== 'anulada' && Q.inRange(x.fecha, p));
         const k = S.db.caja.movimientos.filter((x) => x.sucursal === s.id && Q.inRange(x.fecha, p));
-        const o = S.db.ordenes.filter((x) => x.sucursal === s.id && Q.inRange(x.ingreso, p));
-        return { s, v: Q.sumBy(v, (x) => x.total), n: v.length, c: Q.sumBy(c, (x) => x.total), u: Q.sumBy(v, Q.margenVenta), ing: Q.sumBy(k.filter((x) => x.tipo === 'ingreso'), (x) => x.monto), egr: Q.sumBy(k.filter((x) => x.tipo === 'egreso'), (x) => x.monto), ot: o.length };
+        const inv = S.db.productos.reduce((t, x) => t + S.stockOf(s.id, x.id) * x.costo, 0);
+        return { s, v: Q.sumBy(v, (x) => x.total), n: v.length, c: Q.sumBy(c, (x) => x.total), u: Q.sumBy(v, Q.margenVenta), ing: Q.sumBy(k.filter((x) => x.tipo === 'ingreso'), (x) => x.monto), egr: Q.sumBy(k.filter((x) => x.tipo === 'egreso'), (x) => x.monto), inv };
       });
       return {
         summary: [['Sucursales', String(rows.length)], ['Ventas', money(Q.sumBy(rows, (r) => r.v))], ['Compras', money(Q.sumBy(rows, (r) => r.c))], ['Utilidad estimada', money(Q.sumBy(rows, (r) => r.u))]],
         chart: { kind: 'bars', title: 'Ventas y compras por sucursal', labels: rows.map((r) => r.s.nombre), series: [{ name: 'Ventas', values: rows.map((r) => r.v), color: 'var(--series-1)' }, { name: 'Compras', values: rows.map((r) => r.c), color: 'var(--series-2)' }] },
-        head: ['Sucursal', 'N.º ventas', 'Ventas', 'Compras', 'Utilidad est.', 'Ingresos caja', 'Egresos caja', 'OT ingresadas'], right: [1, 2, 3, 4, 5, 6, 7],
-        rows: rows.map((r) => [r.s.nombre, String(r.n), money(r.v), money(r.c), money(r.u), money(r.ing), money(r.egr), String(r.ot)]),
-        csv: rows.map((r) => [r.s.nombre, r.n, C.n2(r.v), C.n2(r.c), C.n2(r.u), C.n2(r.ing), C.n2(r.egr), r.ot])
+        head: ['Sucursal', 'N.º ventas', 'Ventas', 'Compras', 'Utilidad est.', 'Ingresos caja', 'Egresos caja', 'Valor inventario'], right: [1, 2, 3, 4, 5, 6, 7],
+        rows: rows.map((r) => [r.s.nombre, String(r.n), money(r.v), money(r.c), money(r.u), money(r.ing), money(r.egr), money(r.inv)]),
+        csv: rows.map((r) => [r.s.nombre, r.n, C.n2(r.v), C.n2(r.c), C.n2(r.u), C.n2(r.ing), C.n2(r.egr), C.n2(r.inv)])
       };
     }
-    const o = S.scoped(S.db.ordenes).filter((x) => Q.inRange(x.ingreso, p));
-    const resp = {};
-    o.forEach((x) => { resp[x.responsable] = (resp[x.responsable] || 0) + 1; });
+    // Caja: ingresos y egresos del período por categoría.
+    const k = S.scoped(S.db.caja.movimientos).filter((x) => Q.inRange(x.fecha, p));
+    const cat = {};
+    k.forEach((x) => { const key = `${x.tipo === 'ingreso' ? 'Ingreso' : 'Egreso'} · ${x.categoria}`; cat[key] = (cat[key] || 0) + x.monto; });
+    const ing = Q.sumBy(k.filter((x) => x.tipo === 'ingreso'), (x) => x.monto);
+    const egr = Q.sumBy(k.filter((x) => x.tipo === 'egreso'), (x) => x.monto);
     return {
-      summary: [['Órdenes', String(o.length)], ['Entregadas', String(o.filter((x) => x.estado === 'entregada').length)], ['Atrasadas', String(o.filter(Q.otAtrasada).length)], ['Facturado est.', money(Q.sumBy(o.filter((x) => x.estado !== 'cancelada'), (x) => x.precio))]],
-      chart: { kind: 'hbars', title: 'Órdenes por responsable', fmtN: true, items: Object.entries(resp).sort((a, b) => b[1] - a[1]).map(([k, val]) => ({ label: S.user(k).nombre, value: val })) },
-      head: ['Código', 'Cliente', 'Trabajo', 'Responsable', 'Sucursal', 'Ingreso', 'Entrega', 'Estado', 'Costo est.', 'Precio'], right: [8, 9],
-      rows: o.map((x) => [x.codigo, S.cli(x.cliente).nombre, x.descripcion, S.user(x.responsable).nombre, sucNom(x.sucursal), fmt.date(x.ingreso), fmt.date(x.entrega), L.estadoOT[x.estado], money(x.costoEstimado), money(x.precio)]),
-      csv: o.map((x) => [x.codigo, S.cli(x.cliente).nombre, x.descripcion, S.user(x.responsable).nombre, sucNom(x.sucursal), x.ingreso.slice(0, 10), x.entrega, L.estadoOT[x.estado], C.n2(x.costoEstimado), C.n2(x.precio)])
+      summary: [['Movimientos', String(k.length)], ['Ingresos', money(ing)], ['Egresos', money(egr)], ['Saldo del período', money(ing - egr)]],
+      chart: { kind: 'hbars', title: 'Ingresos y egresos por categoría', items: Object.entries(cat).sort((a, b) => b[1] - a[1]).map(([label, value]) => ({ label, value })) },
+      head: ['Fecha', 'Sucursal', 'Concepto', 'Categoría', 'Método', 'Ingreso', 'Egreso'], right: [5, 6],
+      rows: k.map((x) => [fmt.dateTime(x.fecha), sucNom(x.sucursal), x.concepto, x.categoria, L.metodo[x.metodo] || x.metodo, x.tipo === 'ingreso' ? money(x.monto) : '', x.tipo === 'egreso' ? money(x.monto) : '']),
+      csv: k.map((x) => [x.fecha.replace('T', ' '), sucNom(x.sucursal), x.concepto, x.categoria, L.metodo[x.metodo] || x.metodo, x.tipo === 'ingreso' ? C.n2(x.monto) : '', x.tipo === 'egreso' ? C.n2(x.monto) : ''])
     };
   }
 

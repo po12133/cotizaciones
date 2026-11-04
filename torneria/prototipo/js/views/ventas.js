@@ -13,7 +13,7 @@
     const total = Q.sumBy(validas, (v) => v.total);
     const porCobrar = S.scoped(S.db.ventas).filter((v) => v.estado === 'pendiente');
     el.innerHTML = `
-      <div class="page-head"><div><p class="lead">Ventas de materiales, repuestos y servicios con descuentos, varios métodos de pago y comprobante interno. Cada venta descuenta stock y registra el ingreso en caja.</p></div>
+      <div class="page-head"><div><p class="lead">Ventas de productos comerciales con descuentos, varios métodos de pago y comprobante interno. Cada venta descuenta stock de la sucursal y registra el ingreso en caja.</p></div>
         <div class="actions"><button class="btn btn-outline" id="vExp">${icon('excel', 'sm')}Exportar Excel</button>${A.actionBtn('ventas', `<button class="btn btn-primary" id="vNew">${icon('plus', 'sm')}Registrar venta</button>`)}</div></div>
       <div class="kpis">
         ${C.kpi({ label: 'Total vendido', value: fmt.money(total), sub: `${validas.length} ventas en el período`, icon: 'cart', tone: 'accent' })}
@@ -37,7 +37,7 @@
       columns: [
         { key: 'codigo', label: 'Código', cls: 'code', sort: (v) => v.codigo, render: (v) => esc(v.codigo) },
         { key: 'fecha', label: 'Fecha', sort: (v) => v.fecha, render: (v) => `<span class="nowrap">${fmt.dateTime(v.fecha)}</span>` },
-        { key: 'cliente', label: 'Cliente', sort: (v) => S.cli(v.cliente).nombre, render: (v) => `${esc(S.cli(v.cliente).nombre)}${v.orden ? '<span class="sub">Trabajo de tornería</span>' : v.cotizacion ? '<span class="sub">Desde cotización</span>' : ''}` },
+        { key: 'cliente', label: 'Cliente', sort: (v) => S.cli(v.cliente).nombre, render: (v) => `${esc(S.cli(v.cliente).nombre)}${v.cotizacion ? '<span class="sub">Desde cotización</span>' : ''}` },
         { key: 'items', label: 'Detalle', render: (v) => `<span class="muted">${esc(v.items[0].descripcion || S.prod(v.items[0].producto).nombre)}${v.items.length > 1 ? ` y ${v.items.length - 1} más` : ''}</span>` },
         { key: 'sucursal', label: 'Sucursal', render: (v) => esc(S.suc(v.sucursal).nombre) },
         { key: 'metodo', label: 'Pago', render: (v) => esc(L.metodo[v.metodo]) },
@@ -67,7 +67,7 @@
     const write = A.can('ventas');
     const m = TOR.ui.modal({
       title: `Venta ${v.codigo}`, sub: `${fmt.dateTime(v.fecha)} · ${esc(S.suc(v.sucursal).nombre)} · vendedor ${esc(S.user(v.vendedor) ? S.user(v.vendedor).nombre : '')}`, size: 'wide',
-      body: `<div class="row wrap" style="margin-bottom:12px">${A.badge(L.estadoVenta[v.estado], L.claseVenta[v.estado])}${v.cotizacion ? A.badge(`Desde ${S.db.cotizaciones.find((q) => q.id === v.cotizacion).codigo}`, 'info') : ''}${v.orden ? A.badge(`Trabajo ${S.db.ordenes.find((o) => o.id === v.orden).codigo}`, 'accent') : ''}</div>
+      body: `<div class="row wrap" style="margin-bottom:12px">${A.badge(L.estadoVenta[v.estado], L.claseVenta[v.estado])}${v.cotizacion ? A.badge(`Desde ${S.db.cotizaciones.find((q) => q.id === v.cotizacion).codigo}`, 'info') : ''}</div>
         ${v.estado === 'anulada' ? `<div class="info-box warning" style="margin-bottom:12px">${icon('alert', 'sm')}<span>Venta anulada: ${esc(v.motivoAnulacion || '')}. El stock fue devuelto al inventario.</span></div>` : ''}
         ${C.voucher(v)}
         ${v.pagos.length ? `<div class="section-title">${icon('wallet', 'sm')}Pagos</div><ul class="list-plain" style="border:1px solid var(--line);border-radius:8px">${v.pagos.map((p) => `<li><span>${esc(L.metodo[p.metodo])}<small>${fmt.dateTime(p.fecha)}</small></span><b>${fmt.money(p.monto)}</b></li>`).join('')}</ul>` : ''}`,

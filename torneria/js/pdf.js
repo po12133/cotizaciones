@@ -49,7 +49,7 @@
   function build(JsPDF, m) {
     const doc = new JsPDF({ unit: 'mm', format: 'a4', compress: true });
     const P = m.proyecto;
-    doc.setProperties({ title: `Cotización ${m.cotizacion.numero} - ${P.nombre}`, subject: P.nombre, author: m.proveedor.nombre, creator: m.proveedor.nombre, keywords: 'cotización, tornería, sistema de gestión' });
+    doc.setProperties({ title: `Cotización ${m.cotizacion.numero} - ${P.nombre}`, subject: P.nombre, author: m.proveedor.nombre, creator: m.proveedor.nombre, keywords: 'cotización, sistema de gestión comercial, inventarios, multisucursal' });
     const W = doc.internal.pageSize.getWidth();
     const H = doc.internal.pageSize.getHeight();
     const M = 18;
@@ -184,10 +184,10 @@
     section('Resumen ejecutivo', 60);
     paragraph(`${m.proveedor.nombre} presenta esta propuesta para el desarrollo de un ${P.nombre.charAt(0).toLowerCase() + P.nombre.slice(1)}: ${P.tipo.toLowerCase()} que reúne en una sola plataforma la administración de todas las sucursales de la empresa.`);
     paragraph(P.descripcion);
-    paragraph(`El sistema cubre ${m.modulos.length} módulos integrados: sucursales, usuarios y permisos, productos y materiales, compras, ventas y cotizaciones, inventarios, órdenes de trabajo, clientes, caja, dashboard, reportes y configuración. La inversión total es de ${m.money(m.total)}, con un plazo estimado de ${m.plazoTexto}.`);
+    paragraph(`Cubre ${m.modulos.length} módulos integrados: ${listaModulos(m.modulos)}. El subtotal de los módulos es de ${m.money(m.subtotal)}; con el ${m.descuentos.map((d) => `${d.concepto.toLowerCase()} de ${m.money(d.monto)}`).join(' y el ')}, la inversión total es de ${m.money(m.total)}, con un plazo estimado de ${m.plazoTexto}.`);
     table({
       theme: 'plain',
-      body: [[`INVERSIÓN TOTAL\n${money(m.total)}`, `TIEMPO ESTIMADO\n${clean(m.plazoTexto)}`, `FORMA DE PAGO\n${m.pagos.map((p) => `${p.porcentaje}%`).join(' / ')}`, `HOSTING\n${money(m.hosting.montoMensual)}/mes (${m.hosting.meses} meses)`, `MANTENIMIENTO\n${money(m.mantenimiento.montoMensual)}/mes (opcional)`]],
+      body: [[`INVERSIÓN TOTAL\n${money(m.total)}${m.descuento ? `\n(desc. ${money(m.descuento)})` : ''}`, `TIEMPO ESTIMADO\n${clean(m.plazoTexto)}`, `FORMA DE PAGO\n${m.pagos.map((p) => `${p.porcentaje}%`).join(' / ')}`, `HOSTING\n${money(m.hosting.montoMensual)}/mes (${m.hosting.meses} meses)`, `MANTENIMIENTO\n${money(m.mantenimiento.montoMensual)}/mes (opcional)`]],
       styles: { fontSize: 9, textColor: INK, fillColor: SOFT, lineColor: [255, 255, 255], lineWidth: 1.2, cellPadding: 3.4, fontStyle: 'bold' }
     });
 
@@ -226,25 +226,32 @@
 
     section('Inversión: tabla de precios', 70);
     table({
-      head: [['#', 'Módulo / servicio', '% del total', 'Precio']],
-      body: m.costos.map((c, i) => [String(i + 1).padStart(2, '0'), clean(c.concepto), `${(c.monto / m.total * 100).toFixed(1).replace('.', ',')} %`, money(c.monto)]),
-      foot: [['', 'TOTAL', '100 %', money(m.total)]],
+      head: [['#', 'Módulo / servicio', '% del subtotal', 'Precio']],
+      body: m.costos.map((c, i) => [String(i + 1).padStart(2, '0'), clean(c.concepto), `${(c.monto / m.subtotal * 100).toFixed(1).replace('.', ',')} %`, money(c.monto)]),
+      foot: [['', 'Subtotal', '100 %', money(m.subtotal)], ...m.descuentos.map((d) => ['', clean(d.concepto), '', money(-d.monto)]), ['', 'TOTAL FINAL', '', money(m.total)]],
       columnStyles: { 0: { cellWidth: 12, textColor: MUTED }, 2: { halign: 'right', cellWidth: 28 }, 3: { halign: 'right', cellWidth: 34, fontStyle: 'bold', textColor: INK } },
-      didParseCell: (d) => { if (d.section === 'foot' && d.column.index >= 2) d.cell.styles.halign = 'right'; if (d.section === 'head' && d.column.index >= 2) d.cell.styles.halign = 'right'; }
+      didParseCell: (d) => {
+        if (d.section === 'foot' && d.column.index >= 2) d.cell.styles.halign = 'right';
+        if (d.section === 'head' && d.column.index >= 2) d.cell.styles.halign = 'right';
+        // Subtotal y descuento en filas claras; el total final queda en el fondo oscuro del pie.
+        if (d.section === 'foot' && d.row.index < d.table.foot.length - 1) { d.cell.styles.fillColor = SOFT; d.cell.styles.textColor = d.row.index === 0 ? INK : [10, 107, 10]; d.cell.styles.fontSize = 9.6; }
+      }
     });
     paragraph(m.config.notaCostos, { size: 8.8, color: MUTED });
 
     // caja de inversión total
     ensure(30);
-    doc.setFillColor(...INK); doc.roundedRect(M, y, CW, 24, 2.5, 2.5, 'F');
-    doc.setFillColor(...ACCENT); doc.rect(M, y, 2.2, 24, 'F');
+    doc.setFillColor(...INK); doc.roundedRect(M, y, CW, 28, 2.5, 2.5, 'F');
+    doc.setFillColor(...ACCENT); doc.rect(M, y, 2.2, 28, 'F');
     font(8, [170, 180, 194], 'bold'); doc.text('INVERSIÓN TOTAL DEL DESARROLLO', M + 8, y + 8.5);
     font(20, [255, 170, 120], 'bold'); doc.text(money(m.total), M + 8, y + 18);
+    font(8.2, [200, 208, 218]);
+    doc.text(clean(`Subtotal ${money(m.subtotal)}${m.descuentos.map((d) => ` · ${d.concepto} ${money(-d.monto)}`).join('')}`), M + 8, y + 24);
     font(9, [200, 208, 218]);
     doc.text(clean(`${m.moneda.nombre} (${m.moneda.codigo})`), W - M - 6, y + 9, { align: 'right' });
     doc.text(clean(`Plazo estimado: ${m.plazoTexto}`), W - M - 6, y + 15, { align: 'right' });
-    doc.text(clean(`Facturación electrónica: no incluida`), W - M - 6, y + 20, { align: 'right' });
-    y += 30;
+    doc.text(clean(`Facturación electrónica: no incluida`), W - M - 6, y + 21, { align: 'right' });
+    y += 34;
 
     section('Cronograma estimado', 80);
     table({
@@ -258,6 +265,7 @@
     gantt(m.cronograma, m.semanas.max, 'max');
     paragraph(m.config.notaCronograma, { size: 8.8, color: MUTED });
 
+    function listaModulos(mods) { const n = mods.map((x) => x.nombre.charAt(0).toLowerCase() + x.nombre.slice(1)); return `${n.slice(0, -1).join(', ')} y ${n[n.length - 1]}`; }
     function rango([a, b]) { return a === b ? `Semana ${a}` : `Semanas ${a} a ${b}`; }
     function gantt(etapas, total, key) {
       const rowH = 6.4;
@@ -333,7 +341,7 @@
   }
 
   function fileName(m) {
-    return `Cotizacion-${m.cotizacion.numero}-Sistema-Gestion-Torneria.pdf`;
+    return `Cotizacion-${m.cotizacion.numero}-Sistema-Gestion-Comercial.pdf`;
   }
 
   async function create(m) { const JsPDF = await ensureLib(); return build(JsPDF, m); }
