@@ -25,7 +25,8 @@ if (fs.existsSync(envFile)) {
 const num = (v, d) => (v !== undefined && v !== '' && !Number.isNaN(Number(v)) ? Number(v) : d);
 const CFG = {
   port: num(process.env.PORT, 8080),
-  host: process.env.HOST || '127.0.0.1',
+  // Dentro de Docker (Coolify) hay que escuchar en todas las interfaces: con 127.0.0.1 el proxy no llega (Bad Gateway)
+  host: process.env.MODAFLOW_DOCKER === '1' ? '0.0.0.0' : process.env.HOST || '127.0.0.1',
   model: process.env.IA_MODELO || DEFAULT_MODEL,
   perMinute: num(process.env.IA_LIMITE_POR_MINUTO, 6),
   perDay: num(process.env.IA_LIMITE_DIARIO, 200),
