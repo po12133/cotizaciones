@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Planes y comparación · ModaFlow</title>
+  <meta name="description" content="Planes Básico, Pro, Premium y Empresarial para tiendas de ropa. Compare funciones y pruebe la demostración de cada plan.">
+  <link rel="icon" href="assets/logos/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="planes">
+  <div class="proto-ribbon"><b>Prototipo comercial</b> · Precios y límites son una propuesta inicial, sujeta a las condiciones definitivas del servicio.</div>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html"><span data-brand>ModaFlow</span></a>
+      <button class="icon-btn nav-toggle" aria-label="Abrir menú" aria-expanded="false"><i data-icon="menu"></i></button>
+      <nav class="site-nav" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="#planes" class="active">Planes</a>
+        <a href="#recomendador">¿Qué plan necesito?</a>
+        <a href="#comparar">Comparar</a>
+        <a href="catalogo.html">Catálogo MioShop</a>
+        <a class="btn grad sm" href="demo.html">Probar demostración</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Planes de <span data-brand>ModaFlow</span></span>
+        <h1>Elija el plan que <span class="grad-text">acompaña a su tienda</span></h1>
+        <p>Tres planes mensuales y una modalidad empresarial con implementación acompañada. Todos incluyen catálogo online, pedidos por WhatsApp y pago con QR.</p>
+      </div>
+    </section>
+
+    <section id="planes" style="padding-top:20px">
+      <div class="container">
+        <div class="plans-grid" id="planCards"></div>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="container">
+        <div class="license-box reveal">
+          <div class="ic"><i data-icon="shield"></i></div>
+          <div>
+            <h3>Plan Empresarial: licencia de uso, no venta del software</h3>
+            <p class="muted" style="margin:0">El cliente paga por activación, configuración, capacitación y servicio.</p>
+            <ul>
+              <li>Bs 4.500 de activación, con el primer año de servicio incluido. Renovación referencial desde el segundo año: Bs 900 anuales.</li>
+              <li>No incluye entrega del código fuente. El software sigue siendo propiedad de <span data-brand>ModaFlow</span> y funciona bajo una licencia de uso.</li>
+              <li>El código fuente, la infraestructura y la propiedad intelectual permanecen bajo control de la empresa desarrolladora.</li>
+              <li>Los desarrollos personalizados se cotizan por separado.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="recomendador" style="background:#fff;border-block:1px solid var(--line)">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Recomendador</span>
+          <h2>¿Qué plan necesita su tienda?</h2>
+          <p>Mueva los controles según el tamaño de su tienda y le sugerimos el plan más económico que lo cubre.</p>
+        </div>
+        <div class="calc reveal" id="calc"></div>
+      </div>
+    </section>
+
+    <section id="comparar">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Comparador</span>
+          <h2>Compare los cuatro planes</h2>
+          <p>Elija un plan para resaltarlo y pruebe su demostración directamente desde la tabla.</p>
+        </div>
+        <div id="compare"></div>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="container">
+        <div class="cta-band reveal">
+          <div>
+            <h2>¿Todavía con dudas?</h2>
+            <p>Abra la demostración y cambie de plan desde la barra superior: verá en el momento qué funciones se habilitan en cada uno.</p>
+          </div>
+          <div class="actions">
+            <a class="btn ghost lg" href="index.html#faq">Preguntas frecuentes</a>
+            <a class="btn dark lg" href="demo.html"><i data-icon="play" class="sm"></i> Abrir demostración</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div>
+        <a class="brand" href="index.html"><span data-brand>ModaFlow</span></a>
+        <p class="legal">Presentación comercial y prototipo funcional. Precios en bolivianos (Bs). Los precios, límites y condiciones son una propuesta comercial inicial y están sujetos a las condiciones definitivas del servicio.</p>
+      </div>
+      <nav><a href="index.html">Inicio</a><a href="demo.html">Demostración</a><a href="catalogo.html">Catálogo MioShop</a></nav>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/plans.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/planes.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

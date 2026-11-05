@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MioShop — Moda Femenina · Catálogo</title>
+  <meta name="description" content="Tu próximo outfit favorito está aquí. Catálogo de MioShop — Moda Femenina (demostración).">
+  <meta name="theme-color" content="#E8457E">
+  <link rel="icon" href="assets/logos/mio-logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/catalogo.css">
+</head>
+<body>
+  <div class="demo-strip">
+    <span>Catálogo de demostración creado con <a href="index.html" data-brand>ModaFlow</a> · precios y existencias de ejemplo</span>
+    <a href="demo.html#/pedidos" class="strip-btn">Ver panel de la tienda →</a>
+  </div>
+
+  <header class="shop-header">
+    <div class="wrap">
+      <a href="catalogo.html" class="shop-brand"><img src="assets/logos/mio-logo.png" alt="Logo de MioShop"><span><b data-store="name">MioShop</b><small data-store="category">Moda femenina</small></span></a>
+      <label class="shop-search"><i data-icon="search" class="sm"></i><input id="q" type="search" placeholder="Buscar blusas, vestidos, colores…" aria-label="Buscar productos"></label>
+      <button class="cart-btn" id="cartBtn" aria-label="Abrir carrito"><i data-icon="cart"></i><span id="cartCount" hidden>0</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="banner" id="banner" aria-label="Banner de MioShop"></section>
+
+    <div class="wrap">
+      <nav class="cats" id="cats" aria-label="Categorías"></nav>
+      <div id="promo"></div>
+      <section id="featured"></section>
+
+      <section class="catalog" id="catalog">
+        <div class="cat-head">
+          <h2 id="listTitle">Toda la colección</h2>
+          <div class="filters">
+            <button class="pill" id="filtersBtn"><i data-icon="filter" class="sm"></i> Filtros <span id="fCount"></span></button>
+            <select id="sort" aria-label="Ordenar">
+              <option value="new">Más nuevos</option>
+              <option value="low">Menor precio</option>
+              <option value="high">Mayor precio</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-panel" id="filterPanel" hidden></div>
+        <div class="grid" id="grid"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="shop-footer">
+    <div class="wrap">
+      <div class="f-brand"><img src="assets/logos/mio-logo.png" alt=""><div><b data-store="fullName">MioShop — Moda Femenina</b><p data-store="slogan">Tu próximo outfit favorito está aquí</p></div></div>
+      <div class="f-info">
+        <p><i data-icon="truck" class="sm"></i> <span id="deliveryTxt"></span></p>
+        <p><i data-icon="qr" class="sm"></i> Pagos en efectivo o por QR bancario</p>
+        <p><i data-icon="whatsapp" class="sm"></i> Pedidos y consultas por WhatsApp</p>
+      </div>
+      <p class="f-made">Tienda online de demostración · Hecha con <a href="index.html" data-brand>ModaFlow</a></p>
+    </div>
+  </footer>
+
+  <a class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><i data-icon="whatsapp"></i></a>
+
+  <aside class="drawer" id="drawer" aria-label="Carrito de compras" aria-hidden="true"></aside>
+  <div class="drawer-scrim" id="drawerScrim"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/plans.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/catalogo.js"></script>
+</body>
+</html>

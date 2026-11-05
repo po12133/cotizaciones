@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demostración · ModaFlow · MioShop</title>
+  <link rel="icon" href="assets/logos/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="app">
+  <div class="demo-bar">
+    <a class="demo-brand" href="index.html" title="Volver a la presentación"><span class="brand-mini"></span><span data-brand>ModaFlow</span></a>
+    <span class="demo-tag"><i data-icon="info" class="sm"></i> Prototipo · datos de demostración</span>
+    <div class="plan-switch" role="group" aria-label="Plan de la demostración">
+      <span class="ps-label">Plan:</span>
+      <div class="seg dark" id="planSwitch"></div>
+    </div>
+    <div class="demo-actions">
+      <a class="db-btn" href="catalogo.html" target="_blank" rel="noopener"><i data-icon="store" class="sm"></i><span>Catálogo</span></a>
+      <a class="db-btn" href="planes.html"><i data-icon="layers" class="sm"></i><span>Planes</span></a>
+      <button class="db-btn" id="resetBtn" type="button"><i data-icon="refresh" class="sm"></i><span>Restaurar datos</span></button>
+    </div>
+  </div>
+
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="store-head">
+        <img src="assets/logos/mio-logo.png" alt="Logo MioShop">
+        <div><b data-store="name">MioShop</b><small>Panel de la tienda</small></div>
+      </div>
+      <nav id="nav" aria-label="Módulos"></nav>
+      <div class="usage" id="usage"></div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menú"><i data-icon="menu"></i></button>
+        <div class="tb-title"><h1 id="viewTitle">Dashboard</h1><span id="viewSub" class="muted"></span></div>
+        <div class="tb-right">
+          <label class="branch-pick" id="branchPick" title="Sucursal activa"><i data-icon="mapPin" class="sm"></i><select id="branchSel" aria-label="Sucursal activa"></select></label>
+          <button class="icon-btn" id="bellBtn" aria-label="Notificaciones"><i data-icon="bell"></i><span class="dot" id="bellDot" hidden></span></button>
+          <div class="me" id="me"></div>
+        </div>
+      </header>
+      <main id="view" class="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/plans.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/demo.js"></script>
+  <script src="js/productos.js"></script>
+  <script src="js/ventas.js"></script>
+  <script src="js/pedidos.js"></script>
+  <script src="js/modulos.js"></script>
+  <script>MF.demo.start();</script>
+</body>
+</html>
