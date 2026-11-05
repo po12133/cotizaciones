@@ -34,7 +34,15 @@ window.MF_CONFIG = {
 
   // Registro de prendas con Claude: el navegador llama a este endpoint del servidor (server/server.mjs),
   // que es el único que conoce la API key. Ruta relativa = mismo servidor que sirve el sitio.
-  ai: { endpoint: 'api/ia', maxImageEdge: 1280, timeoutMs: 70000 },
+  // Si las páginas se publican en un sitio estático y el servidor en otro dominio, use la URL completa,
+  // p. ej. 'https://modaflow.midominio.com/api/ia', y agregue el dominio estático a IA_CORS_ORIGENES en el servidor.
+  ai: {
+    // En el sitio estático de cotizaciones la IA vive en su propio servidor (recurso Docker en Coolify);
+    // en local o cuando el servidor de ModaFlow sirve las páginas, se usa la ruta relativa.
+    endpoint: location.hostname === 'cotizaciones.amicornios.com' ? 'https://modaflow-api.amicornios.com/api/ia' : 'api/ia',
+    maxImageEdge: 1280,
+    timeoutMs: 70000
+  },
 
   storageKey: 'modaflow:db',
   cartKey: 'modaflow:cart',

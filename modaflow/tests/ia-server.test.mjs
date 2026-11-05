@@ -47,7 +47,7 @@ const req = { image: jpeg, media_type: 'image/jpeg', categorias: CATS, colores: 
 
 (async () => {
   console.log('Servidor sin API key');
-  let s = await runServer({ ANTHROPIC_API_KEY: '' }, 5381);
+  let s = await runServer({ ANTHROPIC_API_KEY: '', IA_CORS_ORIGENES: 'https://estatico.ejemplo.com' }, 5381);
   let r = await (await fetch('http://127.0.0.1:5381/api/ia/estado')).json();
   ok(r.disponible === false && r.modelo === 'claude-haiku-5-5', 'Estado: IA no disponible, modelo claude-haiku-5-5');
   r = await post(5381, req);
@@ -57,6 +57,10 @@ const req = { image: jpeg, media_type: 'image/jpeg', categorias: CATS, colores: 
   }
   const raw = (p) => new Promise((res) => http.get({ host: '127.0.0.1', port: 5381, path: p }, (r) => { r.resume(); res(r.statusCode); }));
   for (const p of ['/../package.json', '/..%2f..%2fCOOLIFY%2fcotizaciones%2fmodaflow%2f.env.example']) ok((await raw(p)) === 404, 'Bloquea salir de la carpeta: ' + p);
+  let pre = await fetch('http://127.0.0.1:5381/api/ia/analizar', { method: 'OPTIONS', headers: { Origin: 'https://estatico.ejemplo.com' } });
+  ok(pre.status === 204 && pre.headers.get('access-control-allow-origin') === 'https://estatico.ejemplo.com', 'CORS: permite el dominio configurado en IA_CORS_ORIGENES');
+  pre = await fetch('http://127.0.0.1:5381/api/ia/estado', { headers: { Origin: 'https://otro.com' } });
+  ok(!pre.headers.get('access-control-allow-origin'), 'CORS: no permite otros dominios');
   ok((await fetch('http://127.0.0.1:5381/index.html')).status === 200 && (await fetch('http://127.0.0.1:5381/')).status === 200, 'Sirve el sitio');
   ok(!(await (await fetch('http://127.0.0.1:5381/js/config.js')).text()).includes('sk-ant'), 'El JavaScript del navegador no contiene claves');
   s.p.kill();

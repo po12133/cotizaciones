@@ -31,7 +31,7 @@
       const s = await r.json();
       statusCache = Object.assign(s, s.disponible ? {} : { motivo: 'clave', mensaje: 'El servidor está activo, pero falta configurar ANTHROPIC_API_KEY en el archivo .env.' });
     } catch (e) {
-      statusCache = { disponible: false, motivo: 'servidor', mensaje: 'No se encontró el servicio de IA. Inicie el servidor de ModaFlow con npm start y abra http://localhost:8080.' };
+      statusCache = { disponible: false, motivo: 'servidor', mensaje: 'No se encontró el servicio de IA. Si el sitio está publicado como estático, la IA necesita el servidor de ModaFlow (Node o Docker); en local, inícielo con npm start y abra http://localhost:8080.' };
     }
     return statusCache;
   }

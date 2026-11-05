@@ -20,6 +20,24 @@ npm start                   # → http://localhost:8080
 
 Solo las tipografías se cargan desde Google Fonts. Sin internet se usa la fuente del sistema.
 
+## Publicar en Coolify (con IA)
+
+Las páginas se publican en el sitio estático `https://cotizaciones.amicornios.com/modaflow/`. Un sitio estático no ejecuta el servidor que llama a Claude, así que la IA se publica como un **segundo recurso** de Coolify. Las páginas lo llaman solas: `js/config.js` usa `https://modaflow-api.amicornios.com/api/ia` cuando la página está en `cotizaciones.amicornios.com`.
+
+1. **+ New Resource** → el mismo repositorio de GitHub (`cotizaciones`), rama `main`.
+2. **Build Pack:** `Dockerfile` · **Base Directory:** `/modaflow` · **Ports Exposes:** `8080`.
+3. **Domains:** `https://modaflow-api.amicornios.com`. El DNS de ese subdominio debe apuntar al servidor de Coolify, salvo que ya tenga un comodín `*.amicornios.com`.
+4. **Environment Variables:**
+   - `ANTHROPIC_API_KEY` (secreta)
+   - `IA_CORS_ORIGENES=https://cotizaciones.amicornios.com`
+   - opcionales: `IA_PRECIO_ENTRADA_USD_MTOK=0.10`, `IA_PRECIO_SALIDA_USD_MTOK=0.50`, `IA_TIPO_CAMBIO_BS=6.96`
+
+   El Dockerfile ya define `HOST=0.0.0.0`, `PORT=8080` y `TRUST_PROXY=1`.
+5. Despliegue y abra `https://modaflow-api.amicornios.com/api/ia/estado`: debe responder `"disponible": true`.
+6. Haga push de los cambios para que el sitio estático publique el nuevo `js/config.js`.
+
+Si elige otro subdominio, cámbielo en `js/config.js` → `ai.endpoint`. Ese recurso también sirve ModaFlow completo en su propio dominio, por si prefiere usarlo directamente.
+
 ## Registro de prendas con IA (Claude)
 
 - **Modelo:** `claude-haiku-5-5` (Claude Haiku 5.5), el modelo de Claude más económico que analiza imágenes. Se cambia con `IA_MODELO` en `.env`.

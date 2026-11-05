@@ -32,8 +32,18 @@ const CFG = {
   concurrency: num(process.env.IA_CONCURRENCIA, 2),
   pricing: process.env.IA_PRECIO_ENTRADA_USD_MTOK && process.env.IA_PRECIO_SALIDA_USD_MTOK
     ? { input: num(process.env.IA_PRECIO_ENTRADA_USD_MTOK, NaN), output: num(process.env.IA_PRECIO_SALIDA_USD_MTOK, NaN) } : null,
-  usdToBs: num(process.env.IA_TIPO_CAMBIO_BS, null)
+  usdToBs: num(process.env.IA_TIPO_CAMBIO_BS, null),
+  // Detrás de un proxy (Coolify/Traefik) la IP real del visitante llega en X-Forwarded-For
+  trustProxy: /^(1|true|si|sí)$/i.test(process.env.TRUST_PROXY || ''),
+  // Orígenes permitidos para llamar a la API desde otro dominio (p. ej. el sitio estático). Vacío = solo el mismo dominio.
+  corsOrigins: (process.env.IA_CORS_ORIGENES || '').split(',').map((s) => s.trim().replace(/\/$/, '')).filter(Boolean)
 };
+const clientIp = (req) => (CFG.trustProxy && req.headers['x-forwarded-for'] ? String(req.headers['x-forwarded-for']).split(',')[0].trim() : req.socket.remoteAddress) || 'local';
+function corsHeaders(req) {
+  const origin = (req.headers.origin || '').replace(/\/$/, '');
+  if (!origin || !CFG.corsOrigins.includes(origin)) return {};
+  return { 'Access-Control-Allow-Origin': origin, 'Vary': 'Origin', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Max-Age': '600' };
+}
 const hasKey = Boolean(process.env.ANTHROPIC_API_KEY);
 const client = hasKey ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, maxRetries: 1, timeout: 60_000 }) : null;
 
@@ -96,7 +106,7 @@ function status() {
 
 async function analyze(req, res) {
   if (!hasKey) return send(res, 503, { error: 'La IA no está configurada en el servidor: falta ANTHROPIC_API_KEY.', code: 'sin_clave' });
-  const ip = req.socket.remoteAddress || 'local';
+  const ip = clientIp(req);
   let body;
   try { body = JSON.parse(await readBody(req, 7.2 * 1024 * 1024)); }
   catch (e) { return send(res, e.status || 400, { error: e instanceof IAError ? e.message : 'Solicitud inválida.', code: e.code || 'json' }); }
@@ -128,6 +138,10 @@ async function analyze(req, res) {
 export function createServer() {
   return http.createServer((req, res) => {
     const url = req.url.split('?')[0];
+    if (url.startsWith('/api/')) {
+      for (const [k, v] of Object.entries(corsHeaders(req))) res.setHeader(k, v);
+      if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
+    }
     if (url === '/api/ia/estado' && req.method === 'GET') return send(res, 200, status());
     if (url === '/api/ia/analizar') {
       if (req.method !== 'POST') return send(res, 405, { error: 'Use POST.' });
