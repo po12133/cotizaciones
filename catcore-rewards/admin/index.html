@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Panel CorePoints · CatCore</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0a0c16">
+  <link rel="icon" href="../assets/images/catcore-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="admin">
+  <div id="boot"><div class="boot-box"><img src="../assets/images/catcore-icon.png" alt=""><span class="spinner"></span><span>Cargando panel CorePoints…</span></div></div>
+  <div class="admin-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Menú del panel">
+      <a class="side-brand" href="#/dashboard"><img src="../assets/images/catcore-icon.png" alt=""><div><b><span class="text-pink">CORE</span><span class="text-cyan">POINTS</span></b><small>Panel administrativo</small></div></a>
+      <nav class="side-nav" id="sideNav"></nav>
+      <div class="side-foot">
+        <a class="btn btn-ghost btn-sm" href="../index.html" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Ver portal del cliente</a>
+        <div class="side-user"><span class="avatar" style="--h:300">AD</span><div><b>Administración</b><small>Sin autenticación (demo)</small></div></div>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+    <div class="admin-main">
+      <header class="topbar">
+        <button class="icon-btn side-toggle" id="sideToggle" aria-label="Abrir menú"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <div><h1 id="pageTitle">Dashboard</h1><div class="sub" id="pageSub"></div></div>
+        <div class="topbar-right">
+          <span class="clock-pill" id="clockPill"></span>
+          <a class="icon-btn bell" href="#/notificaciones" id="bellBtn" aria-label="Notificaciones"></a>
+        </div>
+      </header>
+      <main class="admin-content" id="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/database.js"></script>
+  <script src="../assets/js/points.js"></script>
+  <script src="../assets/js/customers.js"></script>
+  <script src="../assets/js/purchases.js"></script>
+  <script src="../assets/js/rewards.js"></script>
+  <script src="../assets/js/redemptions.js"></script>
+  <script src="../assets/js/notifications.js"></script>
+  <script src="../assets/js/seed.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/admin.js"></script>
+</body>
+</html>

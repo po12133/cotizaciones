@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>CorePoints · Programa de recompensas CatCore</title>
+  <meta name="description" content="CorePoints: registra tus boletas de compra en CatCore, acumula puntos y canjéalos por accesorios, periféricos y servicios técnicos.">
+  <meta name="theme-color" content="#0c0e1a">
+  <link rel="icon" href="assets/images/catcore-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body class="portal">
+  <div id="boot"><div class="boot-box"><img src="assets/images/catcore-icon.png" alt=""><span class="spinner"></span><span>Preparando CorePoints…</span></div></div>
+
+  <div class="demo-bar"><b>Prototipo de demostración</b> · Los datos se guardan solo en este navegador (LocalStorage + IndexedDB). No ingreses información personal real. · <a href="admin/index.html">Abrir panel administrativo →</a></div>
+
+  <header class="site-head">
+    <div class="container">
+      <a class="brand" href="#/" aria-label="CorePoints, inicio">
+        <img src="assets/images/catcore-logo.png" alt="CatCore">
+        <span class="brand-sep"></span>
+        <span class="cp-word head"><span class="a">CORE</span><span class="b">POINTS</span></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Principal">
+        <a href="#/" data-route="inicio">Inicio</a>
+        <a href="#/registrar" data-route="registrar">Registrar compra</a>
+        <a href="#/recompensas" data-route="recompensas">Recompensas</a>
+        <a href="#/mis-puntos" data-route="mis-puntos">Mis puntos</a>
+      </nav>
+      <div class="head-cta" id="headCta"></div>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </div>
+  </header>
+  <div class="subnav">
+    <div class="container">
+      <a href="https://catcorebo.com/" target="_blank" rel="noopener">catcorebo.com</a>
+      <a href="https://catcorebo.com/tienda/" target="_blank" rel="noopener">Productos</a>
+      <a href="https://catcorebo.com/" target="_blank" rel="noopener">Combos</a>
+      <a href="https://catcorebo.com/" target="_blank" rel="noopener">Garantías</a>
+      <a href="https://catcorebo.com/" target="_blank" rel="noopener">Contáctanos</a>
+      <a class="hl" href="#/">CorePoints</a>
+    </div>
+  </div>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="site-foot">
+    <div class="container">
+      <div class="foot-grid">
+        <div>
+          <img src="assets/images/catcore-logo.png" alt="CatCore">
+          <p>CorePoints es el programa de fidelización de CatCore. Cada compra en tienda suma puntos para canjear por accesorios, periféricos y servicios técnicos.</p>
+        </div>
+        <div>
+          <h5>CorePoints</h5>
+          <a href="#/registrar">Registrar compra</a>
+          <a href="#/mis-puntos">Consultar mis puntos</a>
+          <a href="#/recompensas">Tienda de recompensas</a>
+          <a href="#/" data-scroll="faq">Preguntas frecuentes</a>
+        </div>
+        <div>
+          <h5>CatCore</h5>
+          <a href="https://catcorebo.com/" target="_blank" rel="noopener">Sitio web</a>
+          <a href="https://catcorebo.com/tienda/" target="_blank" rel="noopener">Productos</a>
+          <a href="https://catcorebo.com/" target="_blank" rel="noopener">Combos</a>
+        </div>
+        <div>
+          <h5>Demostración</h5>
+          <a href="admin/index.html">Panel administrativo</a>
+          <a href="README.md">Guía del prototipo</a>
+        </div>
+      </div>
+      <div class="foot-bottom"><span>© CatCore · Rendimiento que domina</span><span>Prototipo CorePoints · datos ficticios</span></div>
+    </div>
+  </footer>
+  <a class="wa-float" href="#" id="waFloat" aria-label="Escribir por WhatsApp"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2.2A9.8 9.8 0 0 0 3.6 17l-1.4 4.8 5-1.3A9.8 9.8 0 1 0 12 2.2zm5.7 13.9c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.2 1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.6 2.1 1.1 1 2.1 1.3 2.4 1.4.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.5z"/></svg></a>
+
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/database.js"></script>
+  <script src="assets/js/points.js"></script>
+  <script src="assets/js/customers.js"></script>
+  <script src="assets/js/purchases.js"></script>
+  <script src="assets/js/rewards.js"></script>
+  <script src="assets/js/redemptions.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/seed.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
