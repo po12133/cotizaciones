@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Superadministrador · Catalogia</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    .adm-top { background: #0f172a; color: #fff; }
+    .adm-top-in { display: flex; align-items: center; gap: 14px; height: 64px; }
+    .adm-top .logo { color: #fff; }
+    .adm-top .badge { background: rgba(255, 255, 255, .12); color: #c7d2fe; }
+    .adm-top-r { margin-left: auto; display: flex; gap: 8px; }
+    .adm-top .btn-ghost { background: transparent; color: #e2e8f0; border-color: rgba(255, 255, 255, .25); }
+    .adm-tabs { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 30; }
+    .adm-tabs .tabs { margin: 0; border: 0; }
+    .adm-main { padding: 22px 0 60px; }
+    @media (max-width: 640px) {
+      .adm-top-in { height: auto; padding-top: 10px; padding-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+      .adm-top .badge { display: none; }
+      .adm-top-r { width: 100%; margin-left: 0; }
+      .adm-top-r .btn { flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body class="dash">
+  <header class="adm-top"><div class="container adm-top-in">
+    <a class="logo" href="index.html"><span class="logo-mark" data-brand-short>C</span><span data-brand>Catalogia</span></a>
+    <span class="badge">Superadministrador</span>
+    <span class="demo-tag">Simulación</span>
+    <div class="adm-top-r"><a class="btn btn-sm btn-ghost" href="dashboard.html">Panel del comerciante</a><a class="btn btn-sm btn-ghost" href="index.html">Sitio</a></div>
+  </div></header>
+  <nav class="adm-tabs"><div class="container"><div class="tabs" id="admTabs"></div></div></nav>
+  <main class="container adm-main" id="view"></main>
+
+  <script src="js/config.js"></script>
+  <script src="data/plans.js"></script>
+  <script src="data/templates.js"></script>
+  <script src="data/products.js"></script>
+  <script src="js/images.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/catalogs.js"></script>
+  <script src="js/subscriptions.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/seed.js"></script>
+  <script src="js/superadmin.js"></script>
+</body>
+</html>

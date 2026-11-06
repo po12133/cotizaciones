@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión · Catalogia</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body data-page="login">
+  <div class="auth">
+    <aside class="auth-side">
+      <a class="logo" href="index.html"><span class="logo-mark" data-brand-short>C</span><span data-brand>Catalogia</span></a>
+      <div>
+        <h2>Tu catálogo se actualiza solo desde Google Sheets</h2>
+        <p>Entra a tu panel para sincronizar productos, ajustar tu diseño y revisar las consultas por WhatsApp.</p>
+        <ul class="auth-list"><li>Sincronización con Sheets y Drive</li><li>Plantillas por rubro</li><li>Pedidos por WhatsApp sin comisiones</li></ul>
+      </div>
+      <div class="auth-quote"><p>“Antes mandaba fotos una por una. Ahora comparto un enlace y me llegan los pedidos con el código del producto.”</p><small>Testimonio de demostración</small></div>
+    </aside>
+    <main class="auth-main"><div class="auth-box" id="authBox"></div></main>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="data/plans.js"></script>
+  <script src="data/templates.js"></script>
+  <script src="data/products.js"></script>
+  <script src="js/images.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/catalogs.js"></script>
+  <script src="js/subscriptions.js"></script>
+  <script src="js/seed.js"></script>
+  <script src="js/auth-demo.js"></script>
+</body>
+</html>
