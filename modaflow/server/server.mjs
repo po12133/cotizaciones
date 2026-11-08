@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Anthropic from '@anthropic-ai/sdk';
-import { DEFAULT_MODEL, analyzeGarment, validateImage, cleanList, estimateCost, IAError } from './ia.mjs';
+import { DEFAULT_MODEL, MAX_IMAGES, analyzeGarment, readImages, cleanList, estimateCost, IAError } from './ia.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(here, '..');
@@ -78,7 +78,7 @@ function readBody(req, limit) {
   return new Promise((resolve, reject) => {
     let size = 0;
     const chunks = [];
-    req.on('data', (c) => { size += c.length; if (size > limit) { reject(new IAError('tamano', 'La imagen es demasiado grande (máximo 5 MB).', 413)); req.destroy(); } else chunks.push(c); });
+    req.on('data', (c) => { size += c.length; if (size > limit) { reject(new IAError('tamano', `Las fotos son demasiado grandes (máximo 5 MB cada una, hasta ${MAX_IMAGES} fotos).`, 413)); req.destroy(); } else chunks.push(c); });
     req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
     req.on('error', reject);
   });
@@ -100,7 +100,7 @@ function status() {
   return {
     disponible: hasKey, modelo: CFG.model,
     tarifa: CFG.pricing ? { entrada_usd_mtok: CFG.pricing.input, salida_usd_mtok: CFG.pricing.output, usd_a_bs: CFG.usdToBs } : null,
-    limites: { por_minuto: CFG.perMinute, diario: CFG.perDay, imagen_mb: 5 },
+    limites: { por_minuto: CFG.perMinute, diario: CFG.perDay, imagen_mb: 5, imagenes_por_prenda: MAX_IMAGES },
     consumo_servidor: { desde: stats.since, analisis: stats.analyses, errores: stats.errors, tokens_entrada: stats.input_tokens, tokens_salida: stats.output_tokens, costo_usd: Math.round(stats.cost_usd * 1e6) / 1e6, hoy: stats.dayCount }
   };
 }
@@ -109,10 +109,9 @@ async function analyze(req, res) {
   if (!hasKey) return send(res, 503, { error: 'La IA no está configurada en el servidor: falta ANTHROPIC_API_KEY.', code: 'sin_clave' });
   const ip = clientIp(req);
   let body;
-  try { body = JSON.parse(await readBody(req, 7.2 * 1024 * 1024)); }
+  try { body = JSON.parse(await readBody(req, MAX_IMAGES * 7.2 * 1024 * 1024)); }
   catch (e) { return send(res, e.status || 400, { error: e instanceof IAError ? e.message : 'Solicitud inválida.', code: e.code || 'json' }); }
-  const mediaType = String(body.media_type || '');
-  const img = validateImage(body.image, mediaType);
+  const img = readImages(body);
   if (img.error) return send(res, 400, { error: img.error, code: 'imagen' });
   const categorias = cleanList(body.categorias, ['Blusas', 'Tops', 'Vestidos', 'Camisas', 'Chaquetas', 'Cardigans', 'Conjuntos']);
   const colores = cleanList(body.colores, ['Negro', 'Blanco', 'Rojo', 'Rosa', 'Azul', 'Verde', 'Beige', 'Café']);
@@ -123,10 +122,10 @@ async function analyze(req, res) {
   stats.dayCount++;
   const t0 = Date.now();
   try {
-    const out = await analyzeGarment({ client, model: CFG.model, image: body.image, mediaType, categorias, colores });
+    const out = await analyzeGarment({ client, model: CFG.model, images: img.images, categorias, colores });
     const cost = estimateCost(out.usage, CFG.pricing);
     stats.analyses++; stats.input_tokens += out.usage.input_tokens; stats.output_tokens += out.usage.output_tokens; stats.cost_usd += cost || 0;
-    console.log(`[IA] ok ${out.model} · ${out.usage.input_tokens} tokens entrada / ${out.usage.output_tokens} salida · ${cost != null ? 'USD ' + cost.toFixed(6) : 'sin tarifa'} · ${Date.now() - t0} ms · ${Math.round(img.bytes / 1024)} KB`);
+    console.log(`[IA] ok ${out.model} · ${out.usage.input_tokens} tokens entrada / ${out.usage.output_tokens} salida · ${cost != null ? 'USD ' + cost.toFixed(6) : 'sin tarifa'} · ${Date.now() - t0} ms · ${img.images.length} foto(s) [${img.images.map((x) => x.vista).join(', ')}] · ${Math.round(img.images.reduce((a, x) => a + x.bytes, 0) / 1024)} KB`);
     send(res, 200, { result: out.result, usage: out.usage, model: out.model, cost_usd: cost, usd_a_bs: CFG.usdToBs, ms: Date.now() - t0 });
   } catch (e) {
     stats.errors++;

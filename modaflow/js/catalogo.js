@@ -16,7 +16,7 @@
   const variantOf = (p, l) => p && p.variants.find((v) => v.size === l.size && v.color === l.color);
   function cleanCart() {
     // Quita líneas de productos que ya no existen, se ocultaron o se agotaron
-    cart = cart.filter((l) => { const p = MF.product(l.productId); return p && p.published && variantOf(p, l); });
+    cart = cart.filter((l) => { const p = MF.product(l.productId); return p && p.published && MF.isActive(p) && variantOf(p, l); });
     cart.forEach((l) => { const p = MF.product(l.productId); l.qty = Math.min(l.qty, Math.max(0, MF.available(p, variantOf(p, l)))); });
     cart = cart.filter((l) => l.qty > 0);
     saveCart();
@@ -41,7 +41,7 @@
 
   function banner() {
     const el = $('#banner');
-    const photos = MF.get().products.filter((p) => p.photo && p.published && /^assets\//.test(p.photo)).slice(0, 9);
+    const photos = MF.get().products.filter((p) => p.photo && p.published && MF.isActive(p) && /^assets\//.test(p.photo)).slice(0, 9);
     const pick = [photos[2], photos[4], photos[6]].filter(Boolean);
     const composed = `<div class="hero-mio"><div class="wrap"><div>
       <span class="tag">${MF.icon('heart', 'sm')} Nueva colección</span>
@@ -60,7 +60,7 @@
   }
 
   // ---------- Listado ----------
-  const published = () => MF.get().products.filter((p) => p.published);
+  const published = () => MF.get().products.filter((p) => p.published && MF.isActive(p));
   function cats() {
     const list = published();
     const cs = MF.get().categories.filter((c) => list.some((p) => p.category === c));
@@ -142,15 +142,18 @@
       const v = vs.find((x) => x.size === sel.size);
       const inCartQty = v ? cart.filter((l) => l.productId === p.id && l.size === v.size && l.color === v.color).reduce((s, l) => s + l.qty, 0) : 0;
       const max = v ? MF.available(p, v) - inCartQty : 0;
-      m.el.querySelector('#dt').innerHTML = `<div class="detail"><div class="pic">${MF.photo(p)}</div><div>
+      const pics = (p.photos || []).filter((x) => x.view !== 'etiqueta'); // la foto de la etiqueta es solo para uso interno
+      m.el.querySelector('#dt').innerHTML = `<div class="detail"><div class="pic-col"><div class="pic">${pics.length > 1 ? `<img src="${esc(sel.pic || pics[0].src)}" alt="${esc(p.name)}">` : MF.photo(p)}</div>${pics.length > 1 ? `<div class="pic-thumbs">${pics.map((x) => `<button class="${(sel.pic || pics[0].src) === x.src ? 'on' : ''}" data-pic="${esc(x.src)}" aria-label="Ver ${x.view === 'espalda' ? 'espalda' : 'frente'}"><img src="${esc(x.src)}" alt=""><span>${x.view === 'espalda' ? 'Espalda' : 'Frente'}</span></button>`).join('')}</div>` : ''}</div><div>
         <h2>${esc(p.name)}</h2><div class="price">${money(MF.price(p))}${pr ? `<s>${money(p.price)}</s><span class="tag-s rosa">-${pr.percent}%</span>` : ''}</div>
         <p class="desc">${esc(p.desc)}</p>
+        ${p.composition || p.brand ? `<p class="fabric">${p.brand ? `<b>Marca:</b> ${esc(p.brand)}` : ''}${p.brand && p.composition ? ' · ' : ''}${p.composition ? `<b>Composición:</b> ${esc(p.composition)}` : ''}</p>` : ''}
         ${colors.length > 1 ? `<div class="opt-title">Color: ${esc(sel.color)}</div><div class="opts">${colors.map((c) => `<button class="dot ${c === sel.color ? 'on' : ''}" data-col="${esc(c)}" title="${esc(c)}" style="background:${MF.COLORS[c] || '#ccc'}"></button>`).join('')}</div>` : `<div class="opt-title">Color: ${esc(sel.color)}</div>`}
         <div class="opt-title">Talla</div><div class="opts">${vs.map((x) => { const a = MF.available(p, x); return `<button class="opt ${sel.size === x.size ? 'on' : ''}" data-size="${esc(x.size)}" ${a <= 0 ? 'disabled' : ''}>${esc(x.size)}${MF.get().settings.showStock && a > 0 ? `<small>${a} disp.</small>` : ''}</button>`; }).join('')}</div>
         ${v ? `<p class="stock-note ${max <= 1 ? 'low' : ''}">${max > 0 ? (max <= 2 ? `¡Quedan ${max}!` : 'Disponible') : 'Ya tienes todas las unidades disponibles en tu carrito'}</p>` : '<p class="stock-note">Elige tu talla</p>'}
         <div class="opt-title">Cantidad</div><div class="qty"><button data-q="-1" aria-label="Menos">${MF.icon('minus', 'sm')}</button><span>${sel.qty}</span><button data-q="1" aria-label="Más">${MF.icon('plus', 'sm')}</button></div>
         <div class="actions"><button class="btn rosa block" id="addCart" ${!v || max < sel.qty ? 'disabled' : ''}>${MF.icon('cart', 'sm')} Agregar al carrito · ${money(MF.price(p) * sel.qty)}</button>
           <button class="btn wa block" id="buyNow" ${!v || max < sel.qty ? 'disabled' : ''}>${MF.icon('whatsapp', 'sm')} Pedir ahora por WhatsApp</button></div></div></div>`;
+      m.el.querySelectorAll('[data-pic]').forEach((b) => b.addEventListener('click', () => { sel.pic = b.dataset.pic; draw(); }));
       m.el.querySelectorAll('[data-col]').forEach((b) => b.addEventListener('click', () => { sel.color = b.dataset.col; sel.size = null; sel.qty = 1; draw(); }));
       m.el.querySelectorAll('[data-size]').forEach((b) => b.addEventListener('click', () => { sel.size = b.dataset.size; sel.qty = 1; draw(); }));
       m.el.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click', () => { sel.qty = Math.max(1, Math.min(Math.max(1, max), sel.qty + +b.dataset.q)); draw(); }));
@@ -269,8 +272,21 @@
     step1();
   }
 
+  // ---------- Catálogo no disponible (plan Básico o prueba vencida) ----------
+  function closed() {
+    const pl = MF.plan();
+    const expired = pl.trial && MF.readOnly();
+    document.body.classList.add('shop-closed');
+    document.querySelector('main').innerHTML = `<section class="closed-box wrap"><img src="${CFG.store.logo}" alt=""><h1>${expired ? 'Catálogo desactivado' : 'Catálogo no disponible'}</h1>
+      <p>${expired ? 'La prueba gratuita de esta tienda terminó y su catálogo público se desactivó. Los datos se conservan: al elegir un plan Pro o Premium vuelve a publicarse.' : `El plan <b>${esc(pl.name)}</b> no incluye catálogo público. El catálogo online con carrito y pedidos por WhatsApp y QR está disponible desde el plan Pro (y durante la prueba gratuita).`}</p>
+      <p class="muted">Demostración: cambie el plan desde el panel para ver el catálogo.</p>
+      <div class="closed-actions"><a class="btn-sh" href="demo.html?plan=pro#/catalogo">Probar con el plan Pro</a><a class="btn-sh ghost" href="planes.html">Comparar planes</a></div></section>`;
+    ['#cartBtn', '#waFloat', '.shop-search'].forEach((x) => { const el = document.querySelector(x); if (el) el.hidden = true; });
+  }
+
   // ---------- Inicio ----------
   MF.applyBrand();
+  if (!MF.catalogActive()) { closed(); MF.hydrateIcons(document.body); MF.onChange((src) => { if (src === 'remote' && MF.catalogActive()) location.reload(); }); return; }
   banner();
   updateCount();
   renderAll();
@@ -285,7 +301,7 @@
     if (e.target.closest('[data-open-cart]')) drawer(true);
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('.card[data-open]')) openProduct(MF.product(e.target.dataset.open)); if (e.key === 'Escape') closeDrawer(); });
-  MF.onChange((src) => { if (src === 'remote') { cleanCart(); renderAll(); } });
+  MF.onChange((src) => { if (src === 'remote') { if (!MF.catalogActive()) return location.reload(); cleanCart(); renderAll(); } });
   const hp = location.hash.match(/#p=([\w-]+)/);
   if (hp) setTimeout(() => openProduct(MF.product(hp[1])), 200);
 })();

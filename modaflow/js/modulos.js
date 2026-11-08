@@ -1,57 +1,17 @@
 /*
- * Módulos avanzados: clientes, proveedores, compras, gastos, reportes, auditoría,
- * sucursales, usuarios y roles, implementación (Empresarial).
+ * Módulos de gestión (Premium y Pro): proveedores, compras, gastos, auditoría, sucursales, usuarios y roles.
  * Las operaciones son simuladas pero coherentes con el inventario y las ventas de la demostración.
  */
 (function () {
   const MF = window.MF;
   const D = MF.demo;
   const { esc, money } = MF;
-  const st = { custQ: '', rep: 'mes', audUser: '', audType: '', expMonth: 'mes' };
+  const st = { audUser: '', audType: '' };
   const isThisMonth = (iso) => { const d = new Date(iso), n = new Date(); return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear(); };
-
-  // ---------- Clientes ----------
-  D.register({
-    id: 'clientes', label: 'Clientes', icon: 'users', group: 'Gestión', feature: 'clientes',
-    pitch: 'Registre a sus clientas, vea qué compran y cuánto gastan, y escríbales por WhatsApp cuando llegue algo de su talla.',
-    pitchList: ['Ficha de cada clienta', 'Historial de compras', 'Total gastado y última compra', 'Notas: talla, colores preferidos', 'Contacto directo por WhatsApp', 'Asignación de cliente en el punto de venta'],
-    sub: () => MF.get().customers.length + ' clientas registradas',
-    render(view) {
-      const d = MF.get();
-      const q = st.custQ.toLowerCase();
-      const stats = (c) => { const s = d.sales.filter((x) => x.customerId === c.id && x.status === 'completada'); return { n: s.length, total: s.reduce((a, x) => a + x.total, 0), last: s.length ? s[s.length - 1].date : null }; };
-      const list = d.customers.filter((c) => !q || c.name.toLowerCase().includes(q));
-      view.innerHTML = `<div class="toolbar"><div class="search">${MF.icon('search', 'sm')}<input id="cq" placeholder="Buscar clienta…" value="${esc(st.custQ)}"></div><button class="btn primary" id="newC">${MF.icon('plus', 'sm')} Nueva clienta</button></div>
-        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Clienta</th><th>Teléfono</th><th class="num">Compras</th><th class="num">Total gastado</th><th>Última compra</th><th>Notas</th><th></th></tr></thead><tbody>
-        ${list.map((c) => { const s = stats(c); return `<tr><td><div class="prod" style="min-width:160px"><span class="avatar">${c.name.split(' ').map((x) => x[0]).join('').slice(0, 2)}</span><b>${esc(c.name)}</b></div></td><td>${esc(c.phone)}</td><td class="num">${s.n}</td><td class="num"><b>${money(s.total)}</b></td><td>${s.last ? MF.frel(s.last) : '—'}</td><td class="muted">${esc(c.notes)}</td>
-          <td><div class="row-actions"><button class="icon-btn" data-ch="${c.id}" aria-label="Historial">${MF.icon('eye', 'sm')}</button><button class="icon-btn" data-ce="${c.id}" aria-label="Editar">${MF.icon('edit', 'sm')}</button></div></td></tr>`; }).join('')}</tbody></table></div>`;
-      const cq = view.querySelector('#cq');
-      cq.addEventListener('input', () => { st.custQ = cq.value; const p = cq.selectionStart; D.rerender(); const n = document.querySelector('#cq'); n.focus(); n.setSelectionRange(p, p); });
-      view.querySelector('#newC').addEventListener('click', () => custForm());
-      view.querySelectorAll('[data-ce]').forEach((b) => b.addEventListener('click', () => custForm(d.customers.find((c) => c.id === b.dataset.ce))));
-      view.querySelectorAll('[data-ch]').forEach((b) => b.addEventListener('click', () => {
-        const c = d.customers.find((x) => x.id === b.dataset.ch);
-        const s = d.sales.filter((x) => x.customerId === c.id).slice().reverse();
-        MF.modal({ title: esc(c.name), noFocus: true, body: `<p class="muted">${esc(c.phone)} · ${esc(c.notes || 'Sin notas')}</p><ul class="list">${s.map((x) => `<li><span class="ic">${MF.icon('receipt', 'sm')}</span><div class="grow"><b>${esc(x.items.map((i) => i.name + ' (' + i.size + ')').join(', '))}</b><small>#${x.number} · ${MF.fdate(x.date)}</small></div><b>${money(x.total)}</b></li>`).join('') || '<li class="empty">Sin compras registradas</li>'}</ul>`,
-          footer: `<a class="btn wa" target="_blank" rel="noopener" href="${MF.waLink('', `Hola ${c.name.split(' ')[0]}, te escribimos de ${MF_CONFIG.store.name}: ¡llegaron prendas nuevas que te pueden gustar!`)}">${MF.icon('whatsapp', 'sm')} Escribir</a><button class="btn primary" data-close>Cerrar</button>` });
-      }));
-    }
-  });
-  function custForm(c) {
-    const m = MF.modal({ title: c ? 'Editar clienta' : 'Nueva clienta', size: 'sm',
-      body: `<form id="cf" class="form-grid"><label class="full">Nombre <input name="name" required value="${esc(c ? c.name : '')}"></label><label class="full">Teléfono <input name="phone" value="${esc(c ? c.phone : '')}" placeholder="Opcional"></label><label class="full">Notas <input name="notes" value="${esc(c ? c.notes : '')}" placeholder="Talla, colores preferidos…"></label></form>`,
-      footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" id="sc">Guardar</button>` });
-    m.el.querySelector('#sc').addEventListener('click', () => {
-      const f = m.el.querySelector('#cf'); if (!f.reportValidity()) return;
-      const data = { name: f.name.value.trim(), phone: f.phone.value.trim(), notes: f.notes.value.trim() };
-      if (c) Object.assign(c, data); else MF.get().customers.push(Object.assign({ id: MF.uid('c'), createdAt: new Date().toISOString() }, data));
-      MF.save(); m.close(); MF.toast('Clienta guardada'); D.rerender();
-    });
-  }
 
   // ---------- Proveedores ----------
   D.register({
-    id: 'proveedores', label: 'Proveedores', icon: 'truck', group: 'Gestión', feature: 'proveedores',
+    id: 'proveedores', label: 'Proveedores', icon: 'truck', feature: 'proveedores',
     pitch: 'Tenga a mano a sus proveedores y lo que le compró a cada uno.',
     pitchList: ['Directorio de proveedores', 'Compras por proveedor', 'Notas de condiciones', 'Registro de compras que suma stock', 'Control de gastos', 'Reportes de rentabilidad'],
     render(view) {
@@ -73,7 +33,7 @@
 
   // ---------- Compras ----------
   D.register({
-    id: 'compras', label: 'Compras', icon: 'download', group: 'Gestión', feature: 'compras',
+    id: 'compras', label: 'Compras', icon: 'download', feature: 'compras',
     pitch: 'Registre la mercadería que compra: al recibirla, el stock de la sucursal se actualiza solo.',
     render(view) {
       const d = MF.get();
@@ -92,7 +52,7 @@
           const prod = MF.product(i.productId); if (!prod) return;
           let v = prod.variants.find((x) => x.size === i.size);
           if (!v) { v = { size: i.size, color: prod.color, stock: { b1: 0, b2: 0, b3: 0 } }; prod.variants.push(v); }
-          v.stock[p.branchId] = (v.stock[p.branchId] || 0) + i.qty;
+          MF.moveStock([{ productId: prod.id, name: prod.name, size: v.size, color: v.color, qty: i.qty }], p.branchId, +1, 'compra', 'Compra #' + p.number);
         });
         p.status = 'recibida';
         MF.audit('compra', `Recibió la compra #${p.number}: stock sumado en ${MF.branchName(p.branchId)}`);
@@ -140,7 +100,7 @@
   const EXP_CATS = ['Alquiler', 'Sueldos', 'Servicios', 'Insumos', 'Publicidad', 'Transporte', 'Otros'];
   const EXP_COLORS = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', '#9b8cf7', '#c8c3da'];
   D.register({
-    id: 'gastos', label: 'Gastos', icon: 'wallet', group: 'Gestión', feature: 'gastos',
+    id: 'gastos', label: 'Gastos', icon: 'wallet', feature: 'gastos',
     pitch: 'Anote alquiler, sueldos y servicios para conocer la utilidad real de cada sucursal.',
     render(view) {
       const d = MF.get();
@@ -163,73 +123,10 @@
     }
   });
 
-  // ---------- Reportes ----------
-  const REP_BLOCKS = { ventas: 'Ventas y ganancias', productos: 'Productos más vendidos', metodos: 'Métodos de pago y categorías', vendedoras: 'Ventas por vendedora', rentabilidad: 'Rentabilidad', sucursales: 'Comparación de sucursales' };
-  D.register({
-    id: 'reportes', label: 'Reportes', icon: 'chart', group: 'Análisis', feature: 'reportes',
-    pitch: 'Sepa cuánto vende y cuánto gana por día, semana y mes, y qué prendas se venden más.',
-    pitchList: ['Reportes diarios, semanales y mensuales', 'Ganancia por venta y por producto', 'Productos más vendidos', 'Ventas por vendedora y método de pago', 'Exportación a Excel', 'Historial completo'],
-    render(view) {
-      const d = MF.get();
-      const enabled = MF.can('reportesConfig') ? d.settings.reportsEnabled : Object.keys(REP_BLOCKS);
-      const show = (k) => enabled.includes(k);
-      const now = new Date();
-      const range = { dia: 1, semana: 7, mes: 30, trimestre: 90 }[st.rep];
-      const from = st.rep === 'dia' ? new Date().setHours(0, 0, 0, 0) : Date.now() - range * 864e5;
-      const allBranches = MF.can('sucursales');
-      const sales = d.sales.filter((s) => s.status === 'completada' && new Date(s.date).getTime() >= from && (allBranches ? MF.branches().some((b) => b.id === s.branchId) : s.branchId === 'b1'));
-      const total = sales.reduce((a, s) => a + s.total, 0);
-      const cost = sales.reduce((a, s) => a + s.items.reduce((x, i) => x + i.cost * i.qty, 0), 0);
-      const gross = total - cost;
-      const units = sales.reduce((a, s) => a + s.items.reduce((x, i) => x + i.qty, 0), 0);
-      // Serie por día (o por hora si es "hoy")
-      let series = [];
-      if (st.rep === 'dia') for (let h = 9; h <= 21; h++) series.push({ label: h + 'h', value: sales.filter((s) => new Date(s.date).getHours() === h).reduce((a, s) => a + s.total, 0) });
-      else if (st.rep === 'trimestre') for (let w = 12; w >= 0; w--) { const a = Date.now() - (w + 1) * 7 * 864e5, b = Date.now() - w * 7 * 864e5; const ws = sales.filter((s) => { const t = new Date(s.date).getTime(); return t >= a && t < b; }); series.push({ label: 'S' + (13 - w), value: ws.reduce((x, s) => x + s.total, 0), value2: ws.reduce((x, s) => x + s.total - s.items.reduce((y, i) => y + i.cost * i.qty, 0), 0) }); }
-      else for (let i = range - 1; i >= 0; i--) { const day = new Date(); day.setDate(day.getDate() - i); const ds = sales.filter((s) => MF.sameDay(s.date, day)); series.push({ label: `${day.getDate()}/${day.getMonth() + 1}`, value: ds.reduce((a, s) => a + s.total, 0), value2: ds.reduce((a, s) => a + s.total - s.items.reduce((x, it) => x + it.cost * it.qty, 0), 0) }); }
-      const prod = {};
-      sales.forEach((s) => s.items.forEach((i) => { prod[i.productId] = prod[i.productId] || { name: i.name, qty: 0, total: 0, profit: 0 }; prod[i.productId].qty += i.qty; prod[i.productId].total += i.price * i.qty; prod[i.productId].profit += (i.price - i.cost) * i.qty; }));
-      const topP = Object.values(prod).sort((a, b) => b.qty - a.qty).slice(0, 8);
-      const cats = {};
-      sales.forEach((s) => s.items.forEach((i) => { const c = (MF.product(i.productId) || {}).category || 'Otros'; cats[c] = (cats[c] || 0) + i.price * i.qty; }));
-      const sellers = {};
-      sales.forEach((s) => { sellers[s.userId] = (sellers[s.userId] || 0) + s.total; });
-      const exp = d.expenses.filter((e) => new Date(e.date).getTime() >= from && (allBranches ? MF.branches().some((b) => b.id === e.branchId) : e.branchId === 'b1')).reduce((a, e) => a + e.amount, 0);
-      const palette = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', '#9b8cf7', '#c8c3da'];
-
-      view.innerHTML = `<div class="toolbar"><div class="seg">${[['dia', 'Hoy'], ['semana', '7 días'], ['mes', '30 días'], ['trimestre', '3 meses']].map(([k, l]) => `<button data-rep="${k}" class="${st.rep === k ? 'on' : ''}">${l}</button>`).join('')}</div><span class="spacer"></span>
-          ${MF.can('reportesConfig') ? `<button class="btn ghost sm" id="cfgRep">${MF.icon('settings', 'sm')} Configurar reportes</button>` : ''}
-          <button class="btn ghost sm" id="repExp">${MF.icon('download', 'sm')} Exportar a Excel</button></div>
-        <div class="kpis"><div class="kpi"><div class="k-ic">${MF.icon('coins')}</div><small>Ventas</small><b>${money(total)}</b><em>${sales.length} ventas · ${units} prendas</em></div>
-          <div class="kpi mint"><div class="k-ic">${MF.icon('trendUp')}</div><small>Ganancia bruta</small><b>${money(gross)}</b><em class="up">Margen ${total ? Math.round((gross / total) * 100) : 0}%</em></div>
-          <div class="kpi pink"><div class="k-ic">${MF.icon('receipt')}</div><small>Ticket promedio</small><b>${money(sales.length ? total / sales.length : 0)}</b></div>
-          ${MF.can('rentabilidad') ? `<div class="kpi amber"><div class="k-ic">${MF.icon('wallet')}</div><small>Utilidad neta (− gastos)</small><b>${money(gross - exp)}</b><em>Gastos ${money(exp)}</em></div>` : `<div class="kpi locked" data-lock="rentabilidad"><div class="k-ic">${MF.icon('lock')}</div><small>Utilidad neta</small><b>Bs 0.000</b><em>Desde Premium</em></div>`}</div>
-        ${show('ventas') ? `<div class="panel" style="margin-bottom:16px"><div class="panel-head"><h3>Ventas y ganancia</h3><div class="chart-legend"><span><i style="background:var(--c1)"></i>Ventas</span>${st.rep !== 'dia' ? '<span><i style="background:var(--c2)"></i>Ganancia</span>' : ''}</div></div>${MF.charts.bars(series, { every: series.length > 14 ? 5 : 1, short: MF.charts.short, label2: 'ganancia' })}</div>` : ''}
-        <div class="grid g2">
-          ${show('productos') ? `<div class="panel"><div class="panel-head"><h3>Productos más vendidos</h3></div><div class="tbl-wrap" style="border:0"><table class="tbl"><thead><tr><th>Producto</th><th class="num">Unid.</th><th class="num">Ventas</th><th class="num">Ganancia</th></tr></thead><tbody>${topP.map((p) => `<tr><td>${esc(p.name)}</td><td class="num">${p.qty}</td><td class="num">${money(p.total)}</td><td class="num">${money(p.profit)}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">Sin ventas</td></tr>'}</tbody></table></div></div>` : ''}
-          ${show('metodos') ? `<div class="panel"><div class="panel-head"><h3>Ventas por categoría</h3></div>${Object.keys(cats).length ? MF.charts.donut(Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([l, v], i) => ({ label: l, value: v, color: palette[i % palette.length] })), { center: MF.charts.short(total), centerLabel: 'Bs' }) : '<div class="empty">Sin ventas</div>'}</div>` : ''}
-          ${show('vendedoras') ? `<div class="panel"><div class="panel-head"><h3>Ventas por vendedora</h3></div>${MF.charts.hbars(Object.entries(sellers).sort((a, b) => b[1] - a[1]).map(([u, v]) => ({ label: MF.userName(u), value: v })))}</div>` : ''}
-          ${show('sucursales') ? (MF.can('compararSucursales') ? `<div class="panel"><div class="panel-head"><h3>Comparación de sucursales</h3></div><div class="tbl-wrap" style="border:0"><table class="tbl"><thead><tr><th>Sucursal</th><th class="num">Ventas</th><th class="num">Ganancia</th><th class="num">Gastos</th><th class="num">Utilidad</th></tr></thead><tbody>${MF.branches().map((b) => { const bs = sales.filter((s) => s.branchId === b.id); const v = bs.reduce((a, s) => a + s.total, 0); const g = bs.reduce((a, s) => a + s.total - s.items.reduce((x, i) => x + i.cost * i.qty, 0), 0); const e = d.expenses.filter((x) => x.branchId === b.id && new Date(x.date).getTime() >= from).reduce((a, x) => a + x.amount, 0); return `<tr><td>${esc(b.name)}</td><td class="num">${money(v)}</td><td class="num">${money(g)}</td><td class="num">${money(e)}</td><td class="num"><b style="color:${g - e < 0 ? 'var(--red)' : 'inherit'}">${money(g - e)}</b></td></tr>`; }).join('')}</tbody></table></div></div>` : `<div class="panel"><div class="panel-head"><h3>Rentabilidad y sucursales</h3></div>${D.lockMini('rentabilidad', 'Utilidad neta, gastos y comparación de sucursales')}</div>`) : ''}
-        </div>`;
-      view.querySelectorAll('[data-rep]').forEach((b) => b.addEventListener('click', () => { st.rep = b.dataset.rep; D.rerender(); }));
-      view.querySelector('#repExp').addEventListener('click', () => {
-        const rows = [['Reporte', `${MF_CONFIG.store.name} · ${{ dia: 'Hoy', semana: 'Últimos 7 días', mes: 'Últimos 30 días', trimestre: 'Últimos 3 meses' }[st.rep]}`], [], ['Ventas', total], ['Costo de lo vendido', cost], ['Ganancia bruta', gross], ['Gastos', exp], ['Utilidad', gross - exp], [], ['Producto', 'Unidades', 'Ventas', 'Ganancia']];
-        topP.forEach((p) => rows.push([p.name, p.qty, p.total, p.profit]));
-        MF.downloadCSV(`reporte-${st.rep}.csv`, rows); MF.toast('Reporte descargado');
-      });
-      const cfg = view.querySelector('#cfgRep');
-      if (cfg) cfg.addEventListener('click', () => {
-        const m = MF.modal({ title: 'Configurar reportes disponibles', size: 'sm', body: `<p class="muted">Plan Empresarial: elija qué bloques ve su equipo en Reportes.</p><div class="checklist">${Object.entries(REP_BLOCKS).map(([k, l]) => `<label><input type="checkbox" value="${k}" ${enabled.includes(k) ? 'checked' : ''}> ${l}</label>`).join('')}</div>`,
-          footer: `<button class="btn ghost" data-close>Cancelar</button><button class="btn primary" id="sr">Guardar</button>` });
-        m.el.querySelector('#sr').addEventListener('click', () => { d.settings.reportsEnabled = Array.from(m.el.querySelectorAll('input:checked')).map((i) => i.value); MF.save(); m.close(); D.rerender(); });
-      });
-    }
-  });
-
   // ---------- Auditoría ----------
   const AUD_IC = { venta: 'receipt', producto: 'shirt', inventario: 'package', pedido: 'cart', transferencia: 'transfer', usuario: 'user', compra: 'download', gasto: 'wallet', devolucion: 'undo', configuracion: 'settings', promocion: 'percent', importacion: 'upload', proveedor: 'truck' };
   D.register({
-    id: 'auditoria', label: 'Auditoría', icon: 'shield', group: 'Análisis', feature: 'auditoria',
+    id: 'auditoria', label: 'Auditoría', icon: 'shield', feature: 'auditoria',
     pitch: 'Sepa quién hizo cada venta, descuento, cambio de precio o ajuste de inventario, y cuándo.',
     render(view) {
       const d = MF.get();
@@ -245,8 +142,8 @@
 
   // ---------- Sucursales ----------
   D.register({
-    id: 'sucursales', label: 'Sucursales', icon: 'building', group: 'Organización', feature: 'sucursales',
-    pitch: 'Administre hasta 3 sucursales (5 en Empresarial) con inventario independiente y transferencias.',
+    id: 'sucursales', label: 'Sucursales', icon: 'building', feature: 'sucursales',
+    pitch: 'Administre hasta 3 sucursales con inventario independiente y transferencias.',
     pitchList: ['Inventario independiente por sucursal', 'Transferencias entre sucursales', 'Ventas por sucursal', 'Comparación de sucursales', 'Encargada por sucursal', 'Catálogos por sucursal'],
     sub: () => `${MF.branches().length} de ${MF.plan().limits.branches} sucursales del plan`,
     render(view) {
@@ -276,9 +173,9 @@
 
   // ---------- Usuarios y roles ----------
   const usersMod = {
-    id: 'usuarios', label: 'Usuarios y roles', icon: 'user', group: 'Organización', feature: 'usuarios',
+    id: 'usuarios', label: 'Usuarios y roles', icon: 'user', feature: 'usuarios',
     pitch: 'Sume a sus vendedoras con su propio usuario para saber quién vendió qué.',
-    pitchList: ['Hasta 3 usuarios en Pro', 'Hasta 10 en Premium y 20 en Empresarial', 'Roles y permisos (Premium)', 'Auditoría de acciones (Premium)', 'Ventas por vendedora', 'Acceso desde el celular de cada una'],
+    pitchList: ['Hasta 3 usuarios en Pro', 'Hasta 10 usuarios en Premium', 'Roles y permisos (Premium)', 'Auditoría de acciones (Premium)', 'Cada venta queda con su vendedora', 'Acceso desde el celular de cada una'],
     sub: () => `${MF.get().users.filter((u) => u.active).length} activos · límite ${MF.plan().limits.users}`,
     render(view) {
       const d = MF.get();
@@ -333,27 +230,4 @@
   };
   D.register(usersMod);
 
-  // ---------- Implementación (Empresarial) ----------
-  D.register({
-    id: 'implementacion', label: 'Implementación', icon: 'headset', group: 'Servicio', feature: 'implementacion',
-    pitch: 'En el plan Empresarial lo acompañamos: configuración inicial, importación asistida del inventario, capacitación del equipo y configuración de reportes.',
-    pitchList: ['Configuración inicial personalizada', 'Importación asistida del inventario', 'Capacitación personalizada', 'Configuración de reportes', 'Acompañamiento de implementación', 'Funcionalidades adicionales a cotizar'],
-    render(view) {
-      const d = MF.get();
-      const done = d.onboarding.filter((k) => k.done).length;
-      const pct = Math.round((done / d.onboarding.length) * 100);
-      view.innerHTML = `<div class="grid g-main"><div class="panel"><div class="panel-head"><h3>Plan de implementación</h3><b>${pct}%</b></div><div class="progress-big"><i style="width:${pct}%"></i></div>
-          <ul class="checklist">${d.onboarding.map((k) => `<li><label class="${k.done ? 'done' : ''}"><input type="checkbox" data-k="${k.id}" ${k.done ? 'checked' : ''}> ${esc(k.label)}</label></li>`).join('')}</ul></div>
-        <div class="grid" style="align-content:start">
-          <div class="panel"><div class="panel-head"><h3>${MF.icon('calendar', 'sm')} Capacitaciones</h3></div><ul class="list">
-            <li><span class="ic">${MF.icon('users', 'sm')}</span><div class="grow"><b>Punto de venta y pedidos</b><small>Para vendedoras · 1 h (ejemplo)</small></div><span class="badge ok">Realizada</span></li>
-            <li><span class="ic">${MF.icon('chart', 'sm')}</span><div class="grow"><b>Reportes y rentabilidad</b><small>Para administración · 1 h (ejemplo)</small></div><span class="badge warn">Por agendar</span></li>
-            <li><span class="ic">${MF.icon('sparkles', 'sm')}</span><div class="grow"><b>Registro con IA y catálogo</b><small>Para encargadas · 45 min (ejemplo)</small></div><span class="badge warn">Por agendar</span></li></ul></div>
-          <div class="panel"><div class="panel-head"><h3>${MF.icon('shield', 'sm')} Licencia de uso</h3></div><p style="font-size:.88rem;margin:0">Activación Bs 4.500 con el primer año incluido; renovación referencial Bs 900/año. No incluye el código fuente: el software, la infraestructura y la propiedad intelectual siguen siendo de <span data-brand>${esc(MF_CONFIG.brand.name)}</span>.</p></div>
-          <div class="panel"><div class="panel-head"><h3>${MF.icon('plus', 'sm')} Funcionalidades adicionales</h3></div><form id="extra"><label>¿Qué necesita su tienda? <textarea rows="3" required placeholder="Ej. integración con facturación, app para mayoristas…"></textarea></label><div class="actions" style="margin-top:10px"><button class="btn primary sm">Solicitar cotización</button></div></form><p class="muted" style="font-size:.78rem;margin:8px 0 0">Los desarrollos personalizados se cotizan por separado.</p></div>
-        </div></div>`;
-      view.querySelectorAll('[data-k]').forEach((c) => c.addEventListener('change', () => { d.onboarding.find((k) => k.id === c.dataset.k).done = c.checked; MF.save(); D.rerender(); }));
-      view.querySelector('#extra').addEventListener('submit', (e) => { e.preventDefault(); MF.toast('Solicitud registrada (simulación: no se envía a ningún servidor)', 'info'); e.target.reset(); });
-    }
-  });
 })();

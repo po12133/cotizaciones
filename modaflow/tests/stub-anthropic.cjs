@@ -12,6 +12,10 @@ const OK = {
 };
 const NOT = Object.assign({}, OK, { es_prenda: false, cantidad_prendas: 0, mensaje: 'La foto muestra un paisaje, no una prenda.', nombre: '', categoria: 'Otra', color_principal: 'Otro', caracteristicas: [], etiquetas: [], confianza: 'baja' });
 const MULTI = Object.assign({}, OK, { cantidad_prendas: 3, mensaje: 'Hay tres blusas colgadas; se describió la del centro.' });
+// Con foto de etiqueta legible
+const LABEL = Object.assign({}, OK, { fotos_misma_prenda: true, etiqueta: { legible: true, marca: 'Mio', talla: 'm', composicion: '100% poliéster', pais_origen: 'Perú', cuidados: ['lavar a mano', 'no usar secadora'] } });
+// Fotos de prendas distintas
+const MIXED = Object.assign({}, OK, { fotos_misma_prenda: false, mensaje: 'La segunda foto muestra una blusa distinta.' });
 
 function start(port) {
   const state = { mode: 'ok', requests: [] };
@@ -27,7 +31,7 @@ function start(port) {
       state.requests.push({ headers: { clave: req.headers['x-api-key'] || req.headers.authorization ? 'presente' : 'ausente' }, body: Object.assign({}, parsed, { messages: parsed.messages.map((m) => ({ role: m.role, content: m.content.map((c) => (c.type === 'image' ? { type: 'image', media_type: c.source.media_type, bytes: Buffer.from(c.source.data, 'base64').length } : c)) })) }) });
       if (state.mode === 'error500') { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ type: 'error', error: { type: 'api_error', message: 'falla de prueba' } })); return; }
       if (state.mode === 'auth') { res.writeHead(401, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ type: 'error', error: { type: 'authentication_error', message: 'invalid x-api-key' } })); return; }
-      const result = state.mode === 'notgarment' ? NOT : state.mode === 'multi' ? MULTI : OK;
+      const result = { notgarment: NOT, multi: MULTI, label: LABEL, mixed: MIXED }[state.mode] || OK;
       const text = state.mode === 'badjson' ? '{"es_prenda": tru' : JSON.stringify(result);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({
@@ -41,4 +45,4 @@ function start(port) {
   return new Promise((r) => srv.listen(port, '127.0.0.1', () => r({ srv, state })));
 }
 
-module.exports = { start, OK };
+module.exports = { start, OK, LABEL };

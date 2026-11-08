@@ -18,18 +18,20 @@
   }
 
   D.register({
-    id: 'pedidos', label: 'Pedidos', icon: 'package', group: 'Principal',
+    id: 'pedidos', label: 'Pedidos online', short: 'Pedidos', icon: 'package', feature: 'pedidos',
+    pitch: 'Reciba pedidos desde su catálogo online por WhatsApp o pago QR. El stock se reserva y se descuenta al confirmar el pago.',
+    pitchList: ['Pedidos por WhatsApp con el resumen armado', 'Pago con su QR bancario estático', 'Stock reservado hasta confirmar', 'Confirmación manual del pago', 'Seguimiento: preparando y entregado', 'Comprobantes adjuntos'],
     sub: () => 'Pedidos recibidos desde el catálogo online',
     render(view) {
       const d = MF.get();
       const tabs = [['abiertos', 'Por atender'], ['todos', 'Todos'], ...Object.entries(MF.ORDER_STATES)];
       const match = (o) => st.tab === 'todos' || (st.tab === 'abiertos' ? !['entregado', 'cancelado'].includes(o.status) : o.status === st.tab);
       const list = d.orders.filter(match);
-      const full = MF.can('pedidosCompleto');
+      const full = MF.can('pedidos');
       view.innerHTML = `
         <div class="alert-strip info">${MF.icon('info', 'sm')}<span>Los pedidos <b>pendientes</b> y <b>esperando pago</b> solo reservan stock. Al confirmar el pago se registra la venta y el inventario se descuenta; si se cancela un pedido confirmado, el stock se repone.</span></div>
         <div class="order-tabs">${tabs.map(([k, l]) => `<button class="fchip ${st.tab === k ? 'on' : ''}" data-tab="${k}">${l}<span>${d.orders.filter((o) => k === 'todos' || (k === 'abiertos' ? !['entregado', 'cancelado'].includes(o.status) : o.status === k)).length}</span></button>`).join('')}</div>
-        ${full ? '' : `<div style="margin-bottom:14px">${D.lockMini('pedidosCompleto', 'Seguimiento completo (preparando, entregado) y registro de comprobantes')}</div>`}
+        ${full ? '' : `<div style="margin-bottom:14px">${D.lockMini('pedidos', 'Seguimiento completo (preparando, entregado) y registro de comprobantes')}</div>`}
         <div class="orders">${list.map((o) => orderCard(o, full)).join('') || `<div class="panel empty">${MF.icon('package')}<p>No hay pedidos en esta vista.</p><a class="btn ghost sm" href="catalogo.html" target="_blank">Hacer un pedido de prueba en el catálogo</a></div>`}</div>`;
       view.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => { st.tab = b.dataset.tab; D.rerender(); }));
       view.querySelectorAll('[data-st]').forEach((b) => b.addEventListener('click', async () => {
@@ -48,7 +50,7 @@
     const actions = [];
     if (MF.OPEN_ORDER.includes(o.status)) actions.push(`<button class="btn primary sm" data-st="confirmado" data-id="${o.id}">${MF.icon('check', 'sm')} Confirmar pago</button>`);
     if (o.status === 'pendiente' && full) actions.push(`<button class="btn ghost sm" data-st="esperando_pago" data-id="${o.id}">Esperando pago</button>`);
-    if (o.status === 'confirmado') actions.push(full ? `<button class="btn primary sm" data-st="preparando" data-id="${o.id}">${MF.icon('package', 'sm')} Preparando</button>` : D.lockPill('pedidosCompleto'));
+    if (o.status === 'confirmado') actions.push(full ? `<button class="btn primary sm" data-st="preparando" data-id="${o.id}">${MF.icon('package', 'sm')} Preparando</button>` : D.lockPill('pedidos'));
     if (o.status === 'preparando') actions.push(`<button class="btn primary sm" data-st="entregado" data-id="${o.id}">${MF.icon('truck', 'sm')} Entregado</button>`);
     if (!['entregado', 'cancelado'].includes(o.status)) actions.push(`<button class="btn ghost sm" data-st="cancelado" data-id="${o.id}">Cancelar</button>`);
     const receipt = o.receipt ? (MF.can('comprobantes') ? `<button class="receipt-thumb" data-rcpt="${o.id}" title="Ver comprobante">${o.receipt === 'demo' ? 'Comprobante<br>(demo)' : `<img src="${o.receipt}" alt="Comprobante" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`}</button>` : `<span class="badge info" data-lock="comprobantes" style="cursor:pointer">${MF.icon('paperclip', 'sm')} Comprobante adjunto · ver desde Pro</span>`) : '';
@@ -96,14 +98,16 @@
 
   // ---------- Catálogo online (configuración) ----------
   D.register({
-    id: 'catalogo', label: 'Catálogo online', icon: 'store', group: 'Productos',
+    id: 'catalogo', label: 'Catálogo online', short: 'Catálogo', icon: 'store', feature: 'catalogo',
+    pitch: 'Publique sus prendas en un catálogo con su logo: sus clientas eligen talla, arman el carrito y le piden por WhatsApp o pagan con QR.',
+    pitchList: ['Enlace público para compartir', 'Logo y banner de su tienda', 'Buscador, categorías y filtros', 'Carrito de compras', 'Pedidos por WhatsApp y QR', 'Disponibilidad sincronizada con el inventario'],
     sub: () => 'Lo que ven sus clientas en internet',
     render(view) {
       const d = MF.get();
       const s = d.settings;
       const url = new URL('catalogo.html', location.href).href;
-      const pub = d.products.filter((p) => p.published).length;
-      view.innerHTML = `
+      const pub = d.products.filter((p) => p.published && MF.isActive(p)).length;
+      view.innerHTML = `${MF.catalogActive() ? `<div class="alert-strip info">${MF.icon('info', 'sm')}<span>El catálogo usa el mismo inventario: si vende una prenda en la tienda, su disponibilidad online se actualiza sola.</span></div>` : `<div class="alert-strip">${MF.icon('lock', 'sm')}<span><b>Catálogo desactivado:</b> la prueba gratuita terminó. Elija un plan Pro o Premium para volver a publicarlo.</span><button class="btn grad sm" data-try="pro">Probar Pro</button></div>`}
         <div class="panel" style="margin-bottom:16px"><div class="panel-head"><h3>${MF.icon('link', 'sm')} Enlace de su catálogo</h3><span class="badge ok">${pub} productos publicados</span></div>
           <div class="toolbar" style="margin:0"><input value="${esc(MF.can('dominio') ? 'https://' + s.domain : url)}" readonly id="catUrl" style="flex:1;min-width:220px">
           <button class="btn ghost sm" id="copyUrl">${MF.icon('copy', 'sm')} Copiar</button><a class="btn primary sm" href="catalogo.html" target="_blank">${MF.icon('external', 'sm')} Abrir catálogo</a>
@@ -124,10 +128,10 @@
             <div class="actions" style="margin-top:12px"><button class="btn primary sm" id="saveBank">Guardar</button></div></div>
           <div class="panel"><div class="panel-head"><h3>${MF.icon('star', 'sm')} Marca, destacados y promociones</h3>${MF.can('catalogoMarca') ? '' : D.lockPill('catalogoMarca')}</div>
             ${MF.can('catalogoMarca') ? brandingHTML(s) : D.lockMini('catalogoMarca', 'Logo, colores propios, productos destacados y promociones')}</div>
-          <div class="panel"><div class="panel-head"><h3>${MF.icon('chart', 'sm')} Visitas del catálogo</h3>${MF.can('visitas') ? '<span class="sub">Últimos 30 días (datos de ejemplo)</span>' : D.lockPill('visitas')}</div>
-            ${MF.can('visitas') ? `<div class="kpis" style="grid-template-columns:1fr 1fr"><div class="kpi"><small>Visitas</small><b>${MF.num(d.visits.reduce((a, v) => a + v.views, 0))}</b></div><div class="kpi pink"><small>Clics a WhatsApp</small><b>${d.visits.reduce((a, v) => a + v.whatsapp, 0)}</b></div></div>
+          <div class="panel"><div class="panel-head"><h3>${MF.icon('chart', 'sm')} Visitas del catálogo</h3>${MF.can('dominio') ? '<span class="sub">Últimos 30 días (datos de ejemplo)</span>' : D.lockPill('dominio')}</div>
+            ${MF.can('dominio') ? `<div class="kpis" style="grid-template-columns:1fr 1fr"><div class="kpi"><small>Visitas</small><b>${MF.num(d.visits.reduce((a, v) => a + v.views, 0))}</b></div><div class="kpi pink"><small>Clics a WhatsApp</small><b>${d.visits.reduce((a, v) => a + v.whatsapp, 0)}</b></div></div>
               ${MF.charts.area(d.visits.map((v) => ({ label: v.date.slice(8) + '/' + v.date.slice(5, 7), value: v.views })), { fmt: (x) => x + ' visitas', every: 6 })}
-              <label class="switch" style="margin-top:12px"><input type="checkbox" id="perBranch" ${s.catalogPerBranch ? 'checked' : ''}><span></span> Catálogos por sucursal (mostrar disponibilidad de cada sucursal)</label>` : D.lockMini('visitas', 'Estadísticas de visitas, dominio propio y catálogos por sucursal')}</div>
+              <label class="switch" style="margin-top:12px"><input type="checkbox" id="perBranch" ${s.catalogPerBranch ? 'checked' : ''}><span></span> Catálogos por sucursal (mostrar disponibilidad de cada sucursal)</label>` : D.lockMini('dominio', 'Estadísticas de visitas, dominio propio y catálogos por sucursal')}</div>
         </div>`;
       bindCatalog(view);
     }

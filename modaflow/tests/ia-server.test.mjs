@@ -6,7 +6,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import http from 'node:http';
 import { fileURLToPath } from 'node:url';
-import { validateImage, validateResult, buildSchema, estimateCost, cleanList } from '../server/ia.mjs';
+import { validateImage, validateResult, buildSchema, estimateCost, cleanList, readImages, buildContent } from '../server/ia.mjs';
 
 const require = createRequire(import.meta.url);
 const stub = require('./stub-anthropic.cjs');
@@ -33,6 +33,21 @@ const sch = buildSchema(CATS, COLS);
 ok(sch.additionalProperties === false && sch.required.length === Object.keys(sch.properties).length && sch.properties.categoria.enum.includes('Otra'), 'Esquema JSON estricto con categorías de la tienda');
 ok(estimateCost({ input_tokens: 1534, output_tokens: 412 }, { input: 0.1, output: 0.5 }) === 0.000359, 'Costo estimado = tokens × tarifa');
 ok(estimateCost({ input_tokens: 1, output_tokens: 1 }, null) === null, 'Sin tarifa no hay costo');
+ok(v.fotos_misma_prenda === true && v.etiqueta.legible === false && v.etiqueta.marca === '', 'Sin datos de etiqueta: legible=false y campos vacíos');
+const vl = validateResult(stub.LABEL, CATS, COLS).result;
+ok(vl.etiqueta.legible && vl.etiqueta.composicion === '100% poliéster' && vl.etiqueta.cuidados.length === 2, 'Normaliza los datos leídos en la etiqueta');
+ok(validateResult(Object.assign({}, stub.OK, { etiqueta: { legible: true, marca: '', talla: '', composicion: '', pais_origen: '', cuidados: [] } }), CATS, COLS).result.etiqueta.legible === false, 'Etiqueta "legible" pero vacía → legible=false');
+ok(sch.properties.etiqueta.additionalProperties === false && sch.properties.etiqueta.required.length === Object.keys(sch.properties.etiqueta.properties).length && sch.properties.fotos_misma_prenda.type === 'boolean', 'Esquema incluye etiqueta y fotos_misma_prenda (estricto)');
+const im3 = readImages({ images: [{ image: jpeg, media_type: 'image/jpeg', vista: 'frente' }, { image: jpeg, media_type: 'image/jpeg', vista: 'espalda' }, { image: jpeg, media_type: 'image/jpeg', vista: 'etiqueta' }] });
+ok(!im3.error && im3.images.map((x) => x.vista).join() === 'frente,espalda,etiqueta', 'Acepta 3 fotos con su vista');
+ok(readImages({ images: [1, 2, 3, 4].map(() => ({ image: jpeg, media_type: 'image/jpeg' })) }).error, 'Rechaza más de 3 fotos');
+ok(readImages({ images: [] }).error && readImages({}).error, 'Rechaza solicitudes sin fotos');
+ok(readImages({ image: jpeg, media_type: 'image/jpeg' }).images[0].vista === 'frente', 'Compatible con el formato anterior (una sola imagen)');
+const dup = readImages({ images: [{ image: jpeg, media_type: 'image/jpeg', vista: 'frente' }, { image: jpeg, media_type: 'image/jpeg', vista: 'frente' }, { image: jpeg, media_type: 'image/jpeg', vista: 'x' }] });
+ok(dup.images.map((x) => x.vista).join() === 'frente,espalda,etiqueta', 'Vistas repetidas o inválidas se reasignan');
+ok(/^Foto 2:/.test(readImages({ images: [{ image: jpeg, media_type: 'image/jpeg' }, { image: jpeg, media_type: 'image/png' }] }).error), 'El error indica qué foto falló');
+const bc = buildContent(im3.images, CATS, COLS);
+ok(bc.filter((b) => b.type === 'image').length === 3 && /espalda/.test(bc[2].text) && /etiqueta/.test(bc[4].text), 'Cada foto va precedida de su vista en el mensaje');
 ok(cleanList(['Blusas', '<script>', 'x'.repeat(40), 5], ['d']).join() === 'Blusas', 'Limpia listas enviadas por el navegador');
 
 async function runServer(env, port) {
@@ -67,14 +82,25 @@ const req = { image: jpeg, media_type: 'image/jpeg', categorias: CATS, colores: 
 
   console.log('Servidor con Anthropic sustituto');
   const { srv, state } = await stub.start(5390);
-  s = await runServer({ ANTHROPIC_API_KEY: 'sk-ant-prueba-no-real', ANTHROPIC_BASE_URL: 'http://127.0.0.1:5390', IA_PRECIO_ENTRADA_USD_MTOK: '0.10', IA_PRECIO_SALIDA_USD_MTOK: '0.50', IA_TIPO_CAMBIO_BS: '6.96', IA_LIMITE_POR_MINUTO: '4' }, 5382);
+  s = await runServer({ ANTHROPIC_API_KEY: 'sk-ant-prueba-no-real', ANTHROPIC_BASE_URL: 'http://127.0.0.1:5390', IA_PRECIO_ENTRADA_USD_MTOK: '0.10', IA_PRECIO_SALIDA_USD_MTOK: '0.50', IA_TIPO_CAMBIO_BS: '6.96', IA_LIMITE_POR_MINUTO: '5' }, 5382);
   r = await post(5382, req);
   const d = await r.json();
   ok(r.status === 200 && d.result.nombre === 'Chaleco boho con flecos', 'Analiza y devuelve el resultado validado');
   ok(d.usage.input_tokens === 1534 && d.usage.output_tokens === 412 && d.cost_usd === 0.000359 && d.usd_a_bs === 6.96, 'Devuelve tokens y costo estimado');
   const last = state.requests[state.requests.length - 1];
   ok(last.body.model === 'claude-haiku-5-5' && last.headers.clave === 'presente', 'Envía a Anthropic el modelo Haiku con la API key (solo desde el servidor)');
-  ok(last.body.messages[0].content[0].type === 'image' && last.body.messages[0].content[0].media_type === 'image/jpeg', 'La foto viaja como bloque de imagen base64');
+  ok(last.body.messages[0].content[1].type === 'image' && last.body.messages[0].content[1].media_type === 'image/jpeg', 'La foto viaja como bloque de imagen base64');
+
+  const req3 = { images: [{ image: jpeg, media_type: 'image/jpeg', vista: 'frente' }, { image: jpeg, media_type: 'image/jpeg', vista: 'espalda' }, { image: jpeg, media_type: 'image/jpeg', vista: 'etiqueta' }], categorias: CATS, colores: COLS };
+  await fetch('http://127.0.0.1:5390/__mode/label');
+  r = await post(5382, req3);
+  const d3 = await r.json();
+  const last3 = state.requests[state.requests.length - 1];
+  ok(r.status === 200 && last3.body.messages[0].content.filter((c) => c.type === 'image').length === 3, 'Analiza 3 fotos (frente, espalda, etiqueta) en una sola llamada');
+  ok(d3.result.etiqueta.legible && d3.result.etiqueta.marca === 'Mio', 'Devuelve los datos leídos en la etiqueta');
+  r = await post(5382, Object.assign({}, req3, { images: req3.images.concat(req3.images[0]) }));
+  ok(r.status === 400 && /hasta 3/.test((await r.json()).error), 'Más de 3 fotos → 400');
+  await fetch('http://127.0.0.1:5390/__mode/ok');
   ok(last.body.output_config.format.type === 'json_schema' && last.body.output_config.effort === 'low', 'Pide salida estructurada (json_schema)');
   ok(!('temperature' in last.body) && !('thinking' in last.body), 'Sin parámetros no admitidos por Haiku 5.5');
   ok(!JSON.stringify(d).includes('sk-ant'), 'La respuesta al navegador no incluye la clave');
@@ -93,7 +119,7 @@ const req = { image: jpeg, media_type: 'image/jpeg', categorias: CATS, colores: 
   r = await post(5382, req);
   ok(r.status === 429, 'Límite por minuto → 429');
   const est = await (await fetch('http://127.0.0.1:5382/api/ia/estado')).json();
-  ok(est.disponible && est.consumo_servidor.analisis === 1 && est.consumo_servidor.tokens_entrada >= 1534 && est.tarifa.entrada_usd_mtok === 0.1, 'Estado del servidor muestra consumo acumulado y tarifa');
+  ok(est.disponible && est.consumo_servidor.analisis === 2 && est.limites.imagenes_por_prenda === 3 && est.consumo_servidor.tokens_entrada >= 1534 && est.tarifa.entrada_usd_mtok === 0.1, 'Estado del servidor muestra consumo acumulado y tarifa');
   ok(/\[IA\] ok claude-haiku-5-5 · 1534 tokens entrada \/ 412 salida · USD 0\.000359/.test(s.log()), 'El servidor registra tokens y costo de cada análisis en consola');
   s.p.kill(); srv.close();
 

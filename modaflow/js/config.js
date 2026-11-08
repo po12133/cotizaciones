@@ -6,9 +6,9 @@
 window.MF_CONFIG = {
   brand: {
     name: 'ModaFlow', // nombre temporal: cámbielo aquí y se actualiza en todo el sitio
-    description: 'Plataforma inteligente de gestión de ventas, inventario y catálogos online para tiendas de ropa.',
-    slogan: 'Tu tienda organizada, tus ventas bajo control',
-    subslogan: 'Registra tus prendas con inteligencia artificial, controla tu inventario y vende por internet desde Bs 30 al mes.',
+    description: 'El sistema inteligente para gestionar tu tienda de ropa desde tu celular.',
+    slogan: 'Deja el cuaderno atrás. Controla tus prendas, ventas e inventario desde tu celular.',
+    subslogan: 'Registra tus prendas con una foto, controla tu inventario y administra tus ventas desde tu celular.',
     country: 'Bolivia',
     // Número de WhatsApp comercial de la plataforma (solo dígitos con código de país, p. ej. 5917xxxxxxx).
     // Vacío = el botón abre WhatsApp para elegir el contacto, sin un número inventado.
@@ -46,5 +46,5 @@ window.MF_CONFIG = {
 
   storageKey: 'modaflow:db',
   cartKey: 'modaflow:cart',
-  dataVersion: 4
+  dataVersion: 5
 };

@@ -146,7 +146,7 @@
       return {
         id, sku: 'MIO-' + String(i + 1).padStart(3, '0'), name, category, color, colorHex: COLORS[color] || '#ccc',
         price, cost, photo: photo ? 'assets/productos/' + photo + '.jpg' : null, published, featured, desc,
-        minStock: 2, createdAt: photo ? at(10 - i, 10) : at(70 - i, 10), source: 'manual',
+        minStock: 2, createdAt: photo ? at(62 + i, 10) : at(70 - i, 10), source: 'manual', active: true, tags: [category.toLowerCase().replace(/s$/, ''), color.toLowerCase()],
         variants: vars.map(([size, vcolor, a, b, c]) => ({ size, color: vcolor, stock: { b1: a, b2: b, b3: c } }))
       };
     });
@@ -170,7 +170,7 @@
           const p = r() < 0.65 ? pick(sellable.slice(0, 9)) : pick(sellable);
           if (items.some((it) => it.productId === p.id)) continue;
           const v = pick(p.variants);
-          items.push({ productId: p.id, name: p.name, size: v.size, color: v.color, qty: 1, price: p.price, cost: p.cost });
+          items.push({ productId: p.id, name: p.name, size: v.size, color: v.color, qty: 1, price: p.price, cost: p.cost, discount: 0 });
         }
         const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
         const discount = r() < 0.15 ? Math.round(subtotal * 0.1) : 0;
@@ -179,7 +179,7 @@
         const user = branch === 'b1' ? pick(['u1', 'u2', 'u3']) : branch === 'b2' ? 'u4' : 'u5';
         const hour = d === 0 ? 9 + k * 2 : 10 + Math.floor(r() * 10);
         sales.push({
-          id: 'v' + (++num), number: num, date: at(d, Math.min(hour, 20), Math.floor(r() * 59)), items, subtotal, discount,
+          id: 'v' + (++num), number: num, date: at(d, Math.min(hour, 20), Math.floor(r() * 59)), items, subtotal, discount, lineDiscount: 0, discountTotal: discount,
           total: subtotal - discount, method: r() < 0.58 ? 'efectivo' : 'qr', customerId: r() < 0.45 ? pick(customers).id : null,
           userId: user, branchId: branch, channel: 'tienda', status: 'completada'
         });
@@ -216,7 +216,7 @@
     // Los pedidos confirmados ya generaron su venta
     orders.filter((o) => ['preparando', 'entregado'].includes(o.status)).forEach((o) => {
       const sale = {
-        id: 'v' + (++num), number: num, date: o.date, items: o.items.map((x) => Object.assign({}, x)), subtotal: o.total, discount: 0,
+        id: 'v' + (++num), number: num, date: o.date, items: o.items.map((x) => Object.assign({ discount: 0 }, x)), subtotal: o.total, discount: 0, lineDiscount: 0, discountTotal: 0,
         total: o.total, method: o.method === 'qr' ? 'qr' : 'efectivo', customerId: null, customerName: o.customer.name,
         userId: 'u1', branchId: 'b1', channel: 'online', orderId: o.id, status: 'completada'
       };
@@ -227,6 +227,24 @@
       else o.history.push({ status: 'preparando', date: o.date });
     });
     sales.sort((a, b) => a.date.localeCompare(b.date));
+    const voided = sales[sales.length - 9];
+    voided.status = 'anulada'; voided.voidNote = 'Error al registrar la talla'; voided.voidDate = voided.date;
+
+    // Movimientos de inventario: ventas (−), devoluciones y anulaciones (+) y el stock inicial que cuadra con el stock actual
+    const movements = [];
+    let mv = 0;
+    const mkMove = (date, it, qty, type, ref, branchId, userId) => movements.push({ id: 'm' + (++mv), date, productId: it.productId, name: it.name, size: it.size, color: it.color, qty, type, ref, branchId, userId: userId || 'u1' });
+    sales.forEach((sl) => sl.items.forEach((it) => {
+      mkMove(sl.date, it, -it.qty, 'venta', 'Venta #' + sl.number, sl.branchId, sl.userId);
+      if (sl.status === 'devuelta') mkMove(sl.date, it, it.qty, 'devolucion', 'Venta #' + sl.number, sl.branchId, 'u1');
+      if (sl.status === 'anulada') mkMove(sl.date, it, it.qty, 'anulacion', 'Venta #' + sl.number, sl.branchId, 'u1');
+    }));
+    products.forEach((p) => p.variants.forEach((v) => ['b1', 'b2', 'b3'].forEach((b) => {
+      const net = movements.filter((m) => m.productId === p.id && m.size === v.size && m.color === v.color && m.branchId === b).reduce((a, m) => a + m.qty, 0);
+      const initial = (v.stock[b] || 0) - net;
+      if (initial > 0) movements.push({ id: 'm' + (++mv), date: p.createdAt < at(60, 9) ? p.createdAt : at(61, 9), productId: p.id, name: p.name, size: v.size, color: v.color, qty: initial, type: 'inicial', ref: 'Registro del producto', branchId: b, userId: 'u1' });
+    })));
+    movements.sort((a, b) => a.date.localeCompare(b.date));
 
     const purchases = [
       { id: 'cp1', number: 51, date: at(40, 10), supplierId: 's1', branchId: 'b1', status: 'recibida', items: [{ productId: 'p03', size: 'M', qty: 6, cost: 66 }, { productId: 'p04', size: 'M', qty: 4, cost: 72 }] },
@@ -266,31 +284,22 @@
     return {
       version: (root.MF_CONFIG && root.MF_CONFIG.dataVersion) || 1,
       settings: {
-        plan: 'pro', branchId: 'b1', userId: 'u1',
+        plan: 'pro', branchId: 'b1', userId: 'u1', trialStart: at(3, 9), trialExpired: false,
         whatsapp: (root.MF_CONFIG && root.MF_CONFIG.store.whatsapp) || '',
         qrImage: null, bankLabel: 'Cuenta de la tienda (datos de demostración)',
         primary: '#E8457E', accent: '#C98B98', showStock: true, delivery: 'Envíos coordinados por WhatsApp. Retiro en tienda sin costo.',
-        domain: 'catalogo.mioshop.bo', reportsEnabled: ['ventas', 'productos', 'metodos', 'vendedoras', 'rentabilidad', 'sucursales']
+        domain: 'catalogo.mioshop.bo'
       },
       categories: CATEGORIES.slice(),
-      products, customers, sales, orders, purchases, expenses, transfers, audit, visits,
+      products, customers, sales, orders, purchases, expenses, transfers, audit, visits, movements,
       branches: BRANCHES.map((b) => Object.assign({}, b)), roles: ROLES.map((x) => Object.assign({}, x, { perms: x.perms.slice() })),
       users: USERS.map((u) => Object.assign({}, u)), suppliers: SUPPLIERS.map((s) => Object.assign({}, s)),
       promotions: [
         { id: 'pr1', name: 'Semana del rojo', percent: 15, category: null, productIds: ['p01', 'p02', 'p03'], active: true },
         { id: 'pr2', name: 'Vestidos de temporada', percent: 10, category: 'Vestidos', productIds: [], active: false }
       ],
-      aiUsage: { month: new Date().toISOString().slice(0, 7), used: 7 },
-      counters: { sale: num, order: 207, purchase: 54 },
-      onboarding: [
-        { id: 'k1', label: 'Reunión de diagnóstico y levantamiento de información', done: true },
-        { id: 'k2', label: 'Configuración de sucursales, usuarios y roles', done: true },
-        { id: 'k3', label: 'Importación asistida del inventario', done: true },
-        { id: 'k4', label: 'Personalización del catálogo y del QR de pago', done: false },
-        { id: 'k5', label: 'Capacitación del equipo de ventas', done: false },
-        { id: 'k6', label: 'Configuración de reportes', done: false },
-        { id: 'k7', label: 'Acompañamiento durante el primer mes', done: false }
-      ]
+      aiUsage: { month: new Date().toISOString().slice(0, 7), used: 7, trialUsed: 2 },
+      counters: { sale: num, order: 207, purchase: 54 }
     };
   }
 

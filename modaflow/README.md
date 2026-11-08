@@ -1,8 +1,14 @@
 # ModaFlow: presentación comercial y prototipo interactivo
 
-Presentación comercial de **ModaFlow** (nombre temporal), una plataforma SaaS de ventas, inventario y catálogo online para tiendas de ropa en Bolivia. Incluye demostraciones funcionales de cada plan con la tienda de ejemplo **MioShop — Moda Femenina**.
+**ModaFlow** (nombre temporal) es *el sistema inteligente para gestionar tu tienda de ropa desde tu celular*. Está pensado para tiendas pequeñas y medianas de Bolivia y resuelve tres necesidades:
 
-El sitio está hecho con HTML, CSS y JavaScript puro, y los datos de demostración se guardan en `localStorage` del navegador. Un servidor pequeño en Node (`server/`) sirve el sitio y conecta el **registro de prendas con Claude**, la IA de Anthropic. No hay pagos, autenticación ni otras integraciones reales.
+1. Registrar prendas con fotos e inteligencia artificial.
+2. Vender y controlar el inventario automáticamente.
+3. Consultar reportes del negocio.
+
+Los planes Pro y Premium suman además un catálogo online con pedidos por WhatsApp y QR. Este repositorio tiene la presentación comercial, los planes y una demo pública con la tienda de ejemplo **MioShop — Moda Femenina**.
+
+El sitio está hecho con HTML, CSS y JavaScript puro, y los datos de la demo se guardan en `localStorage` del navegador. Un servidor pequeño en Node (`server/`) sirve el sitio y conecta el **registro de prendas con Claude**, la IA de Anthropic. No hay cobros, facturación, autenticación ni otras integraciones reales: lo simulado está indicado en la demo.
 
 ## Cómo iniciarlo
 
@@ -14,11 +20,11 @@ cp .env.example .env        # en Windows: copy .env.example .env
 npm start                   # → http://localhost:8080
 ```
 
-- Sin `ANTHROPIC_API_KEY`, todo el prototipo funciona igual, pero la IA muestra "falta configurar ANTHROPIC_API_KEY".
+- Sin `ANTHROPIC_API_KEY`, todo funciona igual, pero la IA muestra "falta configurar ANTHROPIC_API_KEY". El registro manual sigue disponible.
 - Si abre `index.html` directo (como archivo `file://`), funciona todo menos la IA.
 - Para probar desde el celular en la misma red Wi-Fi, ponga `HOST=0.0.0.0` en `.env` y abra `http://IP-de-su-PC:8080`.
 
-Solo las tipografías se cargan desde Google Fonts. Sin internet se usa la fuente del sistema.
+Solo las tipografías se cargan desde Google Fonts. jsPDF (boletas y reportes en PDF) está copiado en `js/vendor/`.
 
 ## Publicar en Coolify (con IA)
 
@@ -38,38 +44,57 @@ Las páginas se publican en el sitio estático `https://cotizaciones.amicornios.
 
 Si elige otro subdominio, cámbielo en `js/config.js` → `ai.endpoint`. Ese recurso también sirve ModaFlow completo en su propio dominio, por si prefiere usarlo directamente.
 
+## Planes
+
+La configuración está centralizada en `js/plans.js`. En `ACCESS`, cada función lista los planes que la incluyen, y la misma aplicación aplica los límites y bloqueos. Cuando una función no está incluida, se muestra "Disponible desde el plan …".
+
+| | Prueba gratuita | Básico | Pro (destacado) | Premium |
+|---|---|---|---|---|
+| Precio | Bs 0 · 14 días | Bs 30/mes | Bs 69/mes | Bs 119/mes |
+| Productos (fichas) | 30 | 150 | 1.000 | 5.000 |
+| Análisis con IA | 10 en total | 20 al mes | 100 al mes | 300 al mes |
+| Usuarios / sucursales | 1 / 1 | 1 / 1 | 3 / 1 | 10 / 3 |
+| Catálogo público | Temporal | No | Sí | Sí + dominio propio |
+| Reportes | Avanzados | Básicos | Avanzados | + comparativos por sucursal |
+
+- **Producto ≠ stock:** una blusa con 20 unidades cuenta como 1 producto. Las ventas son ilimitadas en todos los planes.
+- **Fin de la prueba:** la cuenta queda en solo lectura, el catálogo se desactiva y se proponen 30 días más de conservación de datos. En la demo se simula con "Simular fin de la prueba" y se revierte con "Reactivar prueba".
+- **Créditos de IA:** son mensuales en los planes pagados y totales en la prueba. El registro manual no consume créditos.
+
+## Recorrido sugerido de la demo
+
+La demo funciona **mobile first**. En el celular tiene una barra inferior con **Inicio · Inventario · Vender · Reportes · Más**; en escritorio, menú lateral.
+
+1. **Inicio:** dos accesos grandes, **Registrar prenda** y **Nueva venta**, más las ventas del día y del mes, las alertas y el estado del catálogo.
+2. **Registrar prenda:** hasta 3 fotos (frente, espalda y etiqueta), tomadas con la cámara, subidas o "Elegir varias". Luego **"Identificar prenda con IA"** o **"Completar sin IA"**. La revisión incluye nombre, descripción breve, tipo, categoría y color. Las tallas se tocan para agregarlas, cada variante tiene su cantidad y también se puede elegir "Prenda única (1 unidad)" o "Mismas tallas en otro color". Después van el precio de venta, el precio de compra opcional y las etiquetas. Al guardar se registran la fecha y la hora, el stock inicial como movimiento y las fotos. El final ofrece "Registrar otra prenda" y "Ver inventario".
+3. **Inventario:** tarjetas con foto, precio, tallas y estado, más totales (productos, unidades, poco stock, agotados). Busca por nombre o etiqueta y filtra por categoría y disponibilidad. La ficha permite ingresos de mercadería, ajustes, edición, desactivar y eliminar. El historial de movimientos es del plan Pro.
+4. **Vender:** búsqueda con fotos y elección de talla y color con el stock a la vista. El carrito tiene descuento por prenda y descuento general, y el pago es Efectivo, QR u Otro. No pide datos del cliente. Al confirmar descuenta el stock y muestra la **boleta**: PDF, WhatsApp, impresión o pantalla.
+5. **Historial de ventas** (en "Más"): detalle, boleta otra vez, **anular venta** (repone el stock) y devoluciones (Pro).
+6. **Reportes:** periodos Hoy, Ayer, Esta semana, Últimos 7 días, Quincena, Este mes, Mes anterior, Este año y Rango. Muestra el resumen, la evolución, la comparación con el periodo anterior, los más vendidos, las categorías, los métodos de pago y los movimientos. Se exporta a Excel (CSV) o PDF. Todo se calcula con las ventas registradas.
+7. **Catálogo online** (`catalogo.html`): carrito, pedido por WhatsApp y pago con QR estático. Los pedidos pendientes solo reservan stock. En el plan Básico y con la prueba vencida muestra "no disponible" o "desactivado".
+8. **Planes:** el selector de la barra superior (o `demo.html?plan=gratis|basico|pro|premium`) cambia límites y bloqueos al instante. "Más → Mi plan" muestra el consumo.
+
+El botón **Restaurar datos** vuelve a cargar los datos originales de MioShop.
+
 ## Registro de prendas con IA (Claude)
 
 - **Modelo:** `claude-haiku-5-5` (Claude Haiku 5.5), el modelo de Claude más económico que analiza imágenes. Se cambia con `IA_MODELO` en `.env`.
-- **Dónde va la API key:** en la variable de entorno `ANTHROPIC_API_KEY`, ya sea en el archivo `.env` o en el entorno del servidor. Solo la lee `server/server.mjs`. Nunca llega al navegador ni se guarda en `localStorage`, y `.env` está en `.gitignore`.
-- **Flujo:** el navegador reduce la foto a 1280 px como máximo y la envía a `POST /api/ia/analizar`. El servidor la valida y la manda a Claude pidiendo salida JSON estructurada (`output_config.format`, con un esquema que usa las categorías y colores de la tienda). Luego revisa la respuesta antes de devolverla.
-- **Datos que genera:** nombre comercial, descripción breve y detallada, categoría, tipo de prenda, color principal y secundarios, estilo, público objetivo, características visibles y etiquetas. El prompt le pide no inventar marcas, materiales ni tallas, y marcar con "Confirmar" lo que no esté claro. **Precio, costo, tallas y cantidades** siempre los escribe la vendedora.
-- **Dónde se usa:**
-  - **Panel → Productos → "Registrar con IA":** asistente con foto propia o de MioShop, vista previa, análisis, revisión y guardado.
-  - **Panel → Productos → Nuevo o Editar → "Analizar fotografía con IA":** completa el formulario.
-  - **Landing (`index.html#ia`):** el mismo asistente.
-- **Casos especiales:** si la foto no tiene una prenda, se muestra un aviso. Si hay varias prendas, se sugiere fotografiarlas por separado. Los errores de conexión se muestran con un mensaje claro y el botón "Reintentar", y siempre se puede "Volver a analizar".
-- **Seguridad y límites:**
-  - Solo JPG, PNG, WEBP o GIF, de hasta 5 MB, con firma de archivo verificada.
-  - Por defecto, 6 análisis por minuto por IP, 200 al día y 2 en paralelo (configurable en `.env`).
-  - El servidor no expone `server/`, `node_modules/`, `tests/` ni archivos ocultos como `.env`.
+- **Dónde va la API key:** en `ANTHROPIC_API_KEY`, ya sea en `.env` o en el entorno del servidor. Solo la lee `server/server.mjs`. Nunca llega al navegador ni se guarda en `localStorage`, y `.env` está en `.gitignore`.
+- **Fotos por prenda:** de 1 a 3 fotos de la misma prenda (frente, espalda, etiqueta). Van en una sola llamada y cuentan como **1 análisis**. Con la etiqueta, Claude lee marca, talla, composición, país y cuidados. La talla leída solo se sugiere: la vendedora la confirma.
+- **Flujo:** el navegador reduce cada foto a 1280 px y las envía a `POST /api/ia/analizar` como `images: [{ image, media_type, vista }]`. El servidor las valida, las manda a Claude pidiendo salida JSON estructurada (`output_config.format`) y revisa la respuesta antes de devolverla.
+- **Lo que sugiere:** nombre, descripción breve y detallada, tipo de prenda, categoría, color, etiquetas para búsqueda, características visibles, estilo y público. **No inventa** precios, costos, tallas ni materiales que no se vean.
+- **Guardado:** `photo` es la foto principal y `photos: [{ view, src }]` guarda todas. El catálogo muestra frente y espalda, pero no la etiqueta.
+- **Seguridad y límites:** solo JPG, PNG, WEBP o GIF de hasta 5 MB, con firma de archivo verificada. Por defecto se permiten 6 análisis por minuto por IP, 200 al día y 2 en paralelo. El servidor no expone `server/`, `node_modules/`, `tests/` ni `.env`.
+- **Consumo y costo:** en "Inventario → Registrar prenda" se ven los créditos disponibles, y cada análisis muestra sus tokens y su costo estimado (tarifas en `.env`). `GET /api/ia/estado` devuelve el acumulado del servidor. El consumo real facturado se ve en la consola de Anthropic.
 
-### Consumo y costo
+## Reglas de negocio del prototipo
 
-- **En el panel** (Productos → **Consumo de IA**, y "Ver historial"): análisis del mes, créditos restantes del plan, tokens de entrada y salida, y costo estimado. Cada análisis muestra también sus tokens y su costo.
-- **Créditos:** se descuentan **solo cuando el análisis termina correctamente**. Los límites por plan son los de siempre: 20, 100, 300 y 500 al mes. Es un control demostrativo guardado en el navegador, no un sistema de facturación.
-- **Costo estimado:** tokens × tarifa de `IA_PRECIO_ENTRADA_USD_MTOK` y `IA_PRECIO_SALIDA_USD_MTOK`. El `.env.example` trae la tarifa de Haiku 5.5: USD 0,10 de entrada y USD 0,50 de salida por millón de tokens, para prompts de hasta 100K tokens. Con `IA_TIPO_CAMBIO_BS` también se muestra en bolivianos. Si deja las tarifas vacías, no se muestra costo.
-- **En el servidor:** cada análisis se registra en la consola con tokens, costo y duración, y `GET /api/ia/estado` devuelve el acumulado desde que se encendió.
-- **Consumo real facturado:** lo muestra la consola de Anthropic, en Usage y Cost. Las cifras del prototipo son estimaciones.
-
-## Recorrido sugerido
-
-1. `index.html`: hero, problemas que resuelve, registro con IA, planes, demostraciones, por qué elegir ModaFlow y preguntas frecuentes.
-2. `planes.html`: tarjetas completas, licencia del plan Empresarial, recomendador de plan y tabla comparativa con botones "Probar plan".
-3. `demo.html`: panel de MioShop. Para cambiar de plan use el selector de la barra superior, o abra la página con `demo.html?plan=basico|pro|premium|empresarial`. Si se entra a un módulo que no está incluido en el plan, se muestra el plan que hace falta.
-4. `catalogo.html`: tienda pública de MioShop con carrito, pedido por WhatsApp y pago por QR. Los pedidos aparecen en `demo.html#/pedidos`. El buscador también encuentra productos por las etiquetas que generó la IA.
-
-El botón **Restaurar datos** del panel vuelve a cargar los datos originales.
+- Toda variación de stock (registro, ingreso, ajuste, venta, anulación, devolución, compra, transferencia) pasa por `MF.moveStock` o `MF.setStock` y queda en `movements`. El stock de cada variante siempre coincide con la suma de sus movimientos.
+- Una venta descuenta el stock de cada variante y nunca vende más de lo disponible. Si se anula, el stock se repone y la venta deja de contar en los reportes.
+- Totales de venta: subtotal − descuentos por prenda − descuento general = total. Los reportes suman ambos descuentos.
+- Pedidos del catálogo: *Pendiente* y *Esperando pago* solo **reservan** stock. Al confirmar el pago se crea la venta y se descuenta. Si se cancela un pedido confirmado, se anula la venta y se repone el stock.
+- El QR de pago es estático y **no incluye el monto**: la clienta ve el total y la tienda confirma el pago a mano.
+- La boleta es un comprobante comercial, **no una factura fiscal**.
 
 ## Dónde cambiar las cosas
 
@@ -77,54 +102,44 @@ El botón **Restaurar datos** del panel vuelve a cargar los datos originales.
 |---|---|
 | API key, modelo, tarifa, límites de uso y puerto | `.env` (copia de `.env.example`) |
 | Instrucciones a Claude y esquema JSON de respuesta | `server/ia.mjs` |
-| Nombre de la plataforma, eslóganes, WhatsApp comercial | `js/config.js` → `brand` (el nombre se reemplaza en todo el sitio) |
+| Nombre de la plataforma, eslóganes, WhatsApp comercial | `js/config.js` → `brand` |
 | Tienda de ejemplo, logo, banner, WhatsApp de la tienda | `js/config.js` → `store` |
 | Endpoint de IA (si el servidor está en otro dominio) | `js/config.js` → `ai.endpoint` |
-| Precios, límites y funciones de cada plan, tabla comparativa | `js/plans.js` |
-| Productos, ventas, clientes y demás datos de ejemplo | `js/data.js` (después de cambiarlo, suba `dataVersion` en `config.js`) |
-
-El número de WhatsApp está vacío a propósito para no usar un número inventado. Mientras esté vacío, WhatsApp pide elegir el contacto al enviar. También se puede cargar desde el panel: **Catálogo online → Pedidos por WhatsApp**.
+| Precios, límites, funciones por plan y tabla comparativa | `js/plans.js` |
+| Productos, ventas, movimientos y demás datos de ejemplo | `js/data.js` (después de cambiarlo, suba `dataVersion` en `config.js`) |
 
 ## Imágenes de MioShop
 
-- `assets/productos/`: las 9 fotos reales de prendas de la carpeta del cliente, reducidas a 720×960. Las otras 13 prendas de ejemplo no tienen foto y muestran un dibujo genérico con la etiqueta "Sin foto · demo".
-- `assets/logos/mio-logo.png`: el logo se recortó del flyer de MioShop, así que tiene baja resolución. Reemplácelo por el archivo original con el mismo nombre.
-- **Banner:** como no había un archivo de banner, el catálogo arma uno con las fotos reales. Para usar el original, cópielo en `assets/banners/` y escriba su ruta en `store.banner` de `js/config.js`.
-
-## Reglas de negocio del prototipo
-
-- Una venta en el punto de venta descuenta el stock de la sucursal activa al instante.
-- Los pedidos del catálogo en estado *Pendiente* o *Esperando pago* solo **reservan** stock. Al confirmar el pago se crea la venta (canal online) y se descuenta el stock. Si se cancela un pedido ya confirmado, la venta se anula y el stock se repone.
-- El QR de pago es estático y **no incluye el monto**. La clienta ve el total, lo escribe en su app bancaria y adjunta el comprobante. La tienda confirma el pago manualmente; no hay verificación bancaria automática.
-- En el plan Básico, el historial de ventas visible es de 30 días.
+- `assets/productos/`: las 9 fotos reales de prendas de la carpeta del cliente, reducidas a 720×960. Las otras 13 prendas de ejemplo muestran un dibujo genérico con la etiqueta "Sin foto · demo".
+- `assets/logos/mio-logo.png`: recortado del flyer de MioShop, con baja resolución. Reemplácelo por el original con el mismo nombre.
+- **Banner:** el catálogo arma uno con las fotos reales. Para usar el original, cópielo en `assets/banners/` y escriba su ruta en `store.banner` de `js/config.js`.
 
 ## Estructura
 
 ```
 modaflow/
 ├── index.html, planes.html, demo.html, catalogo.html
-├── package.json, .env.example, .gitignore
-├── server/
-│   ├── server.mjs     sitio estático + /api/ia/estado y /api/ia/analizar, límites y lectura de .env
-│   └── ia.mjs         llamada a Claude (SDK oficial), prompt, esquema JSON y validación de la respuesta
-├── css/  styles.css (marca ModaFlow, landing, planes, IA), dashboard.css (panel), catalogo.css (identidad MioShop)
+├── server/   server.mjs (sitio + /api/ia), ia.mjs (Claude, prompt, esquema y validación)
+├── css/      styles.css (marca, landing, planes, IA), dashboard.css (panel mobile first), catalogo.css (MioShop)
 ├── js/
-│   ├── config.js, plans.js, data.js       configuración, planes y datos de ejemplo
-│   ├── store.js                           base localStorage y reglas (ventas, reservas, pedidos, auditoría)
-│   ├── ui.js, icons.js, charts.js         utilidades, iconos SVG y gráficos SVG propios
-│   ├── ai.js                              registro con IA: asistente, formulario, créditos y consumo
-│   ├── app.js, planes.js                  páginas públicas
-│   ├── demo.js                            panel: menú, selector de plan, bloqueos, dashboard
-│   ├── productos.js, ventas.js, pedidos.js, modulos.js   módulos del panel
-│   └── catalogo.js                        tienda pública
+│   ├── config.js, plans.js, data.js       configuración, planes centralizados y datos de ejemplo
+│   ├── store.js                           base localStorage y reglas (stock, movimientos, ventas, anulaciones, pedidos, prueba)
+│   ├── ui.js, icons.js, charts.js, pdf.js utilidades, iconos, gráficos SVG y PDF (boleta y reportes)
+│   ├── ai.js                              fotos, análisis con IA, variantes y asistente de registro
+│   ├── demo.js                            panel: barra inferior, menú, selector de plan, bloqueos, Inicio, Mi plan
+│   ├── productos.js                       Registrar prenda, Inventario, ficha, ingresos, ajustes, Movimientos
+│   ├── ventas.js, reportes.js             Vender, boleta, historial y anulación; Reportes
+│   ├── pedidos.js, modulos.js             pedidos y catálogo; proveedores, compras, gastos, auditoría, sucursales, usuarios
+│   ├── app.js, planes.js, catalogo.js     páginas públicas y tienda
+│   └── vendor/                            jsPDF y jsPDF-AutoTable (copia local)
 ├── assets/  logos/, banners/, productos/
 └── tests/
 ```
 
 ## Pruebas
 
-Las pruebas **no llaman a Anthropic**. Usan un sustituto local (`tests/stub-anthropic.cjs`) que el servidor recibe mediante `ANTHROPIC_BASE_URL`, así que no hace falta API key ni se genera costo. Para probar el reconocimiento real, use `npm start` con su clave.
+Las pruebas **no llaman a Anthropic**: usan un sustituto local (`tests/stub-anthropic.cjs`) mediante `ANTHROPIC_BASE_URL`.
 
-- `node tests/ia-server.test.mjs`: 41 verificaciones del servidor. Cubre la validación de imágenes y respuestas, la forma de la solicitud a Claude, el costo, los límites, los errores y que no se expongan archivos privados.
-- `node --experimental-websocket tests/flows.js`: 44 verificaciones en Chrome. Además de los flujos del prototipo (planes, ventas, pedidos, QR), cubre el asistente de IA, el formulario, los créditos, los errores y la búsqueda por etiquetas en el catálogo.
-- `node --experimental-websocket tests/smoke.js <carpeta> [basico,empresarial]`: carga todas las páginas en escritorio y celular, revisa errores de consola y desbordes horizontales, y guarda capturas.
+- `node tests/ia-server.test.mjs`: 57 verificaciones del servidor de IA (validaciones, varias fotos, etiqueta, límites, errores y archivos privados).
+- `node --experimental-websocket tests/flows.js`: 73 verificaciones en Chrome con pantalla de celular. Cubre la navegación, los planes, el registro manual y con IA, las variantes, el inventario (vistas tarjetas, lista y tabla, y datos visibles), el punto de venta, la boleta en PDF, la anulación, los reportes, el catálogo y la prueba gratuita.
+- `node --experimental-websocket tests/smoke.js <carpeta> [gratis,basico,premium]`: carga todas las páginas en escritorio y celular, revisa errores de consola y desbordes horizontales, y guarda capturas.

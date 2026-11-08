@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demostración · ModaFlow · MioShop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16132b">
+  <title>Demo pública · ModaFlow · MioShop</title>
   <link rel="icon" href="assets/logos/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,18 +13,16 @@
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body class="app">
+  <!-- Barra de la demostración: deja claro que no es una cuenta real -->
   <div class="demo-bar">
-    <a class="demo-brand" href="index.html" title="Volver a la presentación"><span class="brand-mini"></span><span data-brand>ModaFlow</span></a>
-    <span class="demo-tag"><i data-icon="info" class="sm"></i> Prototipo · datos de demostración</span>
+    <a class="demo-brand" href="index.html" title="Volver a la presentación"><span class="brand-mini"></span><span data-brand class="hide-xs">ModaFlow</span></a>
+    <span class="demo-tag"><i data-icon="info" class="sm"></i> <span class="hide-xs">Demo pública ·</span> datos de ejemplo</span>
     <div class="plan-switch" role="group" aria-label="Plan de la demostración">
-      <span class="ps-label">Plan:</span>
-      <div class="seg dark" id="planSwitch"></div>
+      <span class="ps-label hide-xs">Plan:</span>
+      <div class="seg dark hide-sm" id="planSwitch"></div>
+      <select id="planSel" class="plan-sel show-sm" aria-label="Plan de la demostración"></select>
     </div>
-    <div class="demo-actions">
-      <a class="db-btn" href="catalogo.html" target="_blank" rel="noopener"><i data-icon="store" class="sm"></i><span>Catálogo</span></a>
-      <a class="db-btn" href="planes.html"><i data-icon="layers" class="sm"></i><span>Planes</span></a>
-      <button class="db-btn" id="resetBtn" type="button"><i data-icon="refresh" class="sm"></i><span>Restaurar datos</span></button>
-    </div>
+    <button class="db-btn" id="resetBtn" type="button" title="Restaurar datos de demostración"><i data-icon="refresh" class="sm"></i><span class="hide-sm">Restaurar datos</span></button>
   </div>
 
   <div class="shell">
@@ -35,21 +34,24 @@
       <nav id="nav" aria-label="Módulos"></nav>
       <div class="usage" id="usage"></div>
     </aside>
-    <div class="scrim" id="scrim"></div>
 
     <div class="main">
       <header class="topbar">
-        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menú"><i data-icon="menu"></i></button>
-        <div class="tb-title"><h1 id="viewTitle">Dashboard</h1><span id="viewSub" class="muted"></span></div>
+        <img class="tb-logo" src="assets/logos/mio-logo.png" alt="MioShop">
+        <div class="tb-title"><h1 id="viewTitle">Inicio</h1><span id="viewSub" class="muted"></span></div>
         <div class="tb-right">
           <label class="branch-pick" id="branchPick" title="Sucursal activa"><i data-icon="mapPin" class="sm"></i><select id="branchSel" aria-label="Sucursal activa"></select></label>
           <button class="icon-btn" id="bellBtn" aria-label="Notificaciones"><i data-icon="bell"></i><span class="dot" id="bellDot" hidden></span></button>
-          <div class="me" id="me"></div>
+          <button class="me" id="me" type="button" aria-label="Usuario actual"></button>
         </div>
       </header>
+      <div id="planStrip"></div>
       <main id="view" class="view" tabindex="-1"></main>
     </div>
   </div>
+
+  <!-- Navegación inferior (celular) -->
+  <nav class="bottom-nav" id="bottomNav" aria-label="Navegación principal"></nav>
 
   <script src="js/config.js"></script>
   <script src="js/icons.js"></script>
@@ -58,10 +60,14 @@
   <script src="js/ui.js"></script>
   <script src="js/store.js"></script>
   <script src="js/charts.js"></script>
+  <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/vendor/jspdf.plugin.autotable.min.js"></script>
+  <script src="js/pdf.js"></script>
   <script src="js/ai.js"></script>
   <script src="js/demo.js"></script>
   <script src="js/productos.js"></script>
   <script src="js/ventas.js"></script>
+  <script src="js/reportes.js"></script>
   <script src="js/pedidos.js"></script>
   <script src="js/modulos.js"></script>
   <script>MF.demo.start();</script>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ModaFlow · Gestión de ventas, inventario y catálogo online para tiendas de ropa</title>
-  <meta name="description" content="Plataforma para tiendas de ropa en Bolivia: registra prendas con IA, controla tu inventario, vende en tienda y por internet desde Bs 30 al mes.">
+  <title>ModaFlow · El sistema para gestionar tu tienda de ropa desde el celular</title>
+  <meta name="description" content="Deja el cuaderno atrás: registra tus prendas con una foto e inteligencia artificial, controla tu inventario, vende, entrega boletas y mira tus reportes desde el celular. Para tiendas de ropa en Bolivia, desde Bs 30 al mes.">
   <link rel="icon" href="assets/logos/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,20 +12,19 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="proto-ribbon"><b>Prototipo comercial</b> · Las demostraciones usan datos de ejemplo de MioShop guardados solo en este navegador.</div>
+  <div class="proto-ribbon"><b>Prototipo comercial</b> · La demo usa datos de ejemplo de MioShop guardados solo en este navegador.</div>
 
   <header class="site-header">
     <div class="container">
       <a class="brand" href="index.html" id="brandLink"><span data-brand>ModaFlow</span></a>
       <button class="icon-btn nav-toggle" aria-label="Abrir menú" aria-expanded="false"><i data-icon="menu"></i></button>
       <nav class="site-nav" aria-label="Principal">
-        <a href="#problemas">Problemas</a>
+        <a href="#como-funciona">Cómo funciona</a>
         <a href="#ia">Registro con IA</a>
+        <a href="#funciones">Funciones</a>
         <a href="#planes">Planes</a>
-        <a href="#demos">Demostraciones</a>
         <a href="#faq">Preguntas</a>
-        <a href="catalogo.html">Catálogo MioShop</a>
-        <a class="btn grad sm" href="demo.html">Probar demostración</a>
+        <a class="btn grad sm" href="demo.html?plan=gratis#/inicio">Probar gratis 14 días</a>
       </nav>
     </div>
   </header>
@@ -35,65 +34,61 @@
     <section class="hero">
       <div class="container hero-grid">
         <div>
-          <span class="eyebrow"><i data-icon="sparkles" class="sm"></i> Para tiendas de ropa en Bolivia</span>
-          <h1><span data-cfg="brand.slogan">Tu tienda organizada, tus ventas bajo control</span></h1>
-          <p class="lead" data-cfg="brand.subslogan">Registra tus prendas con inteligencia artificial, controla tu inventario y vende por internet desde Bs 30 al mes.</p>
-          <div class="actions">
-            <a class="btn grad lg" href="#planes"><i data-icon="layers" class="sm"></i> Explorar planes</a>
-            <a class="btn ghost lg" href="demo.html"><i data-icon="play" class="sm"></i> Probar demostración</a>
+          <span class="eyebrow"><i data-icon="phone" class="sm"></i> El sistema inteligente para tu tienda de ropa, desde el celular</span>
+          <h1>Deja de anotar tus ventas en un <span class="grad-text">cuaderno</span></h1>
+          <p class="lead">Registra tus prendas con una foto, controla tu inventario y administra tus ventas desde tu celular.</p>
+          <div class="actions hero-cta">
+            <a class="btn grad lg" href="demo.html?plan=gratis#/inicio"><i data-icon="play" class="sm"></i> Probar gratis 14 días</a>
+            <a class="btn ghost lg" href="demo.html?plan=pro#/inicio"><i data-icon="eye" class="sm"></i> Ver demostración</a>
+            <a class="btn ghost lg" href="planes.html"><i data-icon="layers" class="sm"></i> Comparar planes</a>
           </div>
           <ul class="hero-points">
+            <li><i data-icon="checkCircle" class="sm"></i> Hecho para el celular</li>
             <li><i data-icon="checkCircle" class="sm"></i> Sin instalar nada</li>
-            <li><i data-icon="checkCircle" class="sm"></i> Celular y computadora</li>
-            <li><i data-icon="checkCircle" class="sm"></i> Pedidos por WhatsApp y pagos QR</li>
+            <li><i data-icon="checkCircle" class="sm"></i> Desde Bs 30 al mes</li>
           </ul>
         </div>
 
-        <div class="hero-visual" aria-label="Vista previa del sistema">
-          <div class="mock-window">
-            <div class="mock-bar"><i></i><i></i><i></i><span>Panel · MioShop</span></div>
-            <div class="mock-body">
-              <div class="mock-side"><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="mock-main">
-                <div class="mock-kpis" id="mockKpis"></div>
-                <div class="mock-chart" id="mockChart"></div>
-                <div class="mock-rows" id="mockRows"></div>
+        <div class="hero-phone" aria-label="Vista del sistema en un celular">
+          <div class="phone-mock">
+            <div class="pm-notch"></div>
+            <div class="pm-screen">
+              <div class="pm-top"><img src="assets/logos/mio-logo.png" alt=""><div><b>Inicio</b><small id="pmDate"></small></div></div>
+              <div class="pm-actions">
+                <div class="pm-ha ai"><i data-icon="camera"></i><b>Registrar prenda</b></div>
+                <div class="pm-ha sale"><i data-icon="cart"></i><b>Nueva venta</b></div>
               </div>
+              <div class="pm-kpis" id="pmKpis"></div>
+              <div class="pm-list" id="pmList"></div>
+              <div class="pm-nav"><span class="on"><i data-icon="home"></i></span><span><i data-icon="package"></i></span><span class="mid"><i data-icon="cart"></i></span><span><i data-icon="chart"></i></span><span><i data-icon="menu"></i></span></div>
             </div>
           </div>
-          <div class="float-card float-sale"><i data-icon="check"></i><div><b>Venta registrada</b><span>Stock actualizado al instante</span></div></div>
           <div class="float-card float-ai">
             <img src="assets/productos/top-verde-lunares.jpg" alt="">
             <div><small>IA · sugerencia</small><b>Top verde de lunares</b><span>Tops · Verde · Manga globo</span></div>
           </div>
-          <div class="float-card float-phone" aria-hidden="true">
-            <div class="screen">
-              <div class="ph-head"><img src="assets/logos/mio-logo.png" alt="">MioShop</div>
-              <div class="ph-grid">
-                <figure><img src="assets/productos/blusa-roja-escote-corazon.jpg" alt=""><figcaption>Bs 130</figcaption></figure>
-                <figure><img src="assets/productos/chaleco-flecos.jpg" alt=""><figcaption>Bs 160</figcaption></figure>
-              </div>
-              <div class="ph-btn">Pedir por WhatsApp</div>
-            </div>
-          </div>
+          <div class="float-card float-sale"><i data-icon="receipt"></i><div><b>Boleta N° 1229</b><span>Stock actualizado al instante</span></div></div>
         </div>
       </div>
     </section>
 
-    <div class="trust">
-      <div class="container trust-row">
-        <div class="trust-item"><i data-icon="wallet"></i><div><b>Desde Bs 30/mes</b><span>Planes de precio fijo</span></div></div>
-        <div class="trust-item"><i data-icon="sparkles"></i><div><b>Registro con IA</b><span>Una foto y listo</span></div></div>
-        <div class="trust-item"><i data-icon="store"></i><div><b>Catálogo online</b><span>Comparte un enlace</span></div></div>
-        <div class="trust-item"><i data-icon="phone"></i><div><b>Desde el celular</b><span>Sin instalar programas</span></div></div>
+    <!-- CÓMO FUNCIONA -->
+    <section class="flow-sec" id="como-funciona">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Cómo funciona</span>
+          <h2>De la foto de la prenda al reporte del mes</h2>
+          <p>Todo en un mismo lugar y desde el celular: cada paso actualiza el siguiente, sin anotar nada a mano.</p>
+        </div>
+        <ol class="flow-steps reveal" id="flowSteps"></ol>
       </div>
-    </div>
+    </section>
 
-    <!-- PROBLEMAS -->
+    <!-- 1. PROBLEMAS -->
     <section class="problems" id="problemas">
       <div class="container">
         <div class="section-head reveal">
-          <span class="eyebrow">Problemas que resolvemos</span>
+          <span class="eyebrow">Problemas de las tiendas de ropa</span>
           <h2>Del cuaderno y las fotos sueltas a una tienda bajo control</h2>
           <p>Lo que hoy le quita tiempo y dinero a una tienda pequeña, y cómo lo resuelve <span data-brand>ModaFlow</span>.</p>
         </div>
@@ -101,79 +96,66 @@
       </div>
     </section>
 
-    <!-- IA -->
+    <!-- 2. REGISTRO CON IA -->
     <section class="ai-section" id="ia">
       <div class="container">
         <div class="section-head reveal">
-          <span class="eyebrow"><i data-icon="sparkles" class="sm"></i> Registro de productos con inteligencia artificial</span>
-          <h2>Toma una foto. La IA sugiere el resto.</h2>
-          <p>El vendedor ya no escribe fichas desde cero: la IA propone nombre, categoría, color y descripción, y usted solo revisa, pone precio y tallas.</p>
+          <span class="eyebrow"><i data-icon="sparkles" class="sm"></i> Registro de prendas con inteligencia artificial</span>
+          <h2>Toma una foto. La IA completa la ficha.</h2>
+          <p>Ropa de fardos, confección propia, importada o de proveedores: fotografíe la prenda (frente, espalda y etiqueta) y la IA sugiere nombre, tipo, categoría, color, descripción y etiquetas. Usted confirma talla, cantidad y precio.</p>
         </div>
         <div class="ai-layout">
           <ol class="ai-flow reveal">
-            <li><div><b>Toma o sube una fotografía</b><span>Desde el celular, en la misma tienda.</span></div></li>
-            <li><div><b>La IA reconoce la prenda</b><span>Tipo de prenda, color y detalles visibles.</span></div></li>
-            <li><div><b>Sugiere los datos</b><span>Nombre, categoría, color y descripción comercial.</span></div></li>
-            <li><div><b>Usted confirma o corrige</b><span>Nada se guarda sin su revisión.</span></div></li>
-            <li><div><b>Ingresa precio, tallas y cantidad</b><span>En segundos, con teclado numérico.</span></div></li>
-            <li><div><b>Guarda el producto</b><span>Queda listo para vender en el punto de venta.</span></div></li>
-            <li><div><b>Aparece en inventario y catálogo</b><span>Si lo publica, sus clientas ya lo ven online.</span></div></li>
+            <li><div><b>Tome o suba hasta 3 fotos</b><span>Frente, espalda y etiqueta. Una sola también sirve.</span></div></li>
+            <li><div><b>"Identificar prenda con IA"</b><span>Reconoce tipo de prenda, color y detalles visibles.</span></div></li>
+            <li><div><b>Revise y corrija</b><span>Nada se guarda sin su confirmación.</span></div></li>
+            <li><div><b>Talla, cantidad y precio</b><span>La IA no inventa precios, costos ni tallas.</span></div></li>
+            <li><div><b>Guardar</b><span>Queda en el inventario con fecha, hora y fotos.</span></div></li>
+            <li><div><b>¿Sin IA?</b><span>El registro manual siempre está disponible y no consume créditos.</span></div></li>
           </ol>
           <div class="ai-box reveal" id="aiBox"></div>
         </div>
       </div>
     </section>
 
-    <!-- PLANES -->
-    <section id="planes">
+    <!-- 3–7. FUNCIONES -->
+    <section id="funciones">
       <div class="container">
         <div class="section-head reveal">
-          <span class="eyebrow">Planes</span>
-          <h2>Un plan para cada etapa de su tienda</h2>
-          <p>Empiece con lo básico y crezca sin cambiar de plataforma. Cada plan tiene su propia demostración.</p>
+          <span class="eyebrow">Todo lo que necesita su tienda</span>
+          <h2>Inventario, ventas, boletas y reportes en su bolsillo</h2>
+        </div>
+        <div class="feat-rows" id="featRows"></div>
+      </div>
+    </section>
+
+    <!-- 8. PLANES -->
+    <section id="planes" style="background:#fff;border-block:1px solid var(--line)">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Planes y precios</span>
+          <h2>Empiece gratis 14 días. Siga desde Bs 30 al mes.</h2>
+          <p>Sin comisión por venta. El catálogo online es una ventaja de los planes Pro y Premium.</p>
         </div>
         <div class="plans-grid" id="planCards"></div>
         <p class="plans-foot">Precios en bolivianos. Propuesta comercial inicial, sujeta a las condiciones definitivas del servicio. · <a href="planes.html#comparar">Ver comparación completa →</a></p>
       </div>
     </section>
 
-    <!-- DEMOS -->
-    <section id="demos" style="background:#fff;border-block:1px solid var(--line)">
+    <!-- 9. DEMO -->
+    <section id="demos">
       <div class="container">
         <div class="section-head reveal">
-          <span class="eyebrow">Demostraciones interactivas</span>
-          <h2>Pruébelo como si fuera su tienda</h2>
-          <p>Todo funciona en el navegador con datos de MioShop: registre productos, venda, reciba pedidos y vea cómo se actualiza el inventario.</p>
+          <span class="eyebrow">Demo interactiva de MioShop</span>
+          <h2>Pruébelo como si fuera su tienda, sin registrarse</h2>
+          <p>Registre una prenda, véndala, descargue la boleta y mire cómo baja el stock y cambian los reportes. Puede restaurar los datos cuando quiera.</p>
         </div>
-        <div class="demo-cards">
-          <a class="demo-card reveal" href="demo.html#/dashboard">
-            <div class="shot"><i data-icon="chart" class="lg"></i></div>
-            <div class="body"><b>Panel administrativo</b><p>Dashboard, productos, inventario, pedidos, reportes y módulos avanzados según el plan elegido.</p><span class="go">Abrir panel <i data-icon="arrowRight" class="sm"></i></span></div>
-          </a>
-          <a class="demo-card reveal" href="demo.html#/pos">
-            <div class="shot dark"><i data-icon="cart" class="lg"></i></div>
-            <div class="body"><b>Punto de venta</b><p>Busque prendas, arme el carrito, aplique descuentos, cobre en efectivo o QR y emita el comprobante.</p><span class="go">Vender ahora <i data-icon="arrowRight" class="sm"></i></span></div>
-          </a>
-          <a class="demo-card reveal" href="catalogo.html">
-            <div class="shot store"><img src="assets/productos/saco-rojo-punto.jpg" alt="" style="left:0"><img src="assets/productos/top-verde-lunares.jpg" alt="" style="left:33.5%"><img src="assets/productos/blusa-nude-asimetrica.jpg" alt="" style="left:67%"></div>
-            <div class="body"><b>Catálogo de MioShop</b><p>La tienda online que ven las clientas: carrito, pedido por WhatsApp y pago con QR.</p><span class="go">Visitar tienda <i data-icon="arrowRight" class="sm"></i></span></div>
-          </a>
-        </div>
+        <div class="demo-cards five" id="demoCards"></div>
+        <p class="plans-foot"><i data-icon="info" class="sm"></i> Demo pública: los datos son de ejemplo y se guardan solo en su navegador. No es una cuenta real ni se hacen cobros.</p>
       </div>
     </section>
 
-    <!-- POR QUÉ -->
-    <section id="por-que">
-      <div class="container">
-        <div class="section-head reveal">
-          <span class="eyebrow">¿Por qué elegir <span data-brand>ModaFlow</span>?</span>
-          <h2>Hecho para el día a día de una tienda de ropa</h2>
-        </div>
-        <div class="why-grid" id="whyGrid"></div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
+    <!-- 10. FAQ -->
     <section id="faq" style="background:#fff;border-top:1px solid var(--line)">
       <div class="container">
         <div class="section-head reveal">
@@ -188,12 +170,12 @@
       <div class="container">
         <div class="cta-band reveal">
           <div>
-            <h2>Digitalice su tienda esta semana</h2>
-            <p>Compare los planes, pruebe la demostración del que le interesa y vea su catálogo funcionando con productos reales.</p>
+            <h2>Deje el cuaderno atrás esta semana</h2>
+            <p>Controle sus prendas, ventas e inventario desde su celular. Pruebe 14 días gratis con todas las funciones principales.</p>
           </div>
           <div class="actions">
-            <a class="btn ghost lg" href="planes.html">Comparar planes</a>
-            <a class="btn dark lg" id="ctaWa" href="#" target="_blank" rel="noopener"><i data-icon="whatsapp" class="sm"></i> Consultar por WhatsApp</a>
+            <a class="btn dark lg" href="demo.html?plan=gratis#/inicio"><i data-icon="play" class="sm"></i> Probar gratis</a>
+            <a class="btn ghost lg" id="ctaWa" href="#" target="_blank" rel="noopener"><i data-icon="whatsapp" class="sm"></i> Consultar por WhatsApp</a>
           </div>
         </div>
       </div>
@@ -204,7 +186,7 @@
     <div class="container">
       <div>
         <a class="brand" href="index.html"><span data-brand>ModaFlow</span></a>
-        <p class="legal">Presentación comercial y prototipo funcional para validar la idea de negocio. No es el sistema en producción: no hay cobros, pagos ni integraciones reales. Precios y límites sujetos a las condiciones definitivas del servicio.</p>
+        <p class="legal">Presentación comercial y prototipo funcional para validar la idea de negocio. No es el sistema en producción: no hay cobros, facturación ni pagos reales. Lo simulado está indicado en la demo. Precios y límites sujetos a las condiciones definitivas del servicio.</p>
       </div>
       <nav><a href="planes.html">Planes</a><a href="demo.html">Demostración</a><a href="catalogo.html">Catálogo MioShop</a></nav>
     </div>

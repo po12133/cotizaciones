@@ -1,6 +1,7 @@
 /*
  * Base de datos de demostración en localStorage + reglas de negocio compartidas
  * por el panel (demo.html), el catálogo público (catalogo.html) y la landing.
+ * Toda variación de stock pasa por moveStock / setStock, que registran un movimiento de inventario.
  */
 (function (root) {
   const CFG = root.MF_CONFIG;
@@ -11,6 +12,11 @@
   const ORDER_STATES = {
     pendiente: 'Pendiente', esperando_pago: 'Esperando pago', confirmado: 'Confirmado',
     preparando: 'Preparando', entregado: 'Entregado', cancelado: 'Cancelado'
+  };
+  const PAY = { efectivo: 'Efectivo', qr: 'QR', otro: 'Otro' };
+  const MOVE_TYPES = {
+    inicial: 'Stock inicial', ingreso: 'Ingreso de mercadería', ajuste: 'Ajuste', venta: 'Venta', anulacion: 'Venta anulada',
+    devolucion: 'Devolución', transferencia: 'Transferencia', compra: 'Compra recibida', importacion: 'Importación'
   };
 
   let db = null;
@@ -55,10 +61,26 @@
     const lim = MF.planById(id).limits.branches;
     const visible = d.branches.slice(0, lim).map((b) => b.id);
     if (!visible.includes(d.settings.branchId)) d.settings.branchId = 'b1';
+    if (!MF.planIncludes(id, 'usuarios')) d.settings.userId = 'u1';
     save();
   }
-  const can = (feature) => plan().level >= (MF.FEATURES[feature] || 1);
-  const neededPlan = (feature) => MF.planByLevel(MF.FEATURES[feature] || 1);
+  const can = (feature) => MF.planIncludes(plan().id, feature);
+  const neededPlan = (feature) => MF.planNeededFor(feature);
+
+  // Prueba gratuita: 14 días desde settings.trialStart. "Simular fin de la prueba" fuerza el vencimiento.
+  function trial() {
+    const s = get().settings;
+    const days = MF.planById('gratis').trialDays;
+    const start = new Date(s.trialStart || Date.now());
+    const ends = new Date(start.getTime() + days * 864e5);
+    const left = Math.max(0, Math.ceil((ends - Date.now()) / 864e5));
+    const expired = !!s.trialExpired || left <= 0;
+    return { start, ends, left: expired ? 0 : left, expired, keepUntil: new Date(ends.getTime() + 30 * 864e5) };
+  }
+  /** Cuenta en solo lectura (prueba gratuita vencida): se puede consultar, pero no registrar. */
+  const readOnly = () => plan().trial && trial().expired;
+  const READ_ONLY_MSG = 'La prueba gratuita terminó: la cuenta está en solo lectura. Elija un plan para seguir registrando.';
+
   const branches = () => get().branches.slice(0, plan().limits.branches);
   const branchId = () => (can('sucursales') ? get().settings.branchId : 'b1');
   const branchName = (id) => (get().branches.find((b) => b.id === id) || {}).name || '—';
@@ -67,6 +89,7 @@
 
   // ---------- Productos e inventario ----------
   const product = (id) => get().products.find((p) => p.id === id);
+  const isActive = (p) => p.active !== false;
   const variantStock = (v, b) => (b ? v.stock[b] || 0 : branches().reduce((s, br) => s + (v.stock[br.id] || 0), 0));
   // Stock de un producto en la sucursal indicada (o en todas las visibles si b = 'all')
   function stock(p, b) {
@@ -84,7 +107,7 @@
   }
   function stockStatus(n, p) {
     if (n <= 0) return { key: 'agotado', label: 'Agotado' };
-    if (n <= (p ? p.minStock : 2)) return { key: 'bajo', label: 'Stock bajo' };
+    if (n <= (p ? p.minStock : 2)) return { key: 'bajo', label: 'Poco stock' };
     return { key: 'ok', label: 'Disponible' };
   }
   function promoFor(p) {
@@ -95,16 +118,55 @@
     const pr = promoFor(p);
     return pr ? Math.round(p.price * (1 - pr.percent / 100)) : p.price;
   }
-  const canAddProduct = () => get().products.length < plan().limits.products;
+  // Límite del plan = cantidad de fichas de producto (una blusa con 20 unidades cuenta como 1)
+  const canAddProduct = () => !readOnly() && get().products.length < plan().limits.products;
+  const tagsText = (p) => [p.name, p.sku, p.color, p.category, p.garmentType, p.style, p.brand, ...(p.tags || []), ...(p.features || [])].filter(Boolean).join(' ').toLowerCase();
+
+  // ---------- Movimientos de inventario ----------
+  function logMove(m) {
+    const d = get();
+    d.movements = d.movements || [];
+    d.movements.push(Object.assign({ id: uid('m'), date: new Date().toISOString(), userId: d.settings.userId, branchId: 'b1' }, m));
+    if (d.movements.length > 1500) d.movements.splice(0, d.movements.length - 1500);
+  }
+  const findVariant = (p, size, color) => p && p.variants.find((x) => x.size === size && x.color === color);
+  /** Suma (sign +1) o descuenta (−1) las cantidades de items en la sucursal b y registra el movimiento. */
+  function moveStock(items, b, sign, type, ref) {
+    items.forEach((it) => {
+      const p = product(it.productId);
+      const v = findVariant(p, it.size, it.color);
+      if (!v) return;
+      const before = v.stock[b] || 0;
+      v.stock[b] = Math.max(0, before + sign * it.qty);
+      logMove({ productId: p.id, name: p.name, size: v.size, color: v.color, qty: v.stock[b] - before, type: type || (sign < 0 ? 'venta' : 'ingreso'), ref: ref || '', branchId: b });
+    });
+  }
+  /** Fija el stock de una variante (ajuste o conteo físico) y registra la diferencia. */
+  function setStock(p, v, b, qty, type, note) {
+    const before = v.stock[b] || 0;
+    qty = Math.max(0, Math.round(+qty || 0));
+    if (qty === before) return 0;
+    v.stock[b] = qty;
+    logMove({ productId: p.id, name: p.name, size: v.size, color: v.color, qty: qty - before, type: type || 'ajuste', ref: note || '', branchId: b });
+    return qty - before;
+  }
 
   // ---------- IA (créditos demostrativos por plan: no es facturación real) ----------
+  // Planes pagados: análisis por mes. Prueba gratuita: análisis en total.
   function aiUsage() {
     const d = get();
     const month = new Date().toISOString().slice(0, 7);
-    if (d.aiUsage.month !== month) d.aiUsage = { month, used: 0 };
-    return { used: d.aiUsage.used, limit: plan().limits.ai, left: Math.max(0, plan().limits.ai - d.aiUsage.used) };
+    if (d.aiUsage.month !== month) { d.aiUsage.month = month; d.aiUsage.used = 0; }
+    const lim = plan().limits;
+    const used = lim.aiTotal ? d.aiUsage.trialUsed || 0 : d.aiUsage.used;
+    return { used, limit: lim.ai, left: Math.max(0, lim.ai - used), total: !!lim.aiTotal, period: lim.aiTotal ? 'en total' : 'este mes' };
   }
-  function useAi() { const u = aiUsage(); if (u.left <= 0) return false; get().aiUsage.used++; save(); return true; }
+  function countAi() {
+    aiUsage();
+    const a = get().aiUsage;
+    if (plan().limits.aiTotal) a.trialUsed = (a.trialUsed || 0) + 1; else a.used++;
+  }
+  function useAi() { if (aiUsage().left <= 0) return false; countAi(); save(); return true; }
 
   // ---------- Auditoría ----------
   function audit(type, detail, userId) {
@@ -115,45 +177,60 @@
   // ---------- Ventas ----------
   function checkStock(items, b) {
     for (const it of items) {
-      const p = product(it.productId);
-      const v = p && p.variants.find((x) => x.size === it.size && x.color === it.color);
+      const v = findVariant(product(it.productId), it.size, it.color);
       if (!v) return `"${it.name}" ya no existe en el inventario.`;
-      if ((v.stock[b] || 0) < it.qty) return `Stock insuficiente de "${it.name}" talla ${it.size} en ${branchName(b)} (disponible: ${v.stock[b] || 0}).`;
+      const want = items.filter((x) => x.productId === it.productId && x.size === it.size && x.color === it.color).reduce((s, x) => s + x.qty, 0);
+      if ((v.stock[b] || 0) < want) return `Stock insuficiente de "${it.name}" talla ${it.size} (disponible: ${v.stock[b] || 0}).`;
     }
     return null;
   }
-  function moveStock(items, b, sign) {
-    items.forEach((it) => {
-      const p = product(it.productId);
-      const v = p && p.variants.find((x) => x.size === it.size && x.color === it.color);
-      if (v) v.stock[b] = Math.max(0, (v.stock[b] || 0) + sign * it.qty);
-    });
+  /** Totales de una venta: descuento por prenda (Bs por línea) + descuento general. */
+  function saleTotals(items, general) {
+    const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const lineDiscount = items.reduce((s, i) => s + Math.min(i.price * i.qty, Math.max(0, Math.round(+i.discount || 0))), 0);
+    const discount = Math.min(subtotal - lineDiscount, Math.max(0, Math.round(+general || 0)));
+    return { subtotal, lineDiscount, discount, discountTotal: lineDiscount + discount, total: subtotal - lineDiscount - discount };
   }
+  const saleDiscount = (s) => (s.discount || 0) + (s.lineDiscount || 0);
   /** Registra una venta, descuenta el inventario y devuelve {sale} o {error}. */
   function createSale(o) {
+    if (readOnly()) return { error: READ_ONLY_MSG };
     const d = get();
+    if (!o.items || !o.items.length) return { error: 'Agregue al menos una prenda.' };
     const b = o.branchId || branchId();
     const err = checkStock(o.items, b);
     if (err) return { error: err };
-    moveStock(o.items, b, -1);
-    const subtotal = o.items.reduce((s, i) => s + i.price * i.qty, 0);
-    const discount = Math.min(subtotal, Math.max(0, Math.round(o.discount || 0)));
+    const t = saleTotals(o.items, o.discount);
     const number = ++d.counters.sale;
-    const sale = {
-      id: 'v' + number, number, date: new Date().toISOString(), items: o.items.map((i) => Object.assign({}, i)),
-      subtotal, discount, total: subtotal - discount, method: o.method || 'efectivo', customerId: o.customerId || null,
-      customerName: o.customerName || null, userId: d.settings.userId, branchId: b, channel: o.channel || 'tienda',
-      orderId: o.orderId || null, status: 'completada', received: o.received || null
-    };
+    const items = o.items.map((i) => Object.assign({}, i, { discount: Math.min(i.price * i.qty, Math.max(0, Math.round(+i.discount || 0))) }));
+    moveStock(items, b, -1, 'venta', 'Venta #' + number);
+    const sale = Object.assign({
+      id: 'v' + number, number, date: new Date().toISOString(), items, method: o.method || 'efectivo', methodNote: o.methodNote || '',
+      userId: d.settings.userId, branchId: b, channel: o.channel || 'tienda', orderId: o.orderId || null, customerName: o.customerName || null,
+      status: 'completada', received: o.received || null
+    }, t);
     d.sales.push(sale);
     audit('venta', `Registró la venta #${number} por Bs ${sale.total}` + (o.orderId ? ' (pedido online)' : ''));
     save();
     return { sale };
   }
+  /** Anula una venta: repone el stock de cada prenda y deja la venta fuera de los reportes. */
+  function voidSale(id, reason) {
+    if (readOnly()) return { error: READ_ONLY_MSG };
+    const s = get().sales.find((x) => x.id === id);
+    if (!s || s.status !== 'completada') return { error: 'La venta ya no está activa.' };
+    moveStock(s.items, s.branchId, +1, 'anulacion', 'Venta #' + s.number);
+    s.status = 'anulada';
+    s.voidNote = reason || 'Anulada';
+    s.voidDate = new Date().toISOString();
+    audit('venta', `Anuló la venta #${s.number} (${s.voidNote}) y repuso el stock`);
+    save();
+    return { ok: true };
+  }
   function returnSale(id, note) {
     const s = get().sales.find((x) => x.id === id);
-    if (!s || s.status !== 'completada') return false;
-    moveStock(s.items, s.branchId, +1);
+    if (!s || s.status !== 'completada' || readOnly()) return false;
+    moveStock(s.items, s.branchId, +1, 'devolucion', 'Venta #' + s.number);
     s.status = 'devuelta';
     s.returnNote = note || 'Devolución';
     audit('devolucion', `Registró la devolución de la venta #${s.number} (${s.returnNote})`);
@@ -161,13 +238,12 @@
     return true;
   }
   function visibleSales() {
-    const d = get();
-    const days = plan().limits.historyDays;
-    const from = days ? Date.now() - days * 864e5 : 0;
-    return d.sales.filter((s) => new Date(s.date).getTime() >= from && (can('sucursales') ? true : s.branchId === 'b1'));
+    return get().sales.filter((s) => (can('sucursales') ? branches().some((b) => b.id === s.branchId) : s.branchId === 'b1'));
   }
 
   // ---------- Pedidos online ----------
+  /** El catálogo está activo en Prueba (mientras no venza), Pro y Premium. */
+  const catalogActive = () => can('catalogo') && !readOnly();
   function createOrder(o) {
     const d = get();
     const number = ++d.counters.order;
@@ -187,6 +263,7 @@
   function setOrderStatus(id, status) {
     const o = get().orders.find((x) => x.id === id);
     if (!o) return { error: 'Pedido no encontrado' };
+    if (readOnly()) return { error: READ_ONLY_MSG };
     if (o.status === status) return { ok: true };
     if (o.status === 'cancelado' || o.status === 'entregado') return { error: 'El pedido ya está cerrado.' };
     if (status === 'confirmado') {
@@ -199,7 +276,7 @@
     } else if (status === 'cancelado') {
       if (o.saleId) {
         const s = get().sales.find((x) => x.id === o.saleId);
-        if (s && s.status === 'completada') { moveStock(s.items, s.branchId, +1); s.status = 'anulada'; }
+        if (s && s.status === 'completada') { moveStock(s.items, s.branchId, +1, 'anulacion', 'Pedido #' + o.number); s.status = 'anulada'; s.voidNote = 'Pedido cancelado'; }
       }
     } else if (['preparando', 'entregado'].includes(status) && !o.saleId) {
       return { error: 'Primero confirme el pago del pedido.' };
@@ -214,8 +291,9 @@
   }
 
   Object.assign(MF, {
-    ORDER_STATES, OPEN_ORDER, load, save, reset, onChange, uid, get, plan, setPlan, can, neededPlan, branches, branchId,
-    branchName, userName, currentUser, product, variantStock, stock, reserved, available, stockStatus, promoFor, price,
-    canAddProduct, aiUsage, useAi, audit, createSale, returnSale, visibleSales, createOrder, setOrderStatus, moveStock
+    ORDER_STATES, OPEN_ORDER, PAY, MOVE_TYPES, READ_ONLY_MSG, load, save, reset, onChange, uid, get, plan, setPlan, can, neededPlan, trial, readOnly,
+    branches, branchId, branchName, userName, currentUser, product, isActive, variantStock, stock, reserved, available, stockStatus, promoFor, price,
+    canAddProduct, tagsText, logMove, moveStock, setStock, findVariant, aiUsage, countAi, useAi, audit, saleTotals, saleDiscount, createSale, voidSale,
+    returnSale, visibleSales, catalogActive, createOrder, setOrderStatus
   });
 })(window);
